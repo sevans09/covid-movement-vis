@@ -1,321 +1,207 @@
-
 <!DOCTYPE html>
-<meta charset="utf-8">
-<style>
+<html>
+<head>
+	<script lang="javascript" src="js/jquery-3.1.0.min.js"></script>
+	<script lang="javascript" src="js/d3.v4.min.js"></script>
+	<script lang="javascript" src="js/flare.js"></script>
+	<link rel="stylesheet" href="css/hierarchy.css">
+</head>
+<body>
+	<div id="hierarchy1">
 
-.button {
-  /*border: 1px outset #424242;*/
-  background-color: #4242;
-  height:40px;
-  width:40px;
-  /*padding-top: -100px;*/
-  cursor:pointer;
-}
+	</div>
+	<div id="hierarchy2">
 
-.button:hover {
-  background-color: #424242;
-  color:white;
-}
+	</div>
 
-.slidecontainer {
-  width: 50%;
-  margin-left: 10%;
-}
+	<script>
+		/*
+		 * Name: Sook-Hee Evans
+		 */
+		
+		var width = $('#hierarchy1').width();
+		var height = $('#hierarchy1').height();
+		var radius = (Math.min(width, height) / 2.5) - 10;
 
-.slider {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 80%;
-  height: 24px;
-  background: #d3d3d3;
-  margin-bottom:-50px;
-  opacity: 0.6;
-  -webkit-transition: .2s;
-  transition: opacity .2s;
-}
+		var formatNumber = d3.format(",d");
 
-.slider:hover {
-  opacity: 1; 
-}
+		var x = d3.scaleLinear()
+			.range([0, 2 * Math.PI]);
 
-.slider::-webkit-slider-thumb {
-  -webkit-appearance: none; 
-  appearance: none;
-  width: 25px; 
-  height: 25px; 
-  background: black;
-  cursor: pointer;
-}
+		var y = d3.scaleSqrt()
+			.range([0, radius]);
 
-.slider::-moz-range-thumb {
-  width: 25px; 
-  height: 25px;
-  background: black; 
-  cursor: pointer;
-}
+		var color = d3.scaleOrdinal(d3.schemeCategory10);
 
-.column1 {
-  float: left;
-  width: 70%;
-}
-.column2 {
-  padding-top: 3.5vw;
-  padding-left: .7vw;
-  padding-right: .2vw;
-  float: left;
-  width: 26%;
-}
+		var partition = d3.partition();
 
-.row:after {
-  content: "";
-  display: table;
-  clear: both;
-}
-.counties {
-  fill: rgb(255, 247, 230);
-}
-
-.states {
-  fill: none;
-  stroke: #fff;
-  stroke-linejoin: round;
-}
-
-h2 { 
-  font-family: "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
-  font-size: 2.5vw; 
-  font-style: normal; 
-  font-variant: normal; 
-  font-weight: 700; 
-  line-height: 29.4px; 
-}
-
-h3 { 
-  font-family: "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
-  font-size: 1.3vw; 
-  font-style: normal; 
-  font-variant: normal; 
-  font-weight: 400; 
-  line-height: 26.4px; 
-  text-decoration: italic;
-}
-
-h4 { 
-  font-family: "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
-  font-size: 1.83vw; 
-  font-style: italic; 
-  font-variant: normal; 
-  padding: 10px;
-  padding-left:15px;
-  font-weight: 600; 
-  line-height: 26.4px; 
-  color: #424242;
-  background-color: rgb(230, 230, 230);
-}
-
-#decoration{
-  position: absolute;
-  z-index: 1;
-  top: 0;
-  width: 32vw;
-  margin-top: 49%;
-  margin-right: 5%;
-  right: 0;
-}
-
-#legend{
-  position: absolute;
-  z-index: 1;
-  font-family: "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
-  font-size: 1.3vw; 
-  font-style: italic; 
-  top: 0;
-  width: 32vw;
-  margin-top: -5%;
-  margin-right: 0vw;
-  right: 0;
-}
-
-span{
-    height: 1.3vw;
-    width: calc(100% / 10);
-    background: black;
-    display: inline-block;
-}
-span[data-color='1']{
-    background: rgb(230, 230, 230);
-}
-span[data-color='2']{
-    background: rgb(255, 183, 128);
-}
-span[data-color='3']{
-    background: rgb(255, 154, 77);
-}
-span[data-color='4']{
-    background: rgb(255, 125, 26);
-}
-span[data-color='5']{
-    background: rgb(255, 111, 0);
-}
-span[data-color='6']{
-    background: rgb(230, 99, 0);
-}
-span[data-color='8']{
-    background: rgb(204, 88, 0);
-}
-span[data-color='9']{
-    background: rgb(179, 77, 0);
-}
-span[data-color='10']{
-    background: rgb(128, 55, 0);
-}
+		var arc = d3.arc()
+			.startAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x0))); })
+			.endAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x1))); })
+			.innerRadius(function(d) { return Math.max(0, y(d.y0)); })
+			.outerRadius(function(d) { return Math.max(0, y(d.y1)); });
 
 
-.q0-9 { fill:rgb(230, 230, 230); }
-/*color in slider*/
-.q1-9 { fill:rgb(255, 183, 128); }
-.q2-9 { fill:rgb(255, 154, 77); }
-.q3-9 { fill:rgb(255, 125, 26); }
-.q4-9 { fill:rgb(255, 111, 0); }
-.q5-9 { fill:rgb(230, 99, 0); }
-.q6-9 { fill:rgb(204, 88, 0); }
-.q7-9 { fill:rgb(179, 77, 0); }
-.q8-9 { fill:rgb(128, 55, 0); }
-</style>
+		var svg = d3.select("#hierarchy1").append("svg")
+			.attr("width", width)
+			.attr("height", height)
+			.attr("id", "hierarchy-1")
+			.append("g")
+			.attr("transform", "translate(" + width / 2 + "," + (height / 2) + ")");
+
+		
+		var root = d3.hierarchy(flare);
+		root.sum(function(d) { return d.size; });
+
+		svg.selectAll("path")
+			.data(partition(root).descendants())
+			.enter().append("path")
+			.attr("d", arc)
+			.attr("display", function(d) { return d.depth ? null : "none"; })
+			.attr("id", function(d) { return d.data.name; })
+			.style("fill", function(d) { return color((d.children ? d : d.parent).data.name); });
+
+		svg.selectAll("text")
+			.data(partition(root).descendants().filter(function(d) { return x(d.x1)-x(d.x0) > .05; }))
+			.enter().append("text")
+			.attr("transform", function(d) { 
+				var rotation
+				if(d.parent){
+					offset =  d.x1 + .005 > 1 ? d.x1 + .005 - 1 : d.x1 + .005;
+					rotation = (Math.max(0, Math.min(2 * Math.PI, x(offset)))  - Math.PI / 2) / Math.PI * 180 - 3.5;
+				}else rotation = 0;
+				return "rotate(" + rotation + ")"; })
+			.attr("x", function(d) { return Math.max(0, y(d.y0)); })
+			.attr("dx", "8") // margin
+			.attr("dy", ".35em") // vertical-align
+			.style("font-size", '.85em')
+			.text(function(d) { return d.data.name; });
+
+		d3.select(self.frameElement).style("height", height + "px");
 
 
-<div class="row">
-  <div class="column2">
-    <h2></h2>
-    <h3></h3>
-    <div class="row">
-      <button class="button" onclick="original()" style="margin-top: 50px">
-        DSCI
-      </button>
-      <input type="range" min="1" max="5" value="0" class="slider" id="myRange" onchange="slide()">
-    </div>    
-    <div id="decoration">
-        <div id=legend style="margin-right: 0%"> 
-          No Drought
-        </div>
-        <div id=legend style="margin-right: -59%"> 
-          Exceptional Drought
-        </div>
-        <span data-color="1"></span><span data-color="2"></span><span data-color="3"></span><span data-color="4"></span><span data-color="5"></span><span data-color="6"></span><span data-color="8"></span><span data-color="9"></span><span data-color="10"></span>
-    </div>
-    <h4 id="title"></h4>
-  </div>
+		var width = $('#hierarchy1').width();
+		var height = $('#hierarchy1').height();
 
-  <div class="column1" style="position: relative">
-    <svg width="960" height="600"></svg>
-  </div>
+		var svg = d3.select("#hierarchy2").append("svg")
+			.attr("id", "hierarchy-2")
+			.attr("width", width)
+			.attr("height", height)
+			.append("g")
+			.attr("transform", "translate(" + width * 0  + "," + (height * 0) + ")");
 
 
-</div>
+		var fader = function(color) { return d3.interpolateRgb(color, "#fff")(0.2); },
+			color = d3.scaleOrdinal(d3.schemeCategory20.map(fader)),
+			format = d3.format(",d");
 
-<script src="js/d3.v4.min.js"></script>
-<script src="js/topojson.v1.min.js"></script>
-<script>
+		var treemap = d3.treemap()
+			.tile(d3.treemapResquarify)
+			.size([width, height])
+			.round(true)
+			.paddingInner(1);
 
- // D0-D4 category shows the percent of the area that is classified as D0 or worse.
+		var root = d3.hierarchy(flare)
+			.eachBefore(function(d) { d.data.id = (d.parent ? d.parent.data.id + "." : "") + d.data.name; })
+			.sum(sumBySize)
+			.sort(function(a, b) { return b.height - a.height || b.value - a.value; });
 
-var title = d3.select("h2")
-    .text("Drought Levels By American County");
-var text = d3.select("h3")
-    .text("Slide below to view different drought levels.");
-var map = d3.select("h4")
-    .text("Drought Severity and Coverage Index (DSCI) - Overall Drought Levels for an Area");
+		treemap(root);
 
-var svg = d3.select("svg"),
-    width = +svg.attr("width"),
-    height = +svg.attr("height");
+		var cell = svg.selectAll("g")
+			.data(root.leaves())
+			.enter().append("g")
+			.attr("transform", function(d) { return "translate(" + d.x0 + "," + d.y0 + ")"; });
 
-var rateById = d3.map();
+		cell.append("rect")
+			.attr("id", function(d) { return d.data.id; })
+			.attr("width", function(d) { return d.x1 - d.x0; })
+			.attr("height", function(d) { return d.y1 - d.y0; })
+			.attr("fill", function(d) { return color(d.parent.data.id); });
 
-var quantize = d3.scaleQuantize()
-    .domain([0, 110])
-    .range(d3.range(9).map(function(i) { return "q" + i + "-9"; }));
+		cell.append("clipPath")
+			.attr("id", function(d) { return "clip-" + d.data.id; })
+			.append("use")
+			.attr("xlink:href", function(d) { return "#" + d.data.id; });
 
-var projection = d3.geoAlbersUsa()
-    .scale(1280)
-    .translate([width / 2, height / 2]);
+		cell.append("text")
+			.attr("clip-path", function(d) { return "url(#clip-" + d.data.id + ")"; })
+			.selectAll("tspan")
+			.data(function(d) { return d.data.name.split(/(?=[A-Z][^A-Z])/g); })
+			.enter().append("tspan")
+			.attr("x", 4)
+			.attr("y", function(d, i) { return 13 + i * 10; })
+			.text(function(d) { return d; })
+			.style("font-size", '.65em');
 
-var path = d3.geoPath()
-    .projection(projection);
+		/* puts flare data word in each box */
+		cell.append("title")
+			.text(function(d) { return d.data.id + "\n" + format(d.value); });
 
-d3.queue()
-    .defer(d3.json, "js/us.json")
-    .defer(d3.tsv, "tsv/drought.tsv", function(d) { rateById.set(d.FIPS, (2*d.D0 + 2*d.D1 + 3*d.D2 + 4*d.D3 + 5*d.D4)/9); })
-    .await(ready);
+		d3.selectAll("input")
+			.data([sumBySize, sumByCount], function(d) { return d ? d.name : this.value; })
 
-function slide() {
-  var val = document.getElementById("myRange").value;
-  var x = document.getElementById("decoration");
-  x.style.display = "none";
+		
+		function sumByCount(d) {
+		return d.children ? 0 : 1;
+		}
 
-  if (val == 5) {
-    document.getElementById('title').innerHTML = "D4: Counties Experiencing Exceptional Drought"; 
-    d3.queue()
-      .defer(d3.json, "js/us.json")
-      .defer(d3.tsv, "tsv/drought.tsv", function(d) { rateById.set(d.FIPS, +d.D4 / 4.1); }) 
-      // .defer(d3.tsv, "tsv/drought.tsv", function(d) { rateById.set(d.FIPS, Math.ceil(d.D4)); }) 
-      .await(ready);
-  }
-  else if (val == 4) {
-    document.getElementById('title').innerHTML = "D3: Counties Experiencing At Least Extreme Drought"; 
-    d3.queue()
-      .defer(d3.json, "js/us.json")
-      .defer(d3.tsv, "tsv/drought.tsv", function(d) { rateById.set(d.FIPS, +d.D3/7 ); }) 
-      .await(ready);
-  }
-  else if (val == 3) {
-    document.getElementById('title').innerHTML = "D2: Counties Experiencing At Least Severe Drought"; 
-    d3.queue()
-      .defer(d3.json, "js/us.json")
-      .defer(d3.tsv, "tsv/drought.tsv", function(d) { rateById.set(d.FIPS, +d.D2/6); }) 
-      .await(ready);
-  }
-  else if (val == 2) {
-    document.getElementById('title').innerHTML = "D1: Counties Experiencing At Least Moderate Drought"; 
-    d3.queue()
-      .defer(d3.json, "js/us.json")
-      .defer(d3.tsv, "tsv/drought.tsv", function(d) { rateById.set(d.FIPS, +d.D1/5); }) 
-      .await(ready);
-  }
-  else if (val == 1) {
-    document.getElementById('title').innerHTML = "D0: Counties Experiencing At Least Abnormal Dryness"; 
-    d3.queue()
-      .defer(d3.json, "js/us.json")
-      .defer(d3.tsv, "tsv/drought.tsv", function(d) { rateById.set(d.FIPS, +d.D0/6); }) 
-      .await(ready);
-  }
-}
+		function sumBySize(d) {
+		return d.size;
+	}
 
-function original() {
-  document.getElementById('title').innerHTML = "Drought Severity and Coverage Index (DSCI) - Overall Drought Levels for an Area"; 
-  var x = document.getElementById("decoration");
-  x.style.display = "block";
-  d3.queue()
-      .defer(d3.json, "js/us.json")
-      .defer(d3.tsv, "tsv/drought.tsv", function(d) { rateById.set(d.FIPS, (2*d.D0 + 2*d.D1 + 3*d.D2 + 4*d.D3 + 5*d.D4)/9); })
-      .await(ready);
-}
 
-function ready(error, us) {
-  if (error) throw error;
+	$( "#hierarchy-1" ).click(async function() {
+		d3.selectAll('path').each(function() {
+			var id  = d3.select(this).attr('id');
+			d3.select(this).on("click", function(){
+				var color = d3.select(this).style('fill')
+				console.log("color in hierarchy 1 click is", color)
+				findInSecond(id);
+				d3.select(this).transition().duration(3000).style('fill', 'black').transition().duration(5000).style('fill', color)
+			})
+		});
+	});
 
-  svg.append("g")
-      .attr("class", "counties")
-    .selectAll("path")
-      .data(topojson.feature(us, us.objects.counties).features)
-    .enter().append("path")
-      .attr("class", function(d) { return quantize(rateById.get(d.id)); })
-      .attr("d", path);
+	$( "#hierarchy-2" ).click(async function() {
+		d3.selectAll('rect').each(function() {
+			var id  = d3.select(this).attr('id');
+			var afterDot = id.substr(id.lastIndexOf('.') + 1);
+			d3.select(this).on("click", function(){
+				var color = d3.select(this).attr('fill')
+				console.log("color in hierarchy 2 click is", color)
+				findInFirst(afterDot)
+				d3.select(this).transition().duration(3000).style('fill', 'black').transition().duration(5000).style('fill', color)
+			})
+		});
+	});
 
-  svg.append("path")
-      .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
-      .attr("class", "states")
-      .attr("d", path);
-}
+	// PASS IN COLORS!
+function findInFirst(idToFind) {
+	d3.selectAll('path').each(function() {
+			var id  = d3.select(this).attr('id');
+			if (id === idToFind){
+				var color = d3.select(this).style('fill')
+				console.log("color FOUND in first is", color)
+				d3.select(this).transition().duration(3000).style('fill', 'black').transition().duration(5000).style('fill', color)
+			}
+		});
+	}
 
-</script>
+	function findInSecond(idToFind) {
+		d3.selectAll('rect').each(function() {
+				var id  = d3.select(this).attr('id');
+				var idAfterDot = id.substr(id.lastIndexOf('.') + 1);
+				if (idAfterDot === idToFind){
+					console.log("changinfg")
+					var color = d3.select(this).attr('fill')
+					// NEED TO CHANGE COLOR TO ORIGINAL COLOR, PASS IN
+					d3.select(this).transition().duration(3000).style('fill', 'black').transition().duration(5000).style('fill', color)
+				}
+		});
+	}
+
+	</script>
+	
+</body>
+</html>
