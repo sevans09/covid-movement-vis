@@ -1097,7 +1097,11 @@ date,county,state,fips,cases,deaths
 2020-03-10,Passaic,New Jersey,34031,1,0
 2020-03-10,Union,New Jersey,34039,1,0
 2020-03-10,Nassau,New York,36059,19,0
+<<<<<<< HEAD
 2020-03-10,New York City,New York,36061,37,0
+=======
+2020-03-10,New York City,New York,,37,0
+>>>>>>> d2237dd001064ce0b585f65744e6453478616917
 2020-03-10,Rockland,New York,36087,6,0
 2020-03-10,Saratoga,New York,36091,2,0
 2020-03-10,Suffolk,New York,36103,1,0
