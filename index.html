@@ -3,6 +3,11 @@
 <meta charset="utf-8">
 <style>
 
+body {
+  font-family: 'Helvetica', sans-serif;
+}
+
+
 .button {
   outline:none;
   height:30px;
@@ -80,44 +85,12 @@
   stroke-linejoin: round;
 }
 
-h2 { 
-  font-family: "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
-  font-size: 2.5vw; 
-  font-style: normal; 
-  font-variant: normal; 
-  font-weight: 700; 
-  line-height: 34.4px; 
-}
-
-h3 { 
-  font-family: "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
-  font-size: 1.3vw; 
-  font-style: normal; 
-  font-variant: normal; 
-  font-weight: 400; 
-  line-height: 26.4px; 
-  text-decoration: italic;
-}
-
-h4 { 
-  font-family: "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
-  font-size: 1.83vw; 
-  font-style: italic; 
-  font-variant: normal; 
-  padding: 10px;
-  padding-left:15px;
-  font-weight: 600; 
-  line-height: 26.4px; 
-  color: #424242;
-  background-color: rgb(230, 230, 230);
-}
-
 #decoration{
   position: absolute;
   z-index: 1;
   top: 0;
   width: 32vw;
-  margin-top: 49%;
+  margin-top: 40%;
   margin-right: 5%;
   right: 0;
 }
@@ -126,13 +99,26 @@ h4 {
   position: absolute;
   z-index: 1;
   font-family: "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
-  font-size: 1.3vw; 
+  font-size: 1vw; 
   font-style: italic; 
   top: 0;
   width: 32vw;
   margin-top: -5%;
   margin-right: 0vw;
   right: 0;
+}
+
+.tooltip {
+  background: #fff;
+  width: 140px;
+  border-radius: 10px;
+  border: 1px solid #c9c9c9;
+  font-size: 0.6srem;
+  padding: 5px;
+  position: absolute;
+  text-align: center;
+  opacity: 0;
+  z-index: 1;
 }
 
 span{
@@ -142,44 +128,24 @@ span{
     display: inline-block;
 }
 span[data-color='1']{
-    background: rgb(230, 230, 230);
+    background: #5e7b92;
 }
 span[data-color='2']{
-    background: rgb(255, 183, 128);
+    background: #91c5ae;
 }
 span[data-color='3']{
-    background: rgb(255, 154, 77);
+    background: #eda686;
 }
 span[data-color='4']{
-    background: rgb(255, 125, 26);
-}
-span[data-color='5']{
-    background: rgb(255, 111, 0);
-}
-span[data-color='6']{
-    background: rgb(230, 99, 0);
-}
-span[data-color='8']{
-    background: rgb(204, 88, 0);
-}
-span[data-color='9']{
-    background: rgb(179, 77, 0);
-}
-span[data-color='10']{
-    background: rgb(128, 55, 0);
+    background: #c02c59;
 }
 
-
-.q0-9 { fill:rgb(230, 230, 230); }
+.q0-9 { fill:#5e7b92; }
 /*color in slider*/
-.q1-9 { fill:rgb(255, 183, 128); }
-.q2-9 { fill:rgb(255, 154, 77); }
-.q3-9 { fill:rgb(255, 125, 26); }
-.q4-9 { fill:rgb(255, 111, 0); }
-.q5-9 { fill:rgb(230, 99, 0); }
-.q6-9 { fill:rgb(204, 88, 0); }
-.q7-9 { fill:rgb(179, 77, 0); }
-.q8-9 { fill:rgb(128, 55, 0); }
+.q1-9 { fill:#91c5ae; }
+.q2-9 { fill:#eda686; }
+.q3-9 { fill:#c02c59; }
+/* .q4-9 { fill:#c02c59; } */
 </style>
 
 
@@ -188,19 +154,16 @@ span[data-color='10']{
     <h2></h2>
     <h3></h3>
     <div class="row">
-      <button class="button" onclick="original()">
-        DSCI
-      </button>
-      <input type="range" min="1" max="5" value="0" class="slider" id="myRange" onchange="slide()">
+      <input type="range" min="1" max="5" value="0" class="slider" id="myRange">
     </div>    
     <div id="decoration">
-        <div id=legend style="margin-right: 0%"> 
-          No Drought
+        <div id="legend" style="margin-right: 0%"> 
+          1 or less
         </div>
-        <div id=legend style="margin-right: -59%"> 
-          Exceptional Drought
+        <div id="legend" style="margin-right: -28%"> 
+          4 or more
         </div>
-        <span data-color="1"></span><span data-color="2"></span><span data-color="3"></span><span data-color="4"></span><span data-color="5"></span><span data-color="6"></span><span data-color="8"></span><span data-color="9"></span><span data-color="10"></span>
+        <span data-color="1"></span><span data-color="2"></span><span data-color="3"></span><span data-color="4"></span>
     </div>
     <h4 id="title"></h4>
   </div>
@@ -214,14 +177,17 @@ span[data-color='10']{
 
 <script src="js/d3.v4.min.js"></script>
 <script src="js/topojson.v1.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsonstat@0.13.13"></script>
+<script type = "text/javascript" src="move.json"></script>
 <script>
 
 var title = d3.select("h2")
-    .text("Drought Levels By American County");
+    .text("COVID Movement Index Tracker");
 var text = d3.select("h3")
-    .text("Slide below to view different drought levels.");
+    .text("Slide below to explore movement changes by county over time.");
 var map = d3.select("h4")
-    .text("Drought Severity and Coverage Index (DSCI) - Overall Drought Levels for an Area");
+    .text("Movement index by county (collected from phone data) ");
 
 var svg = d3.select("svg"),
     width = +svg.attr("width"),
@@ -230,8 +196,8 @@ var svg = d3.select("svg"),
 var rateById = d3.map();
 
 var quantize = d3.scaleQuantize()
-    .domain([0, 110])
-    .range(d3.range(9).map(function(i) { return "q" + i + "-9"; }));
+    .domain([0, 4])
+    .range(d3.range(4).map(function(i) { console.log("q" + i + "-9"); return "q" + i + "-9"; }));
 
 var projection = d3.geoAlbersUsa()
     .scale(1280)
@@ -240,78 +206,89 @@ var projection = d3.geoAlbersUsa()
 var path = d3.geoPath()
     .projection(projection);
 
+var all_data = [];
+var county, fips, move;
+$.each(og_data, function(key, data) {
+  var move_data = [];
+  data.forEach(function(elem) {
+    $.each(elem, function(key, data) {
+      if (key == "county")
+        county = data;
+      if (key == "fips")
+        fips = data;
+      if (key == "move_index")
+        move = data;
+    });
+    move_data.push({"fips": fips, "county": county, "move": move});
+  });
+  all_data.push(move_data);
+});
+
+
+console.log("Data");
+
 d3.queue()
     .defer(d3.json, "js/us.json")
-    .defer(d3.tsv, "tsv/drought.tsv", function(d) { rateById.set(d.FIPS, (2*d.D0 + 2*d.D1 + 3*d.D2 + 4*d.D3 + 5*d.D4)/14.); })
     .await(ready);
 
-function slide() {
+function makeMap(us) {
   var val = document.getElementById("myRange").value;
-  var x = document.getElementById("decoration");
-  x.style.display = "none";
+  move_data = all_data[val-1];
 
-  if (val == 5) {
-    document.getElementById('title').innerHTML = "D4: Counties Experiencing Exceptional Drought"; 
-    d3.queue()
-      .defer(d3.json, "js/us.json")
-      .defer(d3.tsv, "tsv/drought.tsv", function(d) { rateById.set(d.FIPS, +d.D4 / 4.1); }) 
-      .await(ready);
-  }
-  else if (val == 4) {
-    document.getElementById('title').innerHTML = "D3: Counties Experiencing At Least Extreme Drought"; 
-    d3.queue()
-      .defer(d3.json, "js/us.json")
-      .defer(d3.tsv, "tsv/drought.tsv", function(d) { rateById.set(d.FIPS, +d.D3/5 ); }) 
-      .await(ready);
-  }
-  else if (val == 3) {
-    document.getElementById('title').innerHTML = "D2: Counties Experiencing At Least Severe Drought"; 
-    d3.queue()
-      .defer(d3.json, "js/us.json")
-      .defer(d3.tsv, "tsv/drought.tsv", function(d) { rateById.set(d.FIPS, +d.D2/6); }) 
-      .await(ready);
-  }
-  else if (val == 2) {
-    document.getElementById('title').innerHTML = "D1: Counties Experiencing At Least Moderate Drought"; 
-    d3.queue()
-      .defer(d3.json, "js/us.json")
-      .defer(d3.tsv, "tsv/drought.tsv", function(d) { rateById.set(d.FIPS, +d.D1/5); }) 
-      .await(ready);
-  }
-  else if (val == 1) {
-    document.getElementById('title').innerHTML = "D0: Counties Experiencing At Least Abnormal Dryness"; 
-    d3.queue()
-      .defer(d3.json, "js/us.json")
-      .defer(d3.tsv, "tsv/drought.tsv", function(d) { rateById.set(d.FIPS, +d.D0/6); }) 
-      .await(ready);
-  }
-}
-
-function original() {
-  document.getElementById('title').innerHTML = "Drought Severity and Coverage Index (DSCI) - Overall Drought Levels for an Area"; 
-  var x = document.getElementById("decoration");
-  x.style.display = "block";
-  d3.queue()
-      .defer(d3.json, "js/us.json")
-      .defer(d3.tsv, "tsv/drought.tsv", function(d) { rateById.set(d.FIPS, (2*d.D0 + 2*d.D1 + 3*d.D2 + 4*d.D3 + 5*d.D4)/14); })
-      .await(ready);
-}
-
-function ready(error, us) {
-  if (error) throw error;
-
+  var tooltip = map.append('div').attr('class', 'tooltip');
   svg.append("g")
       .attr("class", "counties")
     .selectAll("path")
       .data(topojson.feature(us, us.objects.counties).features)
     .enter().append("path")
-      .attr("class", function(d) { return quantize(rateById.get(d.id)); })
-      .attr("d", path);
+      .attr("class", function(d) { 
+        var county = d.id;
+        $.each(move_data, function(key, data){
+          if (data.fips == county)
+            move = data.move;
+        });
+        return quantize(move);
+      })
+      .attr("d", path)
+      .on("mouseover", handleMouseover)
+      .on("mouseout", handleMouseout);
+
+  // TOOLTIP MOUSEOVER & MOUSEOUT FUNCTIONS
+
+  function handleMouseover(d) {
+    $.each(move_data, function(key, data){
+      if (data.fips == d.id) {
+        string = "County: " + data.county + "<br>" + "Move Index: " + data.move;
+      }
+    });
+    tooltip.transition()
+      .duration(200)
+      .style('opacity', 0.7);
+    tooltip.html(string)
+      .style('left', (d3.event.pageX - 70) + 'px')
+      .style('top', (d3.event.pageY - 50) + 'px');
+  }
+
+  function handleMouseout(d) {
+    tooltip.transition()
+      .duration(50)
+      .style('opacity', 0);
+  }
 
   svg.append("path")
       .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
       .attr("class", "states")
       .attr("d", path);
+}
+
+function ready(error, us) {
+  console.log("hello world");
+  if (error) throw error;
+  makeMap(us);
+  var slider = document.querySelector('input[type="range"]');
+  slider.addEventListener('change', function () {
+    makeMap(us);
+  });
 }
 
 </script>
