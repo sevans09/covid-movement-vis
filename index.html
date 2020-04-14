@@ -193,6 +193,8 @@ var svg = d3.select("svg"),
     width = +svg.attr("width"),
     height = +svg.attr("height");
 
+d3.select("svg").style("cursor", "crosshair");
+
 var rateById = d3.map();
 
 var quantize = d3.scaleQuantize()
