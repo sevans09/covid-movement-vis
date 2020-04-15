@@ -69,8 +69,10 @@ def read_avg_move():
 	return avg_index
 
 def calculate_delta(move_data, avg_index):
-	move_data = pd.merge_ordered(left=move_data, right=avg_index, on="county", how="inner")
-	move_data.drop_duplicates(subset ="county", keep = "first", inplace = True) 
+	print(move_data.shape)
+	move_data = pd.merge_ordered(left=move_data, right=avg_index, on="county", how="left")
+	print(move_data.shape)
+	#move_data.drop_duplicates(subset ="county", keep = "first", inplace = True) 
 
 	for index, row in move_data.iterrows():
 		avg  = row['avg_index']
