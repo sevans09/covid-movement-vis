@@ -290,7 +290,6 @@ function makeMap(us) {
   }
 
   function displayBar(clicked_data) {
-    // console.log('in display bar', clicked_data)
     $("#barchart").empty();
     var svg2 = d3.select("#barchart")
       .append("svg")
@@ -304,7 +303,6 @@ function makeMap(us) {
 
         filteredData = data.filter(function(row) {
           // get clicked county
-          // console.log(clicked_data.fips);
           return row['county'] == clicked_data.county;
         });
 
