@@ -1,0 +1,73 @@
+<meta charset="utf-8">
+<head>
+  <title>Force layout (x axis)</title>
+</head>
+
+<style>
+circle {
+  fill: orange;
+}
+</style>
+
+<body>
+  <div id="content">
+    <svg width="700" height="200">
+      <g transform="translate(50, 100)"></g>
+    </svg>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.2.2/d3.min.js"></script>
+
+  <script>
+var width = 600, height = 400;
+
+var colorScale = ['orange', 'lightblue', '#B19CD9'];
+var xScale = d3.scaleLinear().domain([0, 1]).range([0, 600]);
+
+var numNodes = 40;
+var nodes = d3.range(numNodes).map(function(d, i) {
+  return {
+    radius: Math.random() * 25,
+    value: Math.random()
+  }
+});
+
+var simulation = d3.forceSimulation(nodes)
+  .force('charge', d3.forceManyBody().strength(5))
+  .force('x', d3.forceX().x(function(d) {
+    return xScale(d.value);
+  }))
+  .force('y', d3.forceY().y(function(d) {
+    return 0;
+  }))
+  .force('collision', d3.forceCollide().radius(function(d) {
+    return d.radius;
+  }))
+  .on('tick', ticked);
+
+function ticked() {
+  var u = d3.select('svg g')
+    .selectAll('circle')
+    .data(nodes);
+
+  u.enter()
+    .append('circle')
+    .attr('r', function(d) {
+      return d.radius;
+    })
+    .style('fill', function(d) {
+      return d.color;
+    })
+    .merge(u)
+    .attr('cx', function(d) {
+      return d.x;
+    })
+    .attr('cy', function(d) {
+      return d.y;
+    })
+
+  u.exit().remove();
+}
+  </script>
+</body>
+</html>
