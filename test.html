@@ -284,6 +284,11 @@ var projection = d3.geoAlbersUsa()
 var path = d3.geoPath()
     .projection(projection);
 
+function toTitleCase(str) {
+    return str.replace(/\w\S*/g, function(txt){
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    });
+}
 
 d3.queue()
     .defer(d3.json, "js/us.json")
@@ -319,7 +324,7 @@ function makeMap(us) {
       tooltip.transition()
       .duration(200)
       .style('opacity', 0.7);
-      tooltip.html("County: " + county_dict.get(d.id) + "<br>" + "Move Index: " + move_dict.get(d.id)[val - 1])
+      tooltip.html("County: " + toTitleCase(county_dict.get(d.id)) + "<br>" + "Move Index: " + move_dict.get(d.id)[val - 1])
       .style('left', (d3.event.pageX - 70) + 'px')
       .style('top', (d3.event.pageY - 50) + 'px');
 
