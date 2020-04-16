@@ -26,12 +26,16 @@ d3.csv("us-counties-cases.csv", function(data) {
         return row['county'] == 'New York City';
     });
 
+    
+
   var x = d3.scaleBand()
     .range([ 0, width])
     .domain(filteredData.map(function(d) {
       return d.date; 
     }))
     .padding(0.2);
+
+
   svg.append("g")
     .attr("transform", "translate(0," + height + ")")
     .call(d3.axisBottom(x))
@@ -56,17 +60,16 @@ d3.csv("us-counties-cases.csv", function(data) {
         return x(d.date); 
         })
       .attr("width", x.bandwidth())
-<<<<<<< HEAD
       .attr("fill", "#b3b3b3")
-=======
-      .attr("fill", "#424242")
->>>>>>> d2237dd001064ce0b585f65744e6453478616917
       .attr("height", function(d) { 
         return height - y(0); 
       })
       .attr("y", function(d) { 
         return y(0); 
       })
+
+      var xy = d3.axisBottom(x).tickValues(x.domain().filter( (d,i) => !(i % 7) ));
+
 
   // Animation
   svg.selectAll("rect")
