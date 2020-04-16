@@ -1,4 +1,4 @@
-sname,sab,sid,sfips,cname,saint,cfips,fips
+﻿sname,sab,sid,sfips,cname,saint,cfips,fips
 Alabama,AL,1,1,AUTAUGA COUNTY,0,1,1001
 Alabama,AL,1,1,AUTAUGA CTY.,0,1,1001
 Alabama,AL,1,1,autauga cty.,0,1,1001
@@ -29227,7 +29227,7 @@ Maryland,MD,20,24,baltimore cnty,0,5,24005
 Maryland,MD,20,24,baltimore cy,0,5,24005
 Maryland,MD,20,24,BALTIMORE COUNTY,0,5,24005
 Maryland,MD,20,24,Baltimore County,0,5,24005
-Maryland,MD,20,24,BALTIMORE CTY.,0,5,24005
+Maryland,MD,20,24,BALTIMORE,0,5,24005
 Maryland,MD,20,24,baltimore county,0,5,24005
 Maryland,MD,20,24,BALTIMORE CNTY.,0,5,24005
 Maryland,MD,20,24,BALTIMORE CTY,0,5,24005
@@ -29520,9 +29520,9 @@ Maryland,MD,20,24,Montgomery County,0,31,24031
 Maryland,MD,20,24,montgomery,0,31,24031
 Maryland,MD,20,24,montgomery cty.,0,31,24031
 Maryland,MD,20,24,MONTGOMERY C.,0,31,24031
-Maryland,MD,20,24,prince georges cty.,0,33,24033
+Maryland,MD,20,24,prince george,0,33,24033
 Maryland,MD,20,24,PRINCE GEORGES CY.,0,33,24033
-Maryland,MD,20,24,prince georges cy,0,33,24033
+Maryland,MD,20,24,prince georges,0,33,24033
 Maryland,MD,20,24,PRINCEGEORGES C.,0,33,24033
 Maryland,MD,20,24,prince georges cnty.,0,33,24033
 Maryland,MD,20,24,Prince Georges,0,33,24033
@@ -29612,7 +29612,7 @@ Maryland,MD,20,24,STEMARYS CNTY,1,37,24037
 Maryland,MD,20,24,STE MARYS CTY,1,37,24037
 Maryland,MD,20,24,Stemarys County,1,37,24037
 Maryland,MD,20,24,ST MARYS CY,1,37,24037
-Maryland,MD,20,24,ST. MARYS COUNTY,1,37,24037
+Maryland,MD,20,24,ST MARYS,1,37,24037
 Maryland,MD,20,24,stmarys,1,37,24037
 Maryland,MD,20,24,ste.marys cnty.,1,37,24037
 Maryland,MD,20,24,ste marys cnty.,1,37,24037
@@ -29860,7 +29860,7 @@ Maryland,MD,20,24,worcester cnty.,0,47,24047
 Maryland,MD,20,24,WORCESTER,0,47,24047
 Maryland,MD,20,24,worcester cty.,0,47,24047
 Maryland,MD,20,24,worcester,0,47,24047
-Maryland,MD,20,24,baltimore city,0,510,24510
+Maryland,MD,20,24,baltimore,0,510,24510
 Maryland,MD,20,24,BALTIMORE CITY,0,510,24510
 Maryland,MD,20,24,Baltimore City,0,510,24510
 Maryland,MD,20,24,BALTIMORE,0,999999,999999
@@ -36495,7 +36495,7 @@ Mississippi,MS,24,28,SUNFLOWER COUNTY,0,133,28133
 Mississippi,MS,24,28,SUNFLOWER C.,0,133,28133
 Mississippi,MS,24,28,sunflower cty,0,133,28133
 Mississippi,MS,24,28,TALLAHATCHIE CNTY,0,135,28135
-Mississippi,MS,24,28,TALLAHATCHIE CY,0,135,28135
+Mississippi,MS,24,28,TALLAHATCHIE,0,135,28135
 Mississippi,MS,24,28,tallahatchie c.,0,135,28135
 Mississippi,MS,24,28,tallahatchie cnty,0,135,28135
 Mississippi,MS,24,28,TALAHATCHIE CTY.,0,135,28135
@@ -39277,7 +39277,7 @@ Missouri,MO,25,29,ste.clair cnty.,1,185,29185
 Missouri,MO,25,29,ste. genevieve cty.,1,186,29186
 Missouri,MO,25,29,ST.GENEVIEVE CTY.,1,186,29186
 Missouri,MO,25,29,STE. GENEVIEVE CTY.,1,186,29186
-Missouri,MO,25,29,st genevieve cty,1,186,29186
+Missouri,MO,25,29,st genevieve,1,186,29186
 Missouri,MO,25,29,ST. GENEVIEVE CTY.,1,186,29186
 Missouri,MO,25,29,ste.genevieve cy,1,186,29186
 Missouri,MO,25,29,st genevieve cy,1,186,29186
@@ -40154,9 +40154,9 @@ Missouri,MO,25,29,WRIGHT CY.,0,229,29229
 Missouri,MO,25,29,wright cty,0,229,29229
 Missouri,MO,25,29,WRIGHT COUNTY,0,229,29229
 Missouri,MO,25,29,WRIGHT CY,0,229,29229
-Missouri,MO,25,29,St Louis City,1,510,29510
-Missouri,MO,25,29,STE.LOUIS CITY,1,510,29510
-Missouri,MO,25,29,St. Louis City,1,510,29510
+Missouri,MO,25,29,St. Louis,1,510,29510
+Missouri,MO,25,29,St Louis,1,510,29510
+Missouri,MO,25,29,StLouis,1,510,29510
 Missouri,MO,25,29,STELOUIS CITY,1,510,29510
 Missouri,MO,25,29,st.louis city,1,510,29510
 Missouri,MO,25,29,st. louis city,1,510,29510
@@ -41188,7 +41188,7 @@ Montana,MT,26,30,pondera cy,0,73,30073
 Montana,MT,26,30,Pondera,0,73,30073
 Montana,MT,26,30,PONDERA CNTY.,0,73,30073
 Montana,MT,26,30,Powderriver County,0,75,30075
-Montana,MT,26,30,powder river cty,0,75,30075
+Montana,MT,26,30,powder river,0,75,30075
 Montana,MT,26,30,POWDERRIVER CNTY.,0,75,30075
 Montana,MT,26,30,powder river c.,0,75,30075
 Montana,MT,26,30,powderriver cty,0,75,30075
@@ -41727,7 +41727,7 @@ Montana,MT,26,30,yelowstone c.,0,111,30111
 Montana,MT,26,30,yellowstone cnty.,0,111,30111
 Montana,MT,26,30,YELOWSTONE CNTY.,0,111,30111
 Montana,MT,26,30,YELLOWSTONE CTY,0,111,30111
-montana,MT,26,30,yellowstone national park cnty,0,113,30113
+montana,MT,26,30,yellowstone,0,113,30113
 montana,MT,26,30,yellowstone national park cty,0,113,30113
 montana,MT,26,30,YELLOWSTONE NATIONAL PARK CY.,0,113,30113
 montana,MT,26,30,yellowstonenationalpark cnty.,0,113,30113
@@ -56021,7 +56021,7 @@ Pennsylvania,PA,38,42,BEAVER CY.,0,7,42007
 Pennsylvania,PA,38,42,BEAVER CNTY,0,7,42007
 Pennsylvania,PA,38,42,beaver cnty,0,7,42007
 Pennsylvania,PA,38,42,beaver cnty.,0,7,42007
-Pennsylvania,PA,38,42,Bedford County,0,9,42009
+Pennsylvania,PA,38,42,Bedford,0,9,42009
 Pennsylvania,PA,38,42,bedford c.,0,9,42009
 Pennsylvania,PA,38,42,BEDFORD COUNTY,0,9,42009
 Pennsylvania,PA,38,42,bedford,0,9,42009
@@ -60201,7 +60201,7 @@ South Dakota,SD,41,46,WALWORTH,0,129,46129
 South Dakota,SD,41,46,walworth cy.,0,129,46129
 South Dakota,SD,41,46,walworth cty.,0,129,46129
 South Dakota,SD,41,46,Walworth County,0,129,46129
-south dakota,SD,41,46,washabaugh cnty,0,131,46131
+south dakota,SD,41,46,washakie,0,131,46131
 south dakota,SD,41,46,washabaugh cnty.,0,131,46131
 south dakota,SD,41,46,Washabaugh,0,131,46131
 south dakota,SD,41,46,washabaugh,0,131,46131
@@ -60284,7 +60284,7 @@ Tennessee,TN,42,47,anderson c.,0,1,47001
 Tennessee,TN,42,47,bedford cnty,0,3,47003
 Tennessee,TN,42,47,bedford county,0,3,47003
 Tennessee,TN,42,47,BEDFORD CY,0,3,47003
-Tennessee,TN,42,47,BEDFORD CTY,0,3,47003
+Tennessee,TN,42,47,BEDFORD,0,3,47003
 Tennessee,TN,42,47,bedford cy,0,3,47003
 Tennessee,TN,42,47,BEDFORD CY.,0,3,47003
 Tennessee,TN,42,47,Bedford County,0,3,47003
@@ -70513,7 +70513,7 @@ Virginia,VA,46,51,BATH CY.,0,17,51017
 Virginia,VA,46,51,bath cty.,0,17,51017
 Virginia,VA,46,51,BATH COUNTY,0,17,51017
 Virginia,VA,46,51,bath cy.,0,17,51017
-Virginia,VA,46,51,BEDFORD CTY,0,19,51019
+Virginia,VA,46,51,BEDFORD,0,19,51019
 Virginia,VA,46,51,Bedford County,0,19,51019
 Virginia,VA,46,51,bedford cy,0,19,51019
 Virginia,VA,46,51,BEDFORD CNTY.,0,19,51019
@@ -70970,7 +70970,7 @@ Virginia,VA,46,51,ESSEX CNTY,0,57,51057
 Virginia,VA,46,51,ESSEX CNTY.,0,57,51057
 Virginia,VA,46,51,Essex County,0,57,51057
 Virginia,VA,46,51,essex cy,0,57,51057
-Virginia,VA,46,51,fairfax county,0,59,51059
+Virginia,VA,46,51,fairfax,0,59,51059
 Virginia,VA,46,51,fairfax cnty,0,59,51059
 Virginia,VA,46,51,FAIRFAX CTY.,0,59,51059
 Virginia,VA,46,51,FAIRFAX CTY,0,59,51059
@@ -71049,7 +71049,7 @@ Virginia,VA,46,51,FLUVANNA CTY,0,65,51065
 Virginia,VA,46,51,FLUVANNA,0,65,51065
 Virginia,VA,46,51,FRANKLIN CTY.,0,67,51067
 Virginia,VA,46,51,FRANKLIN CTY,0,67,51067
-Virginia,VA,46,51,franklin cty,0,67,51067
+Virginia,VA,46,51,franklin,0,67,51067
 Virginia,VA,46,51,franklin cnty.,0,67,51067
 Virginia,VA,46,51,franklin cy,0,67,51067
 Virginia,VA,46,51,FRANKLIN CNTY,0,67,51067
@@ -71454,7 +71454,7 @@ Virginia,VA,46,51,king & queen cty,0,97,51097
 Virginia,VA,46,51,KING AND QUEEN COUNTY,0,97,51097
 Virginia,VA,46,51,king & queen cnty,0,97,51097
 Virginia,VA,46,51,KINGGEORGE CNTY.,0,99,51099
-Virginia,VA,46,51,KING GEORGE COUNTY,0,99,51099
+Virginia,VA,46,51,KING GEORGE,0,99,51099
 Virginia,VA,46,51,KING GEORGE CY,0,99,51099
 Virginia,VA,46,51,kinggeorge cy.,0,99,51099
 Virginia,VA,46,51,king george c.,0,99,51099
@@ -72236,7 +72236,7 @@ Virginia,VA,46,51,rappahannock cty.,0,157,51157
 Virginia,VA,46,51,Rappahannock County,0,157,51157
 Virginia,VA,46,51,Rappahannock,0,157,51157
 Virginia,VA,46,51,rappahannock cty,0,157,51157
-Virginia,VA,46,51,RICHMOND CTY.,0,159,51159
+Virginia,VA,46,51,RICHMOND,0,159,51159
 Virginia,VA,46,51,richmond cnty.,0,159,51159
 Virginia,VA,46,51,richmond c.,0,159,51159
 Virginia,VA,46,51,richmond county,0,159,51159
@@ -72253,7 +72253,7 @@ Virginia,VA,46,51,richmond cty,0,159,51159
 Virginia,VA,46,51,richmond cy.,0,159,51159
 Virginia,VA,46,51,richmond cnty,0,159,51159
 Virginia,VA,46,51,richmond cy,0,159,51159
-Virginia,VA,46,51,roanoke cy,0,161,51161
+Virginia,VA,46,51,roanoke,0,161,51161
 Virginia,VA,46,51,roanoke cnty,0,161,51161
 Virginia,VA,46,51,roanoke county,0,161,51161
 Virginia,VA,46,51,ROANOKE CTY,0,161,51161
@@ -72717,7 +72717,7 @@ Virginia,VA,46,51,ALEXANDRIA CITY,0,510,51510
 Virginia,VA,46,51,alexandria city,0,510,51510
 Virginia,VA,46,51,alexandria,0,510,51510
 Virginia,VA,46,51,BEDFORD CITY,0,515,51515
-Virginia,VA,46,51,Bedford City,0,515,51515
+Virginia,VA,46,51,Bedford,0,515,51515
 Virginia,VA,46,51,bedford city,0,515,51515
 Virginia,VA,46,51,Bristol City,0,520,51520
 Virginia,VA,46,51,bristol,0,520,51520
@@ -72761,7 +72761,7 @@ Virginia,VA,46,51,Chesapeake City,0,550,51550
 Virginia,VA,46,51,chesapeake city,0,550,51550
 Virginia,VA,46,51,CHESAPEAKE CITY,0,550,51550
 Virginia,VA,46,51,CHESAPEAKE,0,550,51550
-Virginia,VA,46,51,Cliftonforge,0,560,51560
+Virginia,VA,46,51,COLONIAL HEIGHTS,0,560,51560
 Virginia,VA,46,51,cliftonforge city,0,560,51560
 Virginia,VA,46,51,Cliftonforge City,0,560,51560
 Virginia,VA,46,51,clifton forge city,0,560,51560
@@ -72809,7 +72809,7 @@ Virginia,VA,46,51,emporia,0,595,51595
 Virginia,VA,46,51,Emporia City,0,595,51595
 Virginia,VA,46,51,Emporia,0,595,51595
 Virginia,VA,46,51,EMPORIA,0,595,51595
-Virginia,VA,46,51,fairfax city,0,600,51600
+Virginia,VA,46,51,fairfax,0,600,51600
 Virginia,VA,46,51,FAIRFAX CITY,0,600,51600
 Virginia,VA,46,51,Fairfax City,0,600,51600
 Virginia,VA,46,51,FALSCHURCH CITY,0,610,51610
@@ -72836,7 +72836,7 @@ Virginia,VA,46,51,Fals Church,0,610,51610
 Virginia,VA,46,51,Falschurch City,0,610,51610
 Virginia,VA,46,51,FALLS CHURCH,0,610,51610
 Virginia,VA,46,51,Falls Church,0,610,51610
-Virginia,VA,46,51,franklin city,0,620,51620
+Virginia,VA,46,51,franklin,0,620,51620
 Virginia,VA,46,51,FRANKLIN CITY,0,620,51620
 Virginia,VA,46,51,Franklin City,0,620,51620
 Virginia,VA,46,51,Fredericksburg City,0,630,51630
@@ -72895,7 +72895,7 @@ Virginia,VA,46,51,Manassas,0,683,51683
 Virginia,VA,46,51,manassas,0,683,51683
 Virginia,VA,46,51,MANASSASPARK,0,685,51685
 Virginia,VA,46,51,manassaspark city,0,685,51685
-Virginia,VA,46,51,MANASSAS PARK,0,685,51685
+Virginia,VA,46,51,MANASSAS,0,685,51685
 Virginia,VA,46,51,manassas park city,0,685,51685
 Virginia,VA,46,51,Manassaspark,0,685,51685
 Virginia,VA,46,51,MANASSASPARK CITY,0,685,51685
@@ -72979,10 +72979,10 @@ Virginia,VA,46,51,radford cty,0,750,51750
 Virginia,VA,46,51,RADFORD COUNTY,0,750,51750
 Virginia,VA,46,51,Radford County,0,750,51750
 Virginia,VA,46,51,radford c.,0,750,51750
-Virginia,VA,46,51,RICHMOND CITY,0,760,51760
+Virginia,VA,46,51,RICHMOND,0,760,51760
 Virginia,VA,46,51,Richmond City,0,760,51760
 Virginia,VA,46,51,richmond city,0,760,51760
-Virginia,VA,46,51,Roanoke City,0,770,51770
+Virginia,VA,46,51,Roanoke,0,770,51770
 Virginia,VA,46,51,roanoke city,0,770,51770
 Virginia,VA,46,51,ROANOKE CITY,0,770,51770
 Virginia,VA,46,51,SALEM CITY,0,775,51775
@@ -72991,7 +72991,7 @@ Virginia,VA,46,51,salem,0,775,51775
 Virginia,VA,46,51,Salem City,0,775,51775
 Virginia,VA,46,51,Salem,0,775,51775
 Virginia,VA,46,51,SALEM,0,775,51775
-Virginia,VA,46,51,southboston,0,780,51780
+Virginia,VA,46,51,salem,0,780,51780
 Virginia,VA,46,51,SOUTH BOSTON,0,780,51780
 Virginia,VA,46,51,Southboston,0,780,51780
 Virginia,VA,46,51,south boston city,0,780,51780
@@ -73360,7 +73360,7 @@ Washington,WA,47,53,GRAYSHARBOR C.,0,27,53027
 Washington,WA,47,53,grays harbor cnty,0,27,53027
 Washington,WA,47,53,graysharbor cty.,0,27,53027
 Washington,WA,47,53,GRAYS HARBOR C.,0,27,53027
-Washington,WA,47,53,GRAYS HARBOR CY,0,27,53027
+Washington,WA,47,53,GRAYS HARBOR,0,27,53027
 Washington,WA,47,53,graysharbor cy,0,27,53027
 Washington,WA,47,53,GRAYSHARBOR COUNTY,0,27,53027
 Washington,WA,47,53,GRAYS HARBOR COUNTY,0,27,53027
