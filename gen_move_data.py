@@ -31,7 +31,6 @@ def read_replace_data():
 	return replace_counties
 
 def clean_data(move_data, replace_counties, index_col):
-
 		move_data[index_col] = move_data[index_col].replace(r'^\s*$',np.nan,regex=True)
 		move_data[index_col] = move_data[index_col].replace("Index",np.nan,regex=True)
 		move_data = move_data.dropna(axis=0, subset=[index_col])
