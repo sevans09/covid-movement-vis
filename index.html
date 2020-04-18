@@ -300,11 +300,10 @@ function makeMap(us) {
       .attr("transform",
             "translate(" + margin.left + "," + margin.top + ")");
 
+    console.log("about to do scaleband");
     var x = d3.scaleBand()
       .range([ 0, width])
-      .domain(function(d, i) {
-        return dates_dict.get(data.id)[i]; 
-      })
+      .domain(dates_dict.get(data.id))
       .padding(0.2);
       
     svg2.append("g")
@@ -333,8 +332,9 @@ function makeMap(us) {
         .data(dates_dict.get(data.id))
         .enter()
         .append("rect")
-          .attr("x", function(d, i) { 
-            return x(d[i]); 
+          .attr("x", function(d) { 
+            console.log(d);
+            return x(d); 
             })
           .attr("width", x.bandwidth())
           .attr("fill", "#b3b3b3")
