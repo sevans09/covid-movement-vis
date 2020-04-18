@@ -59,23 +59,11 @@ body {
   width: 0%;
 }
 .column2 {
-  padding-top: 1.8vw;
+  padding-top: 3.5vw;
   padding-left: .7vw;
   padding-right: .2vw;
   float: left;
-  width: 28%;
-}
-
-.column3 {
-  /* padding-top: 3.5vw;
-  padding-left: .7vw;
-  padding-right: .2vw; */
-  float: left;
-  width: 8%;
-}
-
-#userbox {
-  line-height: 1.2;
+  width: 26%;
 }
 
 .row:after {
@@ -176,31 +164,15 @@ span[data-color='4']{
     </div>
     <h4 id="title"></h4>
     <div class="row" >
-        <strong>Filter by</strong>&nbsp
-          <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
-              <label class="form-check-label" for="inlineRadio1">Income</label>
-            </div>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
-              <label class="form-check-label" for="inlineRadio2">Politics</label>
-            </div>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3">
-              <label class="form-check-label" for="inlineRadio3">Education</label>
-            </div>
-      </div>   
-      <div class="row" id="userbox">
-          Or &nbsp<strong>query</strong>&nbsp a county:&nbsp
-          <input class="form-control" type="text" id="queriedCounty" placeholder="Default input">
-      </div>
-    <div class="row" >
         <svg id="barchart" width="960" height="600"></svg>
-    </div>
+    </div>   
   </div>
+
   <div class="column1"  style="position: relative">
     <svg id="maps" width="960" height="600"></svg>
   </div>
+
+
 </div>
 
 <script src="js/d3.v4.min.js"></script>
@@ -302,12 +274,7 @@ function makeMap(us) {
   }
 
   function handleClick(d) {
-<<<<<<< HEAD
-    if (county_dict.get(d.id)) {
-      console.log(d)
-=======
     if (cases_dict.get(d.id)) {
->>>>>>> e4a21ce3b50cc1452616b79b2da5e6db4c633565
       console.log("found county", county_dict.get(d.id))
       displayBar(d)
     }
@@ -333,52 +300,6 @@ function makeMap(us) {
       .attr("transform",
             "translate(" + margin.left + "," + margin.top + ")");
 
-<<<<<<< HEAD
-    d3.csv("us-counties-cases.csv", function(data) {
-      // key into data for bar chart
-      filteredData = data.filter(function(row) {
-        console.log()
-        return row['fips'] == (county_dict.get(data.id));
-      });
-      console.log("filtered data", filteredData)
-      var x = d3.scaleBand()
-        .range([ 0, width])
-        .domain(filteredData.map(function(d) {
-          return d.date; 
-        }))
-        .padding(0.2);
-
-      svg2.append("g")
-        .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x))
-        .selectAll("text")
-          .attr("transform", "translate(-10,0)rotate(-45)")
-          .style("text-anchor", "end");
-
-      // Add Y axis
-      var max = d3.max(filteredData, function(d) { return d.cases; });
-      var y = d3.scaleLinear()
-        .domain([0, max * 1.2])
-        .range([ height, 0]);
-      svg2.append("g")
-        .call(d3.axisLeft(y));
-
-      // Bars
-      svg2.selectAll("mybar")
-          .data(filteredData)
-          .enter()
-          .append("rect")
-            .attr("x", function(d) { 
-              return x(d.date); 
-              })
-            .attr("width", x.bandwidth())
-            .attr("fill", "#b3b3b3")
-            .attr("height", function(d) { 
-              return height - y(0); 
-            })
-            .attr("y", function(d) { 
-              return y(0); 
-=======
     console.log("about to do scaleband");
     var x = d3.scaleBand()
       .range([ 0, width])
@@ -414,7 +335,6 @@ function makeMap(us) {
           .attr("x", function(d) { 
             console.log(d);
             return x(d); 
->>>>>>> e4a21ce3b50cc1452616b79b2da5e6db4c633565
             })
           .attr("width", x.bandwidth())
           .attr("fill", "#b3b3b3")
