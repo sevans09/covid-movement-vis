@@ -344,7 +344,7 @@ function makeMap(us) {
       $( "#barchartdiv" ).hide( "slow" );
       const upper = county_dict.get(d.id).replace(/^\w/, c => c.toUpperCase());
       upper.replace(/(^|\s)[a-z]/g,function(f){return f.toUpperCase();});
-      alert("upper is" + upper)
+      console.log("upper is", upper)
       $( "#alertdiv" ).html("No case data for " + upper + " County");
     }
   }
@@ -428,22 +428,18 @@ function displayBar(data) {
       })
 
     // Capitalize each word of the county
-    const upper = county_dict.get(data).replace(/^\w/, c => c.toUpperCase());
-    upper.replace(/(^|\s)[a-z]/g,function(f){
-      return f.toUpperCase();
-    });
+    const title = toTitleCase(county_dict.get(data))
 
     // Title
     svg2.append("text")
       .attr("x", (width / 2))             
       .attr("text-anchor", "middle")  
       .style("font-size", "16px") 
-      .text(upper);
+      .text(title);
   }
 
 function handleQuery() {
   var query = $("#queriedCounty").val();
-  console.log(query);
   var fips_q = names_dict[query.toLowerCase()];
   console.log(fips_q);
   if (cases_dict.get(fips_q)) {
@@ -452,9 +448,10 @@ function handleQuery() {
   else {
     $( "#barchartdiv" ).hide( "slow" );
       // Capitalize each word of the county
-      const upper = county_dict.get(d.id).replace(/^\w/, c => c.toUpperCase());
-      upper.replace(/(^|\s)[a-z]/g,function(f){return f.toUpperCase();});
-      alert("line 456 upper should be all upper", upper);
+      if (typeof(county_dict.get(query)) == "undefined") {
+        $( "#alertdiv" ).html("County does not exist");
+      }
+      const upper = toTitleCase(county_dict.get(query))
       $( "#alertdiv" ).html("No case data for " + upper);
   }
 
