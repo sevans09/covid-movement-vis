@@ -263,7 +263,7 @@ var tip = d3.tip()
                return "County: " + toTitleCase(county_dict.get(d.id)) + 
                       "<br>" + "Move Index: " + move_dict.get(d.id)[val-1]
            } else {
-               return d.properties.name + ": No data.";
+               county_dict.get(d.id) + ": No data.";
            }
       })
 
@@ -301,28 +301,6 @@ function makeMap(us) {
       .on("mouseover", tip.show)
       .on("mouseout", tip.hide)
       .on("click", handleClick);
-
-  // TOOLTIP MOUSEOVER & MOUSEOUT FUNCTIONS
-
-
-  // function handleMouseover(d) {
-  //   if (county_dict.get(d.id)) {
-  //     console.log("in mouse over")
-  //     tooltip.transition()
-  //     .duration(200)
-  //     .style('opacity', 0.7);
-  //     tooltip.html("County: " + toTitleCase(county_dict.get(d.id)) + "<br>" + "Move Index: " + move_dict.get(d.id)[val - 1])
-  //     .style('left', (d3.event.pageX - 70) + 'px')
-  //     .style('top', (d3.event.pageY - 50) + 'px');
-
-  //   }
-  // }
-
-  // function handleMouseout(d) {
-  //   tooltip.transition()
-  //     .duration(50)
-  //     .style('opacity', 0);
-  // }
 
   function handleClick(d) {
     console.log('d is', d)
