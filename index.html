@@ -180,7 +180,7 @@ span[data-color='4']{
       </div>   
       <div class="row" id="userbox">
           Or &nbsp<strong>query</strong>&nbsp a county:&nbsp
-          <input class="form-control" type="text" id="queriedCounty" placeholder="e.g. 'New York City'"> 
+          <input class="form-control" type="text" id="queriedCounty" placeholder="e.g. 'New York City'"/> 
           <button onClick=handleQuery()>Click</button>
       </div>
     <div class="row" >
@@ -254,24 +254,21 @@ function makeMap(us) {
   var num_error_counties = 0;
   var tooltip = map.append('div').attr('class', 'tooltip');
   svg.append("g")
-      .attr("class", "counties")
+    .attr("class", "counties")
     .selectAll("path")
-      .data(topojson.feature(us, us.objects.counties).features)
+    .data(topojson.feature(us, us.objects.counties).features)
     .enter().append("path")
-      .attr("class", function(d) { 
-        if (move_dict.get(d.id)) {
-          return quantize(move_dict.get(d.id)[val-1])
+    .attr("class", function(d) { 
+      if (move_dict.get(d.id)) {
+        return quantize(move_dict.get(d.id)[val-1])
       } else {
-          num_error_counties += 1;
-          console.log(d.id);
-          return;
+        num_error_counties += 1;
+        return;
       }; })
       .attr("d", path)
       .on("mouseover", handleMouseover)
       .on("mouseout", handleMouseout)
       .on("click", handleClick);
-
-  console.log(num_error_counties);
 
   // TOOLTIP MOUSEOVER & MOUSEOUT FUNCTIONS
 
@@ -374,6 +371,14 @@ function makeMap(us) {
       .delay(function(d,i){
           return(i*50)
       })
+
+    const upper = county_dict.get(data.id).replace(/^\w/, c => c.toUpperCase());
+    // Title
+    svg2.append("text")
+      .attr("x", (width / 2))             
+      .attr("text-anchor", "middle")  
+      .style("font-size", "16px") 
+      .text(upper);
       
   }
 
@@ -383,6 +388,10 @@ function makeMap(us) {
       .attr("d", path);
 }
 
+function handleQuery() {
+  var query = $("#queriedCounty").val();
+  console.log(query)
+}
 
 $('#inlineRadio1').change(function() {
   console.log("income selected");
