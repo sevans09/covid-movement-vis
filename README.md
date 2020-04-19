@@ -1,4 +1,4 @@
-# COVID-19 Movement & cases tracker with demographic data
+# COVID-19 movement & cases tracker with demographic data
 
 ### Data Visualization Final Project
 #### Sammy Stolzenbach, Sejal Dua, and Sook-Hee Evans
