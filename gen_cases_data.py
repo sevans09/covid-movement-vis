@@ -19,13 +19,17 @@ cases_data = [{"dates": ["2020-01-21", "2020-01-22", ...],
 			  "deaths": [0, 0, 0, 1]},{""},...,{}]
 
 '''
-
 def gen_data():
 
-	with open("us-counties-cases.json", "r") as infile:
+	with open("old-us-counties-cases.json", "r") as infile:
 		data = json.load(infile)
 
 	cases_data = []
+
+	for county in data:
+		if isinstance(county['fips'], str):
+			if not county['fips'] == '':
+				county['fips'] = int(county['fips'].strip())
 
 	#group data by fips
 	grouped = defaultdict(list)
@@ -55,7 +59,7 @@ def gen_data():
 
 		cases_data.append(cases_by_county)
 	
-	with open("county-cases.json", "w") as outfile: 
+	with open("us-county-cases.json", "w") as outfile: 
 	   	json.dump(cases_data, outfile) 
 
 

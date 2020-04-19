@@ -326,6 +326,7 @@ function makeMap(us) {
 
   function handleClick(d) {
     console.log('d is', d)
+    console.log(cases_dict.get(d.id))
     if (cases_dict.get(d.id)) {
       displayBar(d);
     }
