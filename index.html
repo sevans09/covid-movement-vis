@@ -330,14 +330,11 @@ function makeMap(us) {
   // }
 
   function handleClick(d) {
-    console.log('d is', d)
-    console.log(cases_dict.get(d.id))
     if (cases_dict.get(d.id)) {
       $( "#barchartdiv" ).show();
       displayBar(d.id);
     }
     else {
-      console.log(" no data for ", county_dict.get(d.id))
       $( "#barchartdiv" ).hide( "slow" );
       const upper = county_dict.get(d.id).replace(/^\w/, c => c.toUpperCase());
       $( "#alertdiv" ).html("No case data for " + upper);
@@ -440,15 +437,9 @@ function handleQuery() {
     displayBar(fips_q);
   }
   else {
-    // $("#barchart").empty();
-    // $("#barchart").hide();
-    // console.log("HERE")
-    // $( "#barchartdiv" ).hide( "slow", function() {
-    //   console.log( "Animation complete." );
-    // });
-    // displayBar("");
-    // document.getElementById("#barchart").innerHTML("Hello")
-    console.log("no case data for county:", query);
+    $( "#barchartdiv" ).hide( "slow" );
+      const upper = county_dict.get(d.id).replace(/^\w/, c => c.toUpperCase());
+      $( "#alertdiv" ).html("No case data for " + upper);
   }
 
 }
