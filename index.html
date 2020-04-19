@@ -173,7 +173,7 @@ span[data-color='4']{
     <h2></h2>
     <h3></h3>
     <div class="row">
-      <input type="range" min="1" max="5" value="0" class="slider" id="myRange">
+      <input type="range" min="1" max="7" value="0" class="slider" id="myRange">
     </div>    
     <div id="decoration">
         <div id="legend" style="margin-right: 0%"> 
@@ -222,7 +222,7 @@ span[data-color='4']{
 <script src="js/topojson.v1.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="js/d3-tip.js"></script>
-<script type = "text/javascript" src="move.json"></script>
+<script type = "text/javascript" src="move_index.json"></script>
 <script type = "text/javascript" src="us-county-cases.json"></script>
 <script>
 
@@ -306,6 +306,7 @@ function makeMap(us) {
       if (move_dict.get(d.id)) {
         return quantize(move_dict.get(d.id)[val-1])
       } else {
+        console.log(d)
         num_error_counties += 1;
         return;
       }; })
