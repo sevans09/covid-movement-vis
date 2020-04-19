@@ -385,15 +385,30 @@ function makeMap(us) {
 
 
 $('#inlineRadio1').change(function() {
-  alert("Income selected");
+  console.log("income selected");
+  window.scrollTo({
+    top: 500,
+    left: 0,
+    behavior: 'smooth'
+  });
 })
 
 $('#inlineRadio2').change(function() {
-  alert("Politics selected");
+  console.log("politics selected");
+  window.scrollTo({
+    top: 500,
+    left: 0,
+    behavior: 'smooth'
+  });
 })
 
 $('#inlineRadio3').change(function() {
-  alert("Education selected");
+  console.log("education selected");
+  window.scrollTo({
+    top: 500,
+    left: 0,
+    behavior: 'smooth'
+  });
 })
 
 function ready(error, us) {
