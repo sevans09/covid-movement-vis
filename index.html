@@ -93,6 +93,10 @@ body {
   right: 0;
 }
 
+#alertdiv {
+  padding-top: -50%;
+}
+
 #legend{
   position: absolute;
   z-index: 1;
@@ -195,9 +199,10 @@ span[data-color='4']{
           <input class="form-control" type="text" id="queriedCounty" placeholder="e.g. 'New York City'"/> 
           <button onClick=handleQuery()>Click</button>
       </div>
-    <div class="row" >
+    <div class="row" id="barchartdiv">
         <svg style="z-index: 1" id ="barchart" width="960" height="600"></svg>
     </div>   
+    <div id="alertdiv"></div>
   </div>
 
   <div class="column1"  style="position: relative">
@@ -328,10 +333,14 @@ function makeMap(us) {
     console.log('d is', d)
     console.log(cases_dict.get(d.id))
     if (cases_dict.get(d.id)) {
+      $( "#barchartdiv" ).show();
       displayBar(d.id);
     }
     else {
-      console.log("no case data for county:", county_dict.get(d.id));
+      console.log(" no data for ", county_dict.get(d.id))
+      $( "#barchartdiv" ).hide( "slow" );
+      const upper = county_dict.get(d.id).replace(/^\w/, c => c.toUpperCase());
+      $( "#alertdiv" ).html("No case data for " + upper);
     }
   }
 
@@ -420,7 +429,6 @@ function displayBar(data) {
       .attr("text-anchor", "middle")  
       .style("font-size", "16px") 
       .text(upper);
-      
   }
 
 function handleQuery() {
@@ -432,6 +440,14 @@ function handleQuery() {
     displayBar(fips_q);
   }
   else {
+    // $("#barchart").empty();
+    // $("#barchart").hide();
+    // console.log("HERE")
+    // $( "#barchartdiv" ).hide( "slow", function() {
+    //   console.log( "Animation complete." );
+    // });
+    // displayBar("");
+    // document.getElementById("#barchart").innerHTML("Hello")
     console.log("no case data for county:", query);
   }
 
