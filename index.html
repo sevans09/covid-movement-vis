@@ -94,7 +94,13 @@ body {
 }
 
 #alertdiv {
-  padding-top: -50%;
+  margin-top:10%;
+  /* padding-top: 10%; */
+  padding: 10% 25% 10% 25%;
+  text-align: center;
+  font-size: 1.2vw;
+  font-weight: 700;
+  background-color: #4242;
 }
 
 #legend{
@@ -337,7 +343,9 @@ function makeMap(us) {
     else {
       $( "#barchartdiv" ).hide( "slow" );
       const upper = county_dict.get(d.id).replace(/^\w/, c => c.toUpperCase());
-      $( "#alertdiv" ).html("No case data for " + upper);
+      upper.replace(/(^|\s)[a-z]/g,function(f){return f.toUpperCase();});
+      alert("upper is" + upper)
+      $( "#alertdiv" ).html("No case data for " + upper + " County");
     }
   }
 
@@ -419,7 +427,12 @@ function displayBar(data) {
           return(i*50)
       })
 
+    // Capitalize each word of the county
     const upper = county_dict.get(data).replace(/^\w/, c => c.toUpperCase());
+    upper.replace(/(^|\s)[a-z]/g,function(f){
+      return f.toUpperCase();
+    });
+
     // Title
     svg2.append("text")
       .attr("x", (width / 2))             
@@ -438,7 +451,10 @@ function handleQuery() {
   }
   else {
     $( "#barchartdiv" ).hide( "slow" );
+      // Capitalize each word of the county
       const upper = county_dict.get(d.id).replace(/^\w/, c => c.toUpperCase());
+      upper.replace(/(^|\s)[a-z]/g,function(f){return f.toUpperCase();});
+      alert("line 456 upper should be all upper", upper);
       $( "#alertdiv" ).html("No case data for " + upper);
   }
 
