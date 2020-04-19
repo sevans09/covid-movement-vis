@@ -61,7 +61,6 @@ body {
 .column2 {
   padding-top: 3.5vw;
   padding-left: .7vw;
-  padding-right: .2vw;
   float: left;
   width: 26%;
 }
@@ -177,7 +176,27 @@ span[data-color='4']{
     </div>
     <h4 id="title"></h4>
     <div class="row" >
-        <svg id="barchart" width="960" height="600"></svg>
+        <strong>Filter by</strong>&nbsp
+          <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+              <label class="form-check-label" for="inlineRadio1">Income</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
+              <label class="form-check-label" for="inlineRadio2">Politics</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3">
+              <label class="form-check-label" for="inlineRadio3">Education</label>
+            </div>
+      </div>   
+      <div class="row" id="userbox">
+          Or &nbsp<strong>query</strong>&nbsp a county:&nbsp
+          <input class="form-control" type="text" id="queriedCounty" placeholder="e.g. 'New York City'"/> 
+          <button onClick=handleQuery()>Click</button>
+      </div>
+    <div class="row" >
+        <svg style="z-index: 1" id ="barchart" width="960" height="600"></svg>
     </div>   
   </div>
 
@@ -223,7 +242,7 @@ cases_data.forEach( function(d){ cases_dict.set( d.fips, d.cases); dates_dict.se
 
 var quantize = d3.scaleQuantize()
     .domain([0, 4])
-    .range(d3.range(4).map(function(i) { console.log("q" + i + "-9"); return "q" + i + "-9"; }));
+    .range(d3.range(4).map(function(i) { return "q" + i + "-9"; }));
 
 var projection = d3.geoAlbersUsa()
     .scale(1280)
@@ -267,24 +286,21 @@ function makeMap(us) {
   //var tooltip = map.append('div').attr('class', 'tooltip');
 
   svg.append("g")
-      .attr("class", "counties")
+    .attr("class", "counties")
     .selectAll("path")
-      .data(topojson.feature(us, us.objects.counties).features)
+    .data(topojson.feature(us, us.objects.counties).features)
     .enter().append("path")
-      .attr("class", function(d) { 
-        if (move_dict.get(d.id)) {
-          return quantize(move_dict.get(d.id)[val-1])
+    .attr("class", function(d) { 
+      if (move_dict.get(d.id)) {
+        return quantize(move_dict.get(d.id)[val-1])
       } else {
-          num_error_counties += 1;
-          console.log(d.id);
-          return;
+        num_error_counties += 1;
+        return;
       }; })
       .attr("d", path)
       .on("mouseover", tip.show)
       .on("mouseout", tip.hide)
       .on("click", handleClick);
-
-  console.log(num_error_counties);
 
   // TOOLTIP MOUSEOVER & MOUSEOUT FUNCTIONS
 
@@ -309,9 +325,9 @@ function makeMap(us) {
   // }
 
   function handleClick(d) {
+    console.log('d is', d)
     if (cases_dict.get(d.id)) {
-      console.log("found county", county_dict.get(d.id))
-      displayBar(d)
+      displayBar(d);
     }
     else {
       console.log("no case data for county:", county_dict.get(d.id));
@@ -319,11 +335,9 @@ function makeMap(us) {
   }
 
   function displayBar(data) {
-    console.log("in dipslaywgefsdBar", data)
-    console.log("hello",county_dict.get(data.id))
     $("#barchart").empty();
     var margin = {top: 70, right: 30, bottom: 90, left: 40},
-    width = screen.width/4,
+    width = screen.width/5,
     height = screen.height/4;
 
     // Bar chart SVG
@@ -335,7 +349,6 @@ function makeMap(us) {
       .attr("transform",
             "translate(" + margin.left + "," + margin.top + ")");
 
-    console.log("about to do scaleband");
     var x = d3.scaleBand()
       .range([ 0, width])
       .domain(dates_dict.get(data.id))
@@ -346,7 +359,8 @@ function makeMap(us) {
       .call(d3.axisBottom(x))
       .selectAll("text")
         .attr("transform", "translate(-10,0)rotate(-45)")
-        .style("text-anchor", "end");
+        .style("text-anchor", "end")
+        .style("font-size", "10px");
 
     // Add Y axis
     var cases = cases_dict.get(data.id);
@@ -355,7 +369,6 @@ function makeMap(us) {
       if (cases[i] > max)
         max = cases[i];
     }
-    console.log(max);
     var y = d3.scaleLinear()
       .domain([0, max * 1.2])
       .range([ height, 0]);
@@ -368,7 +381,6 @@ function makeMap(us) {
         .enter()
         .append("rect")
           .attr("x", function(d) { 
-            console.log(d);
             return x(d); 
             })
           .attr("width", x.bandwidth())
@@ -385,7 +397,6 @@ function makeMap(us) {
       .transition()
       .duration(200)
       .attr("y", function(d, i) { 
-        console.log(cases_dict.get(data.id)[i]);
         return y(cases_dict.get(data.id)[i]); 
       })
       .attr("height", function(d, i) { 
@@ -394,6 +405,14 @@ function makeMap(us) {
       .delay(function(d,i){
           return(i*50)
       })
+
+    const upper = county_dict.get(data.id).replace(/^\w/, c => c.toUpperCase());
+    // Title
+    svg2.append("text")
+      .attr("x", (width / 2))             
+      .attr("text-anchor", "middle")  
+      .style("font-size", "16px") 
+      .text(upper);
       
   }
 
@@ -403,8 +422,39 @@ function makeMap(us) {
       .attr("d", path);
 }
 
+function handleQuery() {
+  var query = $("#queriedCounty").val();
+  console.log(query)
+}
+
+$('#inlineRadio1').change(function() {
+  console.log("income selected");
+  window.scrollTo({
+    top: 500,
+    left: 0,
+    behavior: 'smooth'
+  });
+})
+
+$('#inlineRadio2').change(function() {
+  console.log("politics selected");
+  window.scrollTo({
+    top: 500,
+    left: 0,
+    behavior: 'smooth'
+  });
+})
+
+$('#inlineRadio3').change(function() {
+  console.log("education selected");
+  window.scrollTo({
+    top: 500,
+    left: 0,
+    behavior: 'smooth'
+  });
+})
+
 function ready(error, us) {
-  console.log("hello world");
   if (error) throw error;
   makeMap(us);
   var slider = document.querySelector('input[type="range"]');
