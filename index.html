@@ -251,7 +251,8 @@ og_data.forEach( function(d){ names_dict[d.county] = d.fips});
 
 var cases_dict = d3.map();
 var dates_dict = d3.map();
-cases_data.forEach( function(d){ cases_dict.set( d.fips, d.cases); dates_dict.set(d.fips, d.dates); });
+var deaths_dict = d3.map();
+cases_data.forEach( function(d){ cases_dict.set( d.fips, d.cases); deaths_dict.set(d.fips, d.deaths); dates_dict.set(d.fips, d.dates); });
 
 var quantize = d3.scaleQuantize()
     .domain([0, 4])
@@ -378,6 +379,7 @@ function displayBar(data) {
         .data(dates_dict.get(data))
         .enter()
         .append("rect")
+          .attr("class", "cases")
           .attr("x", function(d) { 
             return x(d); 
             })
@@ -389,9 +391,25 @@ function displayBar(data) {
           .attr("y", function(d) { 
             return y(0); 
           })
+      
+    svg2.selectAll("mybar")
+        .data(dates_dict.get(data))
+        .enter()
+        .append("rect")
+          .attr("class", "deaths")
+          .attr("x", function(d) { 
+            return x(d); 
+            })
+          .attr("width", x.bandwidth())
+          .attr("height", function(d) { 
+            return height - y(0); 
+          })
+          .attr("y", function(d) { 
+            return y(0); 
+          })
 
     // Animation
-    svg2.selectAll("rect")
+    svg2.selectAll(".cases")
       .transition()
       .duration(200)
       .attr("y", function(d, i) { 
@@ -399,6 +417,21 @@ function displayBar(data) {
       })
       .attr("height", function(d, i) { 
         return height - y(cases_dict.get(data)[i]); 
+      })
+      .delay(function(d,i){
+          return(i*50)
+      })
+      
+
+    svg2.selectAll(".deaths")
+      .transition()
+      .duration(200)
+      .attr("fill", "#c02c59")
+      .attr("y", function(d, i) { 
+        return y(deaths_dict.get(data)[i]); 
+      })
+      .attr("height", function(d, i) { 
+        return height - y(deaths_dict.get(data)[i]); 
       })
       .delay(function(d,i){
           return(i*50)
