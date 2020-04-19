@@ -120,6 +120,19 @@ body {
   z-index: 1;
 }
 
+.d3-tip {
+  background: #fff;
+  width: 140px;
+  border-radius: 10px;
+  border: 1px solid #c9c9c9;
+  font-size: 0.6srem;
+  padding: 5px;
+  position: absolute;
+  text-align: center;
+  opacity: 0;
+  z-index: 1;
+}
+
 span{
     height: 1.3vw;
     width: calc(100% / 10);
@@ -178,6 +191,7 @@ span[data-color='4']{
 <script src="js/d3.v4.min.js"></script>
 <script src="js/topojson.v1.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="js/d3-tip.js"></script>
 <script type = "text/javascript" src="move.json"></script>
 <script type = "text/javascript" src="us-county-cases.json"></script>
 <script>
@@ -188,7 +202,6 @@ var text = d3.select("h3")
     .text("Slide below to explore movement changes by county over time.");
 var map = d3.select("h4")
     .text("Movement index by county (collected from phone data) ");
-
 
 
 // Map SVG
@@ -219,11 +232,30 @@ var projection = d3.geoAlbersUsa()
 var path = d3.geoPath()
     .projection(projection);
 
+var tip = d3.tip()
+      .attr('class', 'd3-tip')
+      .offset([-5, 0])
+      .html(function(d) {
+        var dataRow = county_dict.get(d.id)
+           if (dataRow) {
+               console.log(dataRow);
+               var val = document.getElementById("myRange").value;
+               return "County: " + toTitleCase(county_dict.get(d.id)) + 
+                      "<br>" + "Move Index: " + move_dict.get(d.id)[val-1]
+           } else {
+               console.log("no dataRow", d);
+               return d.properties.name + ": No data.";
+           }
+      })
+
+svg.call(tip)
+
 function toTitleCase(str) {
     return str.replace(/\w\S*/g, function(txt){
         return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
     });
 }
+
 
 d3.queue()
     .defer(d3.json, "js/us.json")
@@ -232,7 +264,8 @@ d3.queue()
 function makeMap(us) {
   var val = document.getElementById("myRange").value;
   var num_error_counties = 0;
-  var tooltip = map.append('div').attr('class', 'tooltip');
+  //var tooltip = map.append('div').attr('class', 'tooltip');
+
   svg.append("g")
       .attr("class", "counties")
     .selectAll("path")
@@ -247,31 +280,33 @@ function makeMap(us) {
           return;
       }; })
       .attr("d", path)
-      .on("mouseover", handleMouseover)
-      .on("mouseout", handleMouseout)
+      .on("mouseover", tip.show)
+      .on("mouseout", tip.hide)
       .on("click", handleClick);
 
   console.log(num_error_counties);
 
   // TOOLTIP MOUSEOVER & MOUSEOUT FUNCTIONS
 
-  function handleMouseover(d) {
-    if (county_dict.get(d.id)) {
-      tooltip.transition()
-      .duration(200)
-      .style('opacity', 0.7);
-      tooltip.html("County: " + toTitleCase(county_dict.get(d.id)) + "<br>" + "Move Index: " + move_dict.get(d.id)[val - 1])
-      .style('left', (d3.event.pageX - 70) + 'px')
-      .style('top', (d3.event.pageY - 50) + 'px');
 
-    }
-  }
+  // function handleMouseover(d) {
+  //   if (county_dict.get(d.id)) {
+  //     console.log("in mouse over")
+  //     tooltip.transition()
+  //     .duration(200)
+  //     .style('opacity', 0.7);
+  //     tooltip.html("County: " + toTitleCase(county_dict.get(d.id)) + "<br>" + "Move Index: " + move_dict.get(d.id)[val - 1])
+  //     .style('left', (d3.event.pageX - 70) + 'px')
+  //     .style('top', (d3.event.pageY - 50) + 'px');
 
-  function handleMouseout(d) {
-    tooltip.transition()
-      .duration(50)
-      .style('opacity', 0);
-  }
+  //   }
+  // }
+
+  // function handleMouseout(d) {
+  //   tooltip.transition()
+  //     .duration(50)
+  //     .style('opacity', 0);
+  // }
 
   function handleClick(d) {
     if (cases_dict.get(d.id)) {
