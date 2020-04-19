@@ -93,6 +93,16 @@ body {
   right: 0;
 }
 
+#alertdiv {
+  margin-top:10%;
+  /* padding-top: 10%; */
+  padding: 10% 25% 10% 25%;
+  text-align: center;
+  font-size: 1.2vw;
+  font-weight: 700;
+  background-color: #4242;
+}
+
 #legend{
   position: absolute;
   z-index: 1;
@@ -195,9 +205,10 @@ span[data-color='4']{
           <input class="form-control" type="text" id="queriedCounty" placeholder="e.g. 'New York City'"/> 
           <button onClick=handleQuery()>Click</button>
       </div>
-    <div class="row" >
+    <div class="row" id="barchartdiv">
         <svg style="z-index: 1" id ="barchart" width="960" height="600"></svg>
     </div>   
+    <div id="alertdiv"></div>
   </div>
 
   <div class="column1"  style="position: relative">
@@ -303,13 +314,15 @@ function makeMap(us) {
       .on("click", handleClick);
 
   function handleClick(d) {
-    console.log('d is', d)
-    console.log(cases_dict.get(d.id))
     if (cases_dict.get(d.id)) {
+      $( "#barchartdiv" ).show();
       displayBar(d.id);
     }
     else {
-      console.log("no case data for county:", county_dict.get(d.id));
+      $( "#barchartdiv" ).hide( "slow" );
+      const upper = county_dict.get(d.id).replace(/^\w/, c => c.toUpperCase());
+      upper.replace(/(^|\s)[a-z]/g,function(f){return f.toUpperCase();});
+      $( "#alertdiv" ).html("No case data for " + upper + " County");
     }
   }
 
@@ -391,26 +404,31 @@ function displayBar(data) {
           return(i*50)
       })
 
-    const upper = county_dict.get(data).replace(/^\w/, c => c.toUpperCase());
+    // Capitalize each word of the county
+    const title = toTitleCase(county_dict.get(data))
+
     // Title
     svg2.append("text")
       .attr("x", (width / 2))             
       .attr("text-anchor", "middle")  
       .style("font-size", "16px") 
-      .text(upper);
-      
+      .text(title);
   }
 
 function handleQuery() {
   var query = $("#queriedCounty").val();
-  console.log(query);
   var fips_q = names_dict[query.toLowerCase()];
-  console.log(fips_q);
   if (cases_dict.get(fips_q)) {
     displayBar(fips_q);
   }
   else {
-    console.log("no case data for county:", query);
+    $( "#barchartdiv" ).hide( "slow" );
+      // Capitalize each word of the county
+      if (typeof(county_dict.get(query)) == "undefined") {
+        $( "#alertdiv" ).html("County does not exist");
+      }
+      const upper = toTitleCase(county_dict.get(query))
+      $( "#alertdiv" ).html("No case data for " + upper);
   }
 
 }
