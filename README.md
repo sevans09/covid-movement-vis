@@ -1,6 +1,6 @@
 # covid-movement-vis
 
-File Updates:
+File Updates:  
 move.json - most up to date version of the data  
 old.json - original json data (must use forEach to index into dictionary-like object)  
 old.html - old code  
