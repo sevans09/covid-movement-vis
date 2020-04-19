@@ -1,4 +1,8 @@
-# covid-movement-vis
+# COVID-19 movement & cases tracker with demographic data
+
+### Data Visualization Final Project
+#### Sammy Stolzenbach, Sejal Dua, and Sook-Hee Evans
+
 
 File Updates:  
 move.json - most up to date version of the data  
