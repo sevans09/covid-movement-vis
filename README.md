@@ -3,6 +3,8 @@
 ### Data Visualization Final Project
 #### Sammy Stolzenbach, Sejal Dua, and Sook-Hee Evans
 
+Visit site at https://bit.ly/covidmovementmap
+
 
 File Updates:  
 move.json - most up to date version of the data  
