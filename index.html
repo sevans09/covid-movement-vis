@@ -329,8 +329,7 @@ function makeMap(us) {
     }
     else {
       $( "#barchartdiv" ).hide( "slow" );
-      const upper = county_dict.get(d.id).replace(/^\w/, c => c.toUpperCase());
-      upper.replace(/(^|\s)[a-z]/g,function(f){return f.toUpperCase();});
+      upper = toTitleCase(county_dict.get(d.id));
       $( "#alertdiv" ).html("No case data for " + upper + " County");
     }
   }
@@ -373,7 +372,7 @@ function displayBar(data) {
       
     svg2.append("g")
       .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x))
+      .call(d3.axisBottom(x).tickValues(x.domain().filter( (d,i) => !(i % 7) )))
       .selectAll("text")
         .attr("transform", "translate(-10,0)rotate(-45)")
         .style("text-anchor", "end")
