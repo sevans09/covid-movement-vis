@@ -344,6 +344,16 @@ function displayBar(data) {
     width = screen.width/5,
     height = screen.height/4;
 
+    var bartip = d3.tip()
+      .attr('class', 'd3-tip')
+      .offset([-5, 0])
+      .html(function(d, i) {
+        return "Date: " + dates_dict.get(data)[i] + "<br>Cases: " + cases_dict.get(data)[i] + "<br>Deaths: " + deaths_dict.get(data)[i];
+
+      })
+
+    svg.call(bartip)
+
     // Bar chart SVG
     var svg2 = d3.select("#barchart")
       .append("svg")
@@ -396,6 +406,8 @@ function displayBar(data) {
           .attr("y", function(d) { 
             return y(0); 
           })
+          .on("mouseover", bartip.show)
+          .on("mouseout", bartip.hide)
       
     svg2.selectAll("mybar")
         .data(dates_dict.get(data))
