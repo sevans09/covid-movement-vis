@@ -249,9 +249,13 @@ var move_dict = d3.map();
 og_data.forEach( function(d){ move_dict.set( d.fips, d.move_index) });
 
 var county_dict = d3.map();
-og_data.forEach( function(d){ county_dict.set( d.fips, d.county) });
+var states_dict = d3.map();
 var names_dict = {};
-og_data.forEach( function(d){ names_dict[d.county] = d.fips});
+og_data.forEach( function(d){ 
+  county_dict.set( d.fips, d.county);
+  names_dict[d.county] = d.fips;
+  states_dict.set(d.fips, d.state);
+});
 
 var cases_dict = d3.map();
 var dates_dict = d3.map();
@@ -277,7 +281,7 @@ var tip = d3.tip()
            if (dataRow) {
                var val = document.getElementById("myRange").value;
                return "County: " + toTitleCase(county_dict.get(d.id)) + 
-                      "<br>" + "Move Index: " + move_dict.get(d.id)[val-1]
+                      "<br>State: " + states_dict.get(d.id) + "<br>Move Index: " + move_dict.get(d.id)[val-1]
            } else {
                county_dict.get(d.id) + ": No data.";
            }
