@@ -205,8 +205,8 @@ span[data-color='5']{
       </div>   
       <div class="row" id="userbox">
           Or &nbsp<strong>query</strong>&nbsp a county:&nbsp
-          <input class="form-control" type="text" id="queriedCounty" placeholder="e.g. 'New York City'"/> 
-          <button onClick=handleQuery()>Click</button>
+          <input class="form-control" type="text" id="queriedCounty" placeholder="e.g. 'Miami'"/> 
+          <button onClick=handleQuery()>Go!</button>
       </div>
     <div class="row" id="barchartdiv">
         <svg style="z-index: 1" id ="barchart" width="960" height="600"></svg>
@@ -324,11 +324,13 @@ function makeMap(us) {
 
   function handleClick(d) {
     if (cases_dict.get(d.id)) {
+      $( "#alertdiv" ).hide();
       $( "#barchartdiv" ).show();
       displayBar(d.id);
     }
     else {
       $( "#barchartdiv" ).hide( "slow" );
+      $( "#alertdiv" ).show();
       upper = toTitleCase(county_dict.get(d.id));
       $( "#alertdiv" ).html("No case data for " + upper + " County");
     }
@@ -471,15 +473,19 @@ function handleQuery() {
   var query = $("#queriedCounty").val();
   var fips_q = names_dict[query.toLowerCase()];
   if (cases_dict.get(fips_q)) {
+    $( "#alertdiv" ).hide();
+    $( "#barchartdiv" ).show();
     displayBar(fips_q);
   }
   else {
     $( "#barchartdiv" ).hide( "slow" );
       // Capitalize each word of the county
       if (typeof(county_dict.get(query)) == "undefined") {
+        $( "#alertdiv" ).show();
         $( "#alertdiv" ).html("County does not exist");
       }
       const upper = toTitleCase(county_dict.get(query))
+      $( "#alertdiv" ).show();
       $( "#alertdiv" ).html("No case data for " + upper);
   }
 
@@ -514,6 +520,7 @@ $('#inlineRadio3').change(function() {
 
 function ready(error, us) {
   if (error) throw error;
+  $( "#alertdiv" ).hide();
   makeMap(us);
   var slider = document.querySelector('input[type="range"]');
   slider.addEventListener('change', function () {
