@@ -313,7 +313,6 @@ function makeMap(us) {
       if (move_dict.get(d.id)) {
         return quantize(move_dict.get(d.id)[val-1])
       } else {
-        console.log(d)
         num_error_counties += 1;
         return;
       }; })
@@ -327,6 +326,7 @@ function makeMap(us) {
       $( "#alertdiv" ).hide();
       $( "#barchartdiv" ).show();
       displayBar(d.id);
+      fadeOut(d.id);
     }
     else {
       $( "#barchartdiv" ).hide( "slow" );
@@ -340,6 +340,10 @@ function makeMap(us) {
       .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
       .attr("class", "states")
       .attr("d", path);
+}
+
+function fadeOut(countyID) {
+  console.log("in fade out");
 }
 
 function displayBar(data) {
@@ -488,11 +492,9 @@ function handleQuery() {
       $( "#alertdiv" ).show();
       $( "#alertdiv" ).html("No case data for " + upper);
   }
-
 }
 
 $('#inlineRadio1').change(function() {
-  console.log("income selected");
   window.scrollTo({
     top: 500,
     left: 0,
@@ -501,7 +503,6 @@ $('#inlineRadio1').change(function() {
 })
 
 $('#inlineRadio2').change(function() {
-  console.log("politics selected");
   window.scrollTo({
     top: 500,
     left: 0,
@@ -510,7 +511,6 @@ $('#inlineRadio2').change(function() {
 })
 
 $('#inlineRadio3').change(function() {
-  console.log("education selected");
   window.scrollTo({
     top: 500,
     left: 0,
