@@ -11,6 +11,18 @@
 .q3-9 { fill:rgb(253, 223, 158); }
 .q4-9 { fill:rgb(211, 85, 65); }
 
+.d3-tip {
+  background: #fff;
+  width: 140px;
+  border-radius: 10px;
+  border: 1px solid #c9c9c9;
+  font-size: 0.6srem;
+  padding: 5px;
+  position: absolute;
+  text-align: center;
+  opacity: 0;
+  z-index: 1;
+}
 
 </style>
 
@@ -22,12 +34,16 @@
   </div>
   <script type = "text/javascript" src="../data/move-data/move.json"></script>
   <script type = "text/javascript" src="../demographic-data.json"></script>
+  <script src="../js/d3.v4.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="../js/d3-tip.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.2.2/d3.min.js"></script>
 
   <script>
 
-      console.log("hello");
-var width = 1000, height = 200;
+      
+svg = d3.select("svg");
+width = 1000; height = 200;
 
 var xScale = d3.scaleLinear().domain([0, 5]).range([0, 1000]);
 
@@ -35,10 +51,14 @@ var move_dict = d3.map();
 og_data.forEach( function(d){ move_dict.set( d.fips, d.move_index) });
 
 var county_dict = d3.map();
-og_data.forEach( function(d){ county_dict.set( d.fips, d.county) });
+var states_dict = d3.map();
+og_data.forEach( function(d){ 
+  county_dict.set( d.fips, d.county);
+  states_dict.set(d.fips, d.sab);
+});
 
 var gop_dict = d3.map();
-var dem_dict = d3.map();
+var pop_dict = d3.map();
 var max = 1000000;
 var min = 169;
 var rng = max - min;
@@ -47,7 +67,7 @@ dem_data.forEach( function(d){
   //f (d.pop_2019 > max)
     //max = d.pop_2019;
   gop_dict.set( d.fips, d.per_gop); 
-  dem_dict.set( d.fips, d.pop_2019);
+  pop_dict.set( d.fips, d.pop_2019);
 });
 //console.log(max);
 //var min = max;
@@ -81,16 +101,38 @@ var radquantize = d3.scaleQuantize()
 
 var nodes = move_dict.keys().map(function(d) {
     return {
-        radius: radquantize(dem_dict.get(d)),
+        pop: pop_dict.get(d),
+        radius: radquantize(pop_dict.get(d)),
         value: move_dict.get(d)[4],
-        gop: gop_dict.get(d) * 5,
-        color: quantize(move_dict.get(d)[4])
+        gop: gop_dict.get(d),
+        color: quantize(move_dict.get(d)[4]),
+        county: county_dict.get(d),
+        state: states_dict.get(d)
     }
 });
 
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+function toTitleCase(str) {
+    return str.replace(/\w\S*/g, function(txt){
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    });
+}
+
+var tip = d3.tip()
+      .attr('class', 'd3-tip')
+      .offset([-5, 0])
+      .html(function(d) {
+        return "County: " + toTitleCase(d.county) + " (" + d.state + ")<br>Move Index: " + d.value + "<br>Population: " + numberWithCommas(d.pop) + "<br>GOP Vote: " + (d.gop * 100).toFixed(2) + "%";
+      })
+
+svg.call(tip)
+
 var simulation = d3.forceSimulation(nodes)
   .force('x', d3.forceX().x(function(d) {
-    return xScale(d.gop);
+    return xScale(d.gop * 5);
   }))
   .force('y', d3.forceY().y(function(d) {
     return 0;
@@ -122,6 +164,8 @@ function ticked() {
     .attr('cy', function(d) {
       return d.y;
     })
+    .on("mouseover", tip.show)
+    .on("mouseout", tip.hide)
 
   u.exit().remove();
 }
