@@ -1,0 +1,174 @@
+<meta charset="utf-8">
+<head>
+  <title>Force layout (x axis)</title>
+</head>
+
+<style>
+
+.q0-9 { fill:#9adbb5; }
+.q1-9 { fill:rgb(205, 235, 178); }
+.q2-9 { fill:#F6F5AE; }
+.q3-9 { fill:rgb(253, 223, 158); }
+.q4-9 { fill:rgb(211, 85, 65); }
+
+.d3-tip {
+  background: #fff;
+  width: 140px;
+  border-radius: 10px;
+  border: 1px solid #c9c9c9;
+  font-size: 0.6srem;
+  padding: 5px;
+  position: absolute;
+  text-align: center;
+  opacity: 0;
+  z-index: 1;
+}
+
+</style>
+
+<body>
+  <div id="content">
+    <svg width="1200" height="200">
+      <g transform="translate(100, 100)"></g>
+    </svg>
+  </div>
+  <script type = "text/javascript" src="../data/move-data/move.json"></script>
+  <script type = "text/javascript" src="../demographic-data.json"></script>
+  <script src="../js/d3.v4.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="../js/d3-tip.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.2.2/d3.min.js"></script>
+
+  <script>
+
+      
+svg = d3.select("svg");
+var width = 1000, height = 200;
+
+var xScale = d3.scaleLinear().domain([0, 5]).range([0, 1000]);
+
+var move_dict = d3.map();
+og_data.forEach( function(d){ move_dict.set( d.fips, d.move_index) });
+
+var county_dict = d3.map();
+var states_dict = d3.map();
+og_data.forEach( function(d){ 
+  county_dict.set( d.fips, d.county);
+  states_dict.set(d.fips, d.sab);
+});
+
+var dem_dict = d3.map();
+var pop_dict = d3.map();
+var max = 1000000;
+var min = 169;
+var rng = max - min;
+//var max = 0;
+dem_data.forEach( function(d){ 
+  //f (d.pop_2019 > max)
+    //max = d.pop_2019;
+  dem_dict.set( d.fips, d.per_dem); 
+  pop_dict.set( d.fips, d.pop_2019);
+});
+//console.log(max);
+//var min = max;
+//dem_data.forEach( function(d){ 
+  //if (d.pop_2019 < min)
+    //min = d.pop_2019;
+//});
+//console.log(min);
+
+
+var quantize = d3.scaleQuantize()
+    .domain([0, 4])
+    .range(d3.range(5).map(function(i) { 
+        if (i == 0)
+            return "#9adbb5";
+        else if (i == 1)
+            return "rgb(205, 235, 178)";
+        else if (i == 2)
+            return "#F6F5AE";
+        else if (i == 3)
+            return "rgb(253, 223, 158)";
+        else
+            return "rgb(211, 85, 65)";
+    }))
+
+var radquantize = d3.scaleQuantize()
+    .domain([min, max])
+    .range(d3.range(10).map(function(i) {
+      return i+3;
+    }))
+
+var nodes = move_dict.keys().map(function(d) {
+    return {
+        pop: pop_dict.get(d),
+        radius: radquantize(pop_dict.get(d)),
+        value: move_dict.get(d)[4],
+        dem: dem_dict.get(d),
+        color: quantize(move_dict.get(d)[4]),
+        county: county_dict.get(d),
+        state: states_dict.get(d)
+    }
+});
+
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+function toTitleCase(str) {
+    return str.replace(/\w\S*/g, function(txt){
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    });
+}
+
+var tip = d3.tip()
+      .attr('class', 'd3-tip')
+      .offset([-5, 0])
+      .html(function(d) {
+        return "County: " + toTitleCase(d.county) + " (" + d.state + ")<br>Move Index: " + d.value + "<br>Population: " + numberWithCommas(d.pop) + "<br>Dem Vote: " + (d.dem * 100).toFixed(2) + "%";
+      })
+
+svg.call(tip)
+
+var simulation = d3.forceSimulation(nodes)
+  .force('x', d3.forceX().x(function(d) {
+    return xScale(d.dem * 5);
+  }))
+  .force('y', d3.forceY().y(function(d) {
+    return 0;
+  }))
+  .force('collision', d3.forceCollide().radius(function(d) {
+    return d.radius;
+  }))
+  .force('charge', d3.forceManyBody().strength(-2))
+  .on('tick', ticked);
+
+function ticked() {
+  var u = d3.select('svg g')
+    .selectAll('circle')
+    .data(nodes);
+
+  u.enter()
+    .append('circle')
+    .attr('r', function(d) {
+      return d.radius;
+    })
+    .style('fill', function(d) {
+      //console.log(d.color);
+      return d.color;
+    })
+    .merge(u)
+    .attr('cx', function(d) {
+      return d.x;
+    })
+    .attr('cy', function(d) {
+      return d.y;
+    })
+    .on("mouseover", tip.show)
+    .on("mouseout", tip.hide)
+
+  u.exit().remove();
+}
+</script>
+</body>
+</html>
