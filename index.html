@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+
 <style>
 
 .search {
@@ -284,6 +285,7 @@ span[data-color='5']{
 
 <script src="js/d3.v4.min.js"></script>
 <script src="js/topojson.v1.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/0.10.0/lodash.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="js/d3-tip.js"></script>
 <script type = "text/javascript" src="move_index.json"></script>
@@ -311,8 +313,11 @@ og_data.forEach( function(d){ move_dict.set( d.fips, d.move_index) });
 var county_dict = d3.map();
 var states_dict = d3.map();
 var names_dict = {};
+var names_and_county_dict = {};
 og_data.forEach( function(d){ 
   county_dict.set( d.fips, d.county);
+  var countyState = d.county + " " + d.state;
+  names_and_county_dict[countyState] = d.fips;
   names_dict[d.county] = d.fips;
   states_dict.set(d.fips, d.state);
 });
@@ -538,11 +543,27 @@ function displayBar(data) {
   }
 
 function handleQuery() {
-  var query = $("#queriedCounty").val();
-  console.log('query is', query)
+  var query = $("#queriedCounty").val()
   var states_with_county = [];
-  // names dict only stores one county per name
-  // TODO
+
+  console.log("county dict", county_dict)
+  console.log("states", states_dict)
+  console.log("names", names_dict)
+  console.log("both", names_and_county_dict)
+  var fips_q = names_dict[query.toLowerCase()];
+  console.log("fips is", fips_q)
+  console.log(Object.keys(names_dict).length, Object.keys(county_dict).length, Object.keys(states_dict).length, Object.keys(names_and_county_dict).length)
+
+  const keys = Object.keys(county_dict);
+  console.log("keyss", keys)
+
+  // for (var i = 0; i < Object.keys(county_dict).length; i++) {
+  //   console.log("obj val", Object.values(county_dict))
+  //   console.log("queryr is ", county_dict.get[query.toLowerCase()])
+  //   if (county_dict.get[query.toLowerCase()]) {
+  //     console.log("found county")
+  //   }
+  // }
 
   var fips_q = names_dict[query.toLowerCase()];
   if (cases_dict.get(fips_q)) {
