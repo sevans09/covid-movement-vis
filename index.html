@@ -1,6 +1,45 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 <style>
+
+.search {
+  width: 100%;
+  display: flex;
+}
+
+.searchTerm {
+  width: 100%;
+  border: 3px solid #424242;
+  border-right: none;
+  padding: 5px;
+  height: 20px;
+  border-radius: 5px 0 0 5px;
+  outline: none;
+  color: #424242;
+}
+
+.searchTerm:focus{
+  color: #424242;
+}
+
+.searchButton {
+  width: 40px;
+  height: 36px;
+  border: .5px solid #424242;
+  background: #424242;
+  text-align: center;
+  color: #fff;
+  border-radius: 0 5px 5px 0;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.wrap{
+  width: 80%;
+  top: 10%;
+  left: 10%; 
+}
 
 body {
   font-family: 'Helvetica', sans-serif;
@@ -213,10 +252,20 @@ span[data-color='5']{
             </div>
       </div>   
       <div class="row" id="userbox">
-          Or &nbsp<strong>query</strong>&nbsp a county:&nbsp
-          <input class="form-control" type="text" id="queriedCounty" placeholder="e.g. 'Miami'"/> 
-          <button onClick=handleQuery()>Go!</button>
+          <div class="wrap">
+            <div class="search">
+               <input type="text" class="searchTerm" id="queriedCounty" placeholder="Enter a county (e.g. Miami)">
+               <button type="submit" class="searchButton" onClick=handleQuery()>
+                 <i class="fa fa-search"></i>
+              </button>
+            </div>
       </div>
+      
+
+
+     </div>
+
+
     <div class="row" id="barchartdiv">
         <svg style="z-index: 1" id ="barchart" width="960" height="600"></svg>
     </div>   
