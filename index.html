@@ -57,15 +57,17 @@ body {
 #bubblediv {
   height:300px;
   background-color: #4242;
-  margin-bottom: 50px;
-  margin-top: -10%;
-  float: right;
-  width: 74%;
+  margin: auto;
+  width: 75%;
+  text-align: center;
+
 }
 
 .column1 {
   float: left;
   width: 74%;
+  height: auto;
+  margin-bottom: 0px
 }
 .column2 {
   padding-top: 3.5vw;
@@ -149,6 +151,10 @@ body {
   opacity: 0;
   z-index: 1;
 }
+#map-legend {
+  text-align: center;
+}
+
 
 span{
     height: 1.3vw;
@@ -180,6 +186,8 @@ span[data-color='5']{
 </style>
 
 
+
+
 <div class="row">
   <div class="column2">
     <h2></h2>
@@ -187,15 +195,6 @@ span[data-color='5']{
     <div class="row">
       <input type="range" min="1" max="7" value="0" class="slider" id="myRange">
     </div>    
-    <div id="decoration">
-        <div id="legend" style="margin-right: 0%"> 
-          1 or less
-        </div>
-        <div id="legend" style="margin-right: -38%"> 
-          4 or more
-        </div>
-        <span data-color="1"></span><span data-color="2"></span><span data-color="3"></span><span data-color="4"></span><span data-color="5"></span>
-    </div>
     <h4 id="title"></h4>
     <div class="row" >
         <strong>Filter by</strong>&nbsp
@@ -218,18 +217,18 @@ span[data-color='5']{
           <button onClick=handleQuery()>Go!</button>
       </div>
     <div class="row" id="barchartdiv">
-        <svg style="z-index: 1" id ="barchart" width="960" height="600"></svg>
+        <svg id ="barchart"></svg>
     </div>   
     <div id="alertdiv"></div>
   </div>
 
   <div class="column1"  style="position: relative">
-    <svg id="maps" width="960" height="600"></svg>
+    <svg id="maps"></svg>
+     <div id="map-legend">
+     </div>
+     <div id = "bubblediv">
+     </div>
   </div>
-</div>
-
-<div class="row" id="bubblediv">
-  div for sammy
 </div>
 
 <script src="js/d3.v4.min.js"></script>
@@ -238,6 +237,8 @@ span[data-color='5']{
 <script src="js/d3-tip.js"></script>
 <script type = "text/javascript" src="move_index.json"></script>
 <script type = "text/javascript" src="us-county-cases.json"></script>
+<script type = "text/javascript" src="./income_pos.json"></script>
+<script type = "text/javascript" src="./demographic-data.json"></script>
 <script>
 
 var title = d3.select("h2")
@@ -247,11 +248,15 @@ var text = d3.select("h3")
 var map = d3.select("h4")
     .text("Movement index by county (collected from phone data) ");
 
+var margin = {top: 10, left: 10, bottom: 10, right: 10}
+  , width = window.outerWidth / 1.1
+  , width = width - margin.left - margin.right
+  , mapRatio = .5
+  , height = width * mapRatio;
 
-// Map SVG
-var svg = d3.select("#maps"),
-    width = +svg.attr("width"),
-    height = +svg.attr("height");
+var svg = d3.select("#maps")
+    .style('width', width + 'px')
+    .style('height', height + 'px')
 
 d3.select("svg").style("cursor", "crosshair");
 
@@ -277,8 +282,8 @@ var quantize = d3.scaleQuantize()
     .range(d3.range(5).map(function(i) { return "q" + i + "-9"; }));
 
 var projection = d3.geoAlbersUsa()
-    .scale(1280)
-    .translate([width / 2, height / 2]);
+    .scale(width)
+    .translate([width / 2.4, height / 2]);
 
 var path = d3.geoPath()
     .projection(projection);
@@ -299,12 +304,26 @@ var tip = d3.tip()
 
 svg.call(tip)
 
+legend_width = width/2
+legend_height = height/4
+var legend = d3.select("#map-legend")
+  .append("svg:svg")
+  .attr("width", legend_width)
+  .attr("height", 10)
+for (var i = 0; i <= 4; i++) {
+  legend.append("svg:rect")
+  .attr("x", i*(legend_width / 5))
+  .attr("height", 10)
+  .attr("width", legend_width/5)
+  .attr("class", "q" + i + "-9 ")
+  
+};
+
 function toTitleCase(str) {
     return str.replace(/\w\S*/g, function(txt){
         return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
     });
 }
-
 
 d3.queue()
     .defer(d3.json, "js/us.json")
@@ -313,7 +332,6 @@ d3.queue()
 function makeMap(us) {
   var val = document.getElementById("myRange").value;
   var num_error_counties = 0;
-  //var tooltip = map.append('div').attr('class', 'tooltip');
 
   svg.append("g")
     .attr("class", "counties")
@@ -351,6 +369,7 @@ function makeMap(us) {
       .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
       .attr("class", "states")
       .attr("d", path);
+
 }
 
 function fadeOut(countyID) {
@@ -358,7 +377,7 @@ function fadeOut(countyID) {
 }
 
 function displayBar(data) {
-    $("#barchart").empty();
+  $("#barchart").empty();
     var margin = {top: 70, right: 30, bottom: 90, left: 40},
     width = screen.width/5,
     height = screen.height/4;
@@ -529,6 +548,98 @@ $('#inlineRadio3').change(function() {
   });
 })
 
+pop_dict = d3.map()
+dem_data.forEach( function(d){ 
+  pop_dict.set( d.fips, d.pop_2019);
+});
+
+function makeBubblePlot(demographic) {
+  $("#bubblediv").empty();
+  var val = document.getElementById("myRange").value;
+
+  var quantize = d3.scaleQuantize()
+    .domain([0, 4])
+    .range(d3.range(5).map(function(i) { 
+        if (i == 0)
+            return "#9adbb5";
+        else if (i == 1)
+            return "rgb(205, 235, 178)";
+        else if (i == 2)
+            return "#F6F5AE";
+        else if (i == 3)
+            return "rgb(253, 223, 158)";
+        else
+            return "rgb(211, 85, 65)";
+    }))
+
+  income_dict = d3.map()
+  x_dict      = d3.map()
+  y_dict      = d3.map()
+  r_dict      = d3.map()
+
+  income_pos.forEach( function(d){ 
+    income_dict.set( d.fips, d.income); 
+    x_dict.set(d.fips, d.x)
+    y_dict.set(d.fips, 500 - d.y)
+    r_dict.set(d.fips, d.radius)
+  });
+
+
+  var dots = move_dict.keys().map(function(d) {
+    return {
+        radius: r_dict.get(d),
+        value: move_dict.get(d)[val-1],
+        income: income_dict.get(d),
+        color: quantize(move_dict.get(d)[val-1]),
+        fips: d,
+        x: x_dict.get(d),
+        y: y_dict.get(d)
+    }
+  });
+
+  for(var i = dots.length - 1; i >= 0; i--) {
+    if(isNaN(dots[i].income)) {
+        dots.splice(i, 1);
+    }
+  }
+
+  var margin = {top: 100, left: 50, bottom: 10, right: 50}
+  var width = $("#bubblediv").width() - 100;
+  var width = width - margin.left - margin.right
+  var height = 300
+  
+  var bubbles = d3.select("#bubblediv")
+    .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+
+  var x = d3.scaleLinear()
+    .domain([0, 900])
+    .range([ 0, width ]);
+
+  var y = d3.scaleLinear()
+      .domain([0, 300])
+      .range([ height, 0]);
+ 
+  bubbles.append('g')
+    .selectAll("bubbles")
+    .data(dots)
+    .enter()
+    .append("circle")
+      .attr("class", "bubbles")
+      .attr("cx", function (d) { return x(d.x); })
+      .attr("cy", function (d) { return y(d.y); })
+      .attr("r", function (d) { return d.radius; })
+      .style("fill", function (d) { return quantize(d.value); })
+    // .on("mouseover", showTooltip )
+    // .on("mousemove", moveTooltip )
+    // .on("mouseleave", hideTooltip )
+}
+
+
 function ready(error, us) {
   if (error) throw error;
   $( "#alertdiv" ).hide();
@@ -536,6 +647,7 @@ function ready(error, us) {
   var slider = document.querySelector('input[type="range"]');
   slider.addEventListener('change', function () {
     makeMap(us);
+    makeBubblePlot("hello")
   });
 }
 
