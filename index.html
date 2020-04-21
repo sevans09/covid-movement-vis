@@ -3,6 +3,42 @@
 <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 
 <style>
+.dropbtn {
+  display: none;
+  background-color: #424242;
+  color: white;
+  padding: 12px;
+  font-size: 10px;
+  border: none;
+  margin-left: -7%;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 80px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 10px 10px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {background-color: #ddd;}
+
+.dropdown:hover .dropdown-content {display: block;}
+
+.dropdown:hover .dropbtn {background-color: grey;}
 
 .search {
   width: 100%;
@@ -228,10 +264,10 @@ span[data-color='5']{
       <input type="range" min="1" max="7" value="0" class="slider" id="myRange">
     </div>    
     <div id="decoration">
-        <div id="legend" style="margin-right: 0%; margin-top: 50px""> 
+        <div id="legend" style="margin-right: 0%; margin-top: 20px""> 
           1 or less
         </div>
-        <div id="legend" style="margin-right: -38%; margin-top: 50px"> 
+        <div id="legend" style="margin-right: -38%; margin-top: 20px"> 
           4 or more
         </div>
         <span data-color="1"></span><span data-color="2"></span><span data-color="3"></span><span data-color="4"></span><span data-color="5"></span>
@@ -245,10 +281,15 @@ span[data-color='5']{
                  <i class="fa fa-search"></i>
               </button>
             </div>
-      </div>
-      
-
-
+          </div>
+          <div class="dropdown" id="dropdown">
+            <button class="dropbtn" id="dropdown">State</button>
+            <div class="dropdown-content">
+              <a href="#">Link 1</a>
+              <a href="#">Link 2</a>
+              <a href="#">Link 3</a>
+            </div>
+          </div>
      </div>
 
 
@@ -313,11 +354,11 @@ og_data.forEach( function(d){ move_dict.set( d.fips, d.move_index) });
 var county_dict = d3.map();
 var states_dict = d3.map();
 var names_dict = {};
-var names_and_county_dict = {};
+var names_and_county_dict = d3.map();
 og_data.forEach( function(d){ 
   county_dict.set( d.fips, d.county);
   var countyState = d.county + " " + d.state;
-  names_and_county_dict[countyState] = d.fips;
+  names_and_county_dict[d.fips] = d.county, d.state;
   names_dict[d.county] = d.fips;
   states_dict.set(d.fips, d.state);
 });
@@ -542,28 +583,25 @@ function displayBar(data) {
       .text(title);
   }
 
+function addDropdown(fips) {
+  console.log("in dropdown", fips)
+  $( ".dropbtn" ).show();
+}
+
 function handleQuery() {
   var query = $("#queriedCounty").val()
   var states_with_county = [];
 
-  console.log("county dict", county_dict)
-  console.log("states", states_dict)
-  console.log("names", names_dict)
-  console.log("both", names_and_county_dict)
-  var fips_q = names_dict[query.toLowerCase()];
-  console.log("fips is", fips_q)
-  console.log(Object.keys(names_dict).length, Object.keys(county_dict).length, Object.keys(states_dict).length, Object.keys(names_and_county_dict).length)
+  Object.keys(names_and_county_dict)
+  .forEach(function eachKey(key) { 
+    if (names_and_county_dict[key] == query.toLowerCase()) {
+      states_with_county.push(key)
+    }
+  });
 
-  const keys = Object.keys(county_dict);
-  console.log("keyss", keys)
-
-  // for (var i = 0; i < Object.keys(county_dict).length; i++) {
-  //   console.log("obj val", Object.values(county_dict))
-  //   console.log("queryr is ", county_dict.get[query.toLowerCase()])
-  //   if (county_dict.get[query.toLowerCase()]) {
-  //     console.log("found county")
-  //   }
-  // }
+  if (states_with_county.length > 1) {
+    addDropdown(states_with_county);
+  }
 
   var fips_q = names_dict[query.toLowerCase()];
   if (cases_dict.get(fips_q)) {
