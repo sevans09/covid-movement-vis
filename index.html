@@ -1,6 +1,83 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+
 <style>
+.dropbtn {
+  display: none;
+  background-color: #424242;
+  color: white;
+  padding: 12px;
+  font-size: 10px;
+  border: none;
+  margin-left: -7%;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: relative;
+  background-color: #f1f1f1;
+  min-width: 80px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 10px 10px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {background-color: #ddd; display:block}
+
+.dropdown:hover .dropdown-content {display: block;}
+dropdown-content:hover .dropdown-content {display: block;}
+
+.dropdown:hover .dropbtn {background-color: grey;}
+
+.search {
+  width: 100%;
+  display: flex;
+}
+
+.searchTerm {
+  width: 100%;
+  border: 3px solid #424242;
+  border-right: none;
+  padding: 5px;
+  height: 20px;
+  border-radius: 5px 0 0 5px;
+  outline: none;
+  color: #424242;
+}
+
+.searchTerm:focus{
+  color: #424242;
+}
+
+.searchButton {
+  width: 40px;
+  height: 36px;
+  border: .5px solid #424242;
+  background: #424242;
+  text-align: center;
+  color: #fff;
+  border-radius: 0 5px 5px 0;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.wrap{
+  width: 80%;
+  top: 10%;
+  left: 10%; 
+}
 
 body {
   font-family: 'Helvetica', sans-serif;
@@ -58,8 +135,8 @@ body {
   height:300px;
   background-color: #4242;
   margin: auto;
-  width: 75%;
   text-align: center;
+  width: 70%;
 
 }
 
@@ -187,52 +264,62 @@ span[data-color='5']{
 
 
 
-
 <div class="row">
   <div class="column2">
-    <h2></h2>
+    <h2 style="margin-top: 50px"></h2>
     <h3></h3>
     <div class="row">
       <input type="range" min="1" max="7" value="0" class="slider" id="myRange">
     </div>    
     <h4 id="title"></h4>
-    <div class="row" >
-        <strong>Filter by</strong>&nbsp
-          <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
-              <label class="form-check-label" for="inlineRadio1">Income</label>
-            </div>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
-              <label class="form-check-label" for="inlineRadio2">Politics</label>
-            </div>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3">
-              <label class="form-check-label" for="inlineRadio3">Education</label>
-            </div>
-      </div>   
       <div class="row" id="userbox">
-          Or &nbsp<strong>query</strong>&nbsp a county:&nbsp
-          <input class="form-control" type="text" id="queriedCounty" placeholder="e.g. 'Miami'"/> 
-          <button onClick=handleQuery()>Go!</button>
-      </div>
+          <div class="wrap">
+            <div class="search">
+               <input type="text" class="searchTerm" id="queriedCounty" placeholder="Enter a county (e.g. Miami)">
+               <button type="submit" class="searchButton" onClick=handleQuery()>
+                 <i class="fa fa-search"></i>
+              </button>
+            </div>
+          </div>
+          <div class="dropdown" id="dropdown">
+            <button class="dropbtn" id="dropdown">State</button>
+            <div class="dropdown-content">
+              <a href="#" id="county1">Link 1</a>
+              <a href="#" id="county2">Link 2</a>
+              <a href="#"id="county3">Link 3</a>
+            </div>
+          </div>
+     </div>
     <div class="row" id="barchartdiv">
-        <svg id ="barchart"></svg>
+        <div id ="barchart"> </div>
     </div>   
     <div id="alertdiv"></div>
   </div>
-
   <div class="column1"  style="position: relative">
     <svg id="maps"></svg>
      <div id="map-legend">
      </div>
-     <div id = "bubblediv">
+     <div id ="bubblediv">
      </div>
   </div>
 </div>
+    <strong>Filter by</strong>&nbsp
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+        <label class="form-check-label" for="inlineRadio1">Income</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
+        <label class="form-check-label" for="inlineRadio2">Politics</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3">
+        <label class="form-check-label" for="inlineRadio3">Education</label>
+      </div>
 
 <script src="js/d3.v4.min.js"></script>
 <script src="js/topojson.v1.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/0.10.0/lodash.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="js/d3-tip.js"></script>
 <script type = "text/javascript" src="move_index.json"></script>
@@ -266,8 +353,11 @@ og_data.forEach( function(d){ move_dict.set( d.fips, d.move_index) });
 var county_dict = d3.map();
 var states_dict = d3.map();
 var names_dict = {};
+var names_and_county_dict = d3.map();
 og_data.forEach( function(d){ 
   county_dict.set( d.fips, d.county);
+  var countyState = d.county + " " + d.state;
+  names_and_county_dict[d.fips] = d.county, d.state;
   names_dict[d.county] = d.fips;
   states_dict.set(d.fips, d.state);
 });
@@ -379,15 +469,14 @@ function fadeOut(countyID) {
 function displayBar(data) {
   $("#barchart").empty();
     var margin = {top: 70, right: 30, bottom: 90, left: 40},
-    width = screen.width/5,
-    height = screen.height/4;
+    width = 300
+    height = 300
 
     var bartip = d3.tip()
       .attr('class', 'd3-tip')
       .offset([-5, 0])
       .html(function(d, i) {
         return "Date: " + dates_dict.get(data)[i] + "<br>Cases: " + cases_dict.get(data)[i] + "<br>Deaths: " + deaths_dict.get(data)[i];
-
       })
 
     svg.call(bartip)
@@ -493,8 +582,11 @@ function displayBar(data) {
       })
 
     // Capitalize each word of the county
-    const title = toTitleCase(county_dict.get(data))
-
+    const county = toTitleCase(county_dict.get(data))
+    const state = states_dict.get(data);
+    console.log(state);
+    const title = county + ", " + state;
+    
     // Title
     svg2.append("text")
       .attr("x", (width / 2))             
@@ -503,24 +595,62 @@ function displayBar(data) {
       .text(title);
   }
 
+function addDropdown(fips) {
+  console.log("in dropdown", fips)
+  $( ".dropbtn" ).show();
+  console.log("statess", states_dict);
+  var fips_0 = fips[0];
+  var state1 = states_dict.get(fips_0)
+  var fips_1 = fips[1];
+  var state2 = states_dict.get(fips_1)
+  var fips_2 = fips[2];
+  var state3 = states_dict.get(fips_2)
+
+  $( "#county1" ).html(state1);
+  $( "#county2" ).html(state2);
+  $( "#county3" ).html(state3);
+
+  displayBar(fips_0);
+
+
+  // $("#drop").change(function () {
+  //       var end = this.value;
+  //       var firstDropVal = $('#pick').val();
+  //   });
+}
+
 function handleQuery() {
-  var query = $("#queriedCounty").val();
-  var fips_q = names_dict[query.toLowerCase()];
-  if (cases_dict.get(fips_q)) {
-    $( "#alertdiv" ).hide();
-    $( "#barchartdiv" ).show();
-    displayBar(fips_q);
+  var query = $("#queriedCounty").val()
+  var states_with_county = [];
+
+  Object.keys(names_and_county_dict)
+  .forEach(function eachKey(key) { 
+    if (names_and_county_dict[key] == query.toLowerCase()) {
+      states_with_county.push(key)
+    }
+  });
+
+  if (states_with_county.length > 1) {
+    addDropdown(states_with_county);
   }
   else {
-    $( "#barchartdiv" ).hide( "slow" );
-      // Capitalize each word of the county
-      if (typeof(county_dict.get(query)) == "undefined") {
+    var fips_q = names_dict[query.toLowerCase()];
+    if (cases_dict.get(fips_q)) {
+      $( "#alertdiv" ).hide();
+      $( "#barchartdiv" ).show();
+      displayBar(fips_q);
+    }
+    else {
+      $( "#barchartdiv" ).hide( "slow" );
+        // Capitalize each word of the county
+        if (typeof(county_dict.get(query)) == "undefined") {
+          $( "#alertdiv" ).show();
+          $( "#alertdiv" ).html("County does not exist");
+        }
+        const upper = toTitleCase(county_dict.get(query))
         $( "#alertdiv" ).show();
-        $( "#alertdiv" ).html("County does not exist");
-      }
-      const upper = toTitleCase(county_dict.get(query))
-      $( "#alertdiv" ).show();
-      $( "#alertdiv" ).html("No case data for " + upper);
+        $( "#alertdiv" ).html("No case data for " + upper);
+    }
   }
 }
 
