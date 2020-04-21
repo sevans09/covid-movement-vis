@@ -528,9 +528,7 @@ function displayBar(data) {
     const state = states_dict.get(data);
     console.log(state);
     const title = county + ", " + state;
-    // const state = toUpperCase(county_d)
-    // title = title + count
-
+    
     // Title
     svg2.append("text")
       .attr("x", (width / 2))             
@@ -541,6 +539,11 @@ function displayBar(data) {
 
 function handleQuery() {
   var query = $("#queriedCounty").val();
+  console.log('query is', query)
+  var states_with_county = [];
+  // names dict only stores one county per name
+  // TODO
+
   var fips_q = names_dict[query.toLowerCase()];
   if (cases_dict.get(fips_q)) {
     $( "#alertdiv" ).hide();
