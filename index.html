@@ -236,21 +236,6 @@ span[data-color='5']{
         <span data-color="1"></span><span data-color="2"></span><span data-color="3"></span><span data-color="4"></span><span data-color="5"></span>
     </div>
     <h4 id="title"></h4>
-    <div class="row" >
-        <strong>Filter by</strong>&nbsp
-          <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
-              <label class="form-check-label" for="inlineRadio1">Income</label>
-            </div>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
-              <label class="form-check-label" for="inlineRadio2">Politics</label>
-            </div>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3">
-              <label class="form-check-label" for="inlineRadio3">Education</label>
-            </div>
-      </div>   
       <div class="row" id="userbox">
           <div class="wrap">
             <div class="search">
@@ -278,6 +263,22 @@ span[data-color='5']{
 </div>
 
 <div class="row" id="bubblediv">
+  <div class="row" >
+    <strong>Filter by</strong>&nbsp
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+        <label class="form-check-label" for="inlineRadio1">Income</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
+        <label class="form-check-label" for="inlineRadio2">Politics</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3">
+        <label class="form-check-label" for="inlineRadio3">Education</label>
+      </div>
+  </div>
+  <br>   
   div for sammy
 </div>
 
@@ -523,7 +524,12 @@ function displayBar(data) {
       })
 
     // Capitalize each word of the county
-    const title = toTitleCase(county_dict.get(data))
+    const county = toTitleCase(county_dict.get(data))
+    const state = states_dict.get(data);
+    console.log(state);
+    const title = county + ", " + state;
+    // const state = toUpperCase(county_d)
+    // title = title + count
 
     // Title
     svg2.append("text")
