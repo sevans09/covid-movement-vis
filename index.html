@@ -607,13 +607,15 @@ function addDropdown(fips) {
     curr_state = states_dict.get(curr_fips);
     $("#county" + i).html(curr_state);
   }
-  displayBar(curr_fips);
 
+  $(document).ready(function() {
+    $("a").click(function(event) {
+      targ = event.target.id;
+      console.log(targ);
+      displayBar(fips[targ[6]]);
 
-  // $("#drop").change(function () {
-  //       var end = this.value;
-  //       var firstDropVal = $('#pick').val();
-  //   });
+    })
+  })
 }
 
 function handleQuery() {
