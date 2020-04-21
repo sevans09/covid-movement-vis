@@ -5,6 +5,7 @@
 <style>
 .dropbtn {
   display: none;
+  height: 36px;
   background-color: #424242;
   color: white;
   padding: 12px;
@@ -20,7 +21,7 @@
 
 .dropdown-content {
   display: none;
-  position: relative;
+  position: absolute;
   background-color: #f1f1f1;
   min-width: 80px;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
@@ -62,7 +63,6 @@ dropdown-content:hover .dropdown-content {display: block;}
 }
 
 .searchButton {
-  width: 40px;
   height: 36px;
   border: .5px solid #424242;
   background: #424242;
@@ -284,9 +284,6 @@ span[data-color='5']{
           <div class="dropdown" id="dropdown">
             <button class="dropbtn" id="dropdown">State</button>
             <div class="dropdown-content">
-              <a href="#" id="county1">Link 1</a>
-              <a href="#" id="county2">Link 2</a>
-              <a href="#"id="county3">Link 3</a>
             </div>
           </div>
      </div>
@@ -599,18 +596,18 @@ function addDropdown(fips) {
   console.log("in dropdown", fips)
   $( ".dropbtn" ).show();
   console.log("statess", states_dict);
-  var fips_0 = fips[0];
-  var state1 = states_dict.get(fips_0)
-  var fips_1 = fips[1];
-  var state2 = states_dict.get(fips_1)
-  var fips_2 = fips[2];
-  var state3 = states_dict.get(fips_2)
-
-  $( "#county1" ).html(state1);
-  $( "#county2" ).html(state2);
-  $( "#county3" ).html(state3);
-
-  displayBar(fips_0);
+  s = "";
+  for (i = 0; i < fips.length; i++) {
+    s += "<a href='#' id='county" + i + "'></a>";
+  }
+  document.getElementsByClassName("dropdown-content")[0].innerHTML = s;
+  var curr_fips, curr_state;
+  for (i = 0; i < fips.length; i++) {
+    curr_fips = fips[i];
+    curr_state = states_dict.get(curr_fips);
+    $("#county" + i).html(curr_state);
+  }
+  displayBar(curr_fips);
 
 
   // $("#drop").change(function () {
