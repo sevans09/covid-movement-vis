@@ -5,6 +5,12 @@
 
 Visit site at https://bit.ly/covidmovementmap
 
+### Pull NYT Data
+Usage:  
+`chmod u+x pull_nyt.sh`  
+`./pull_nyt.sh`  
+
+
 
 File Updates:  
 move.json - most up to date version of the data  
