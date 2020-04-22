@@ -8,7 +8,7 @@ function make_bubbles(val, dem) {
 
   $("#bubblediv").empty()
   console.log("hello")
-  var width = $("#bubblediv").width();
+  var width = $("#bubblediv").width() + 250;
   var height = $("#bubblediv").height()
 
   var max_pop = 123000;
