@@ -703,10 +703,10 @@ dem_data.forEach( function(d){
 });
 
 var county_dict = d3.map();
-var states_dict = d3.map();
+var sab_dict = d3.map();
 og_data.forEach( function(d){ 
   county_dict.set( d.fips, d.county);
-  states_dict.set(d.fips, d.sab);
+  sab_dict.set(d.fips, d.sab);
 });
 
 function makeBubblePlot(demographic) {
@@ -749,7 +749,7 @@ function makeBubblePlot(demographic) {
         color: quantize(move_dict.get(d)[val-1]),
         fips: d,
         county: county_dict.get(d),
-        state: states_dict.get(d),
+        sab: sab_dict.get(d),
         pop: pop_dict.get(d),
         x: x_dict.get(d),
         y: y_dict.get(d)
@@ -775,7 +775,7 @@ function makeBubblePlot(demographic) {
       .attr('class', 'd3-tip')
       .offset([-5, 0])
       .html(function(d) {
-        return "County: " + toTitleCase(d.county) + " (" + d.state + ")<br>Move Index: " + d.value + "<br>Population: " + numberWithCommas(d.pop) + "<br>Income: $" + numberWithCommas(d.income);
+        return "County: " + toTitleCase(d.county) + " (" + d.sab + ")<br>Move Index: " + d.value + "<br>Population: " + numberWithCommas(d.pop) + "<br>Income: $" + numberWithCommas(d.income);
       })
 
 svg.call(tip)
