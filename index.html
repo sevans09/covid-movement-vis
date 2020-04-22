@@ -702,6 +702,13 @@ dem_data.forEach( function(d){
   pop_dict.set( d.fips, d.pop_2019);
 });
 
+var county_dict = d3.map();
+var states_dict = d3.map();
+og_data.forEach( function(d){ 
+  county_dict.set( d.fips, d.county);
+  states_dict.set(d.fips, d.sab);
+});
+
 function makeBubblePlot(demographic) {
   $("#bubblediv").empty();
   var val = document.getElementById("myRange").value;
@@ -741,6 +748,9 @@ function makeBubblePlot(demographic) {
         income: income_dict.get(d),
         color: quantize(move_dict.get(d)[val-1]),
         fips: d,
+        county: county_dict.get(d),
+        state: states_dict.get(d),
+        pop: pop_dict.get(d),
         x: x_dict.get(d),
         y: y_dict.get(d)
     }
@@ -754,8 +764,21 @@ function makeBubblePlot(demographic) {
 
   var margin = {top: 100, left: 50, bottom: 10, right: 50}
   var width = $("#bubblediv").width() - 100;
-  var width = width - margin.left - margin.right
-  var height = 300
+  var width = width - margin.left - margin.right;
+  var height = 300;
+
+  function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+  var tip = d3.tip()
+      .attr('class', 'd3-tip')
+      .offset([-5, 0])
+      .html(function(d) {
+        return "County: " + toTitleCase(d.county) + " (" + d.state + ")<br>Move Index: " + d.value + "<br>Population: " + numberWithCommas(d.pop) + "<br>Income: $" + numberWithCommas(d.income);
+      })
+
+svg.call(tip)
   
   var bubbles = d3.select("#bubblediv")
     .append("svg")
@@ -783,9 +806,9 @@ function makeBubblePlot(demographic) {
       .attr("cy", function (d) { return y(d.y); })
       .attr("r", function (d) { return d.radius; })
       .style("fill", function (d) { return quantize(d.value); })
-    // .on("mouseover", showTooltip )
-    // .on("mousemove", moveTooltip )
-    // .on("mouseleave", hideTooltip )
+    .on("mouseover", tip.show )
+    //.on("mousemove", moveTooltip )
+    .on("mouseleave", tip.hide )
 }
 
 
