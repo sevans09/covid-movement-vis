@@ -132,9 +132,9 @@ body {
 }
 
 #bubblediv {
-  min-height: 500px;
-  height: 500px;
+  height:500px;
   margin: auto;
+  background: white;
   margin-top: 50px;
   text-align: center;
   width: 70%;
@@ -320,11 +320,11 @@ span[data-color='5']{
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/0.10.0/lodash.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="js/d3-tip.js"></script>
-<script type = "text/javascript" src="move_index.json"></script>
-<script type = "text/javascript" src="us-county-cases.json"></script>
-<script type = "text/javascript" src="./income_pos.json"></script>
-<script type = "text/javascript" src="./demographic-data.json"></script>
-<script type = "text/javascript" src="./js/bubbles.js"></script>
+<script type = "text/javascript" src="./move_index.json"></script>
+<script type = "text/javascript" src="./us-county-cases.json"></script>
+<script type = "text/javascript" src="./test.json"></script>
+<script type = "text/javascript" src="./test.js"></script>
+<script type = "text/javascript" src="../demographic-data.json"></script>
 <script>
 
 var title = d3.select("h2")
@@ -415,7 +415,7 @@ function toTitleCase(str) {
 }
 
 d3.queue()
-    .defer(d3.json, "js/us.json")
+    .defer(d3.json, "../js/us.json")
     .await(ready);
 
 function makeMap(us) {
@@ -682,16 +682,16 @@ dem_data.forEach( function(d){
   pop_dict.set( d.fips, d.pop_2019);
 });
 
+
+
 function ready(error, us) {
   if (error) throw error;
   $( "#alertdiv" ).hide();
   makeMap(us);
-  make_bubbles(1, "income")
+  make_bubbles()
   var slider = document.querySelector('input[type="range"]');
   slider.addEventListener('change', function () {
-    var val = document.getElementById("myRange").value;
     makeMap(us);
-    make_bubbles(val, "income")
   });
 }
 
