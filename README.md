@@ -17,6 +17,8 @@ backupbubble.html - reference implementation
 TODO:
 - make "State" button go away after as soon as user starts typing a new query
 - link main data sources without screwing up the other "a" elements
-- show which week is currently being displayed
 - sizing stuff to fit the map and div on the screen?
+- make legend look nice
+- radio buttons for bubble thing
+
 
