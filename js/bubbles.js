@@ -1,4 +1,8 @@
-
+function toTitleCase(str) {
+    return str.replace(/\w\S*/g, function(txt){
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    });
+}
 
 function make_bubbles(val, dem) {
 
@@ -27,8 +31,19 @@ function make_bubbles(val, dem) {
     "income": income_pos
   }
 
+  function numberWithCommas(x) {
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+
   var move_dict = d3.map();
   og_data.forEach( function(d){ move_dict.set( d.fips, d.move_index) });
+
+  var county_dict = d3.map();
+  var sab_dict = d3.map();
+  og_data.forEach( function(d){ 
+    county_dict.set( d.fips, d.county);
+    sab_dict.set(d.fips, d.sab);
+  });
 
   var x = d3.scaleLinear()
     .domain( [min_max[dem].min, min_max[dem].max] )
@@ -43,12 +58,11 @@ function make_bubbles(val, dem) {
   var xAxis = d3.axisBottom(x);
 
   var tip = d3.tip()
-    .attr('class', 'd3-tip')
-    .offset([-6, 0])
-    .html(function(d) {
-      return "Move Index: " + move_dict.get(d.fips)[val-1] 
-      + "<br>" + "Median Income: " + d.income
-    });
+      .attr('class', 'd3-tip')
+      .offset([-5, 0])
+      .html(function(d) {
+        return "County: " + toTitleCase(d.county) + " (" + d.sab + ")<br>Move Index: " + d.move + "<br>Population: " + numberWithCommas(d.pop) + "<br>Income: $" + numberWithCommas(d.income);
+      })
 
  
   d3.json("./bubble/dem-data.json", function(error, data) {
@@ -100,6 +114,8 @@ function make_bubbles(val, dem) {
         fips: node.fips, 
         pop: node.pop_2019,
         income: node.median_income,
+        county: node.county,
+        sab: node.sab,
         x: x(node.median_income),
         fx: x(node.median_income),
         r: radquantize(node.pop_2019),

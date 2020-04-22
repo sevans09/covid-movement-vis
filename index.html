@@ -3,6 +3,12 @@
 <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 
 <style>
+
+h5 {
+  font-weight: normal;
+  color: #585757;
+}
+
 .dropbtn {
   display: none;
   height: 36px;
@@ -103,7 +109,7 @@ body {
 .slider {
   -webkit-appearance: none;
   appearance: none;
-  width: 80%;
+  width: 60%;
   height: 24px;
   background: #d3d3d3;
   opacity: 0.6;
@@ -233,6 +239,16 @@ body {
   text-align: center;
 }
 
+#week {
+  width: 30%;
+  padding-left: 5px;
+  padding-top: 6px;
+  height: 24px;
+  font-weight: normal;
+  color: #585757;
+  font-size: smaller;
+}
+
 
 span{
     height: 1.3vw;
@@ -267,10 +283,10 @@ span[data-color='5']{
 
 <div class="row">
   <div class="column2">
-    <h2 style="margin-top: 50px"></h2>
+    <div id="info" style="margin-top: 50px"></div>
     <h3></h3>
     <div class="row">
-      <input type="range" min="1" max="7" value="0" class="slider" id="myRange">
+      <input type="range" min="1" max="7" value="0" class="slider" id="myRange"><div id="week"></div>
     </div>    
     <h4 id="title"></h4>
       <div class="row" id="userbox">
@@ -324,15 +340,13 @@ span[data-color='5']{
 <script type = "text/javascript" src="us-county-cases.json"></script>
 <script type = "text/javascript" src="./income_pos.json"></script>
 <script type = "text/javascript" src="./demographic-data.json"></script>
-<script type = "text/javascript" src="./js/bubbles.js"></script>
+<script type = "text/javascript" src="/js/bubbles.js"></script>
 <script>
 
-var title = d3.select("h2")
-    .text("COVID Movement Index Tracker");
-var text = d3.select("h3")
-    .text("Slide below to explore movement changes by county over time.");
-var map = d3.select("h4")
-    .text("Movement index by county (collected from phone data) ");
+var title = document.getElementById("info").innerHTML = "<h2>COVID-19 Movement & Cases Tracker<br>with Demographic Data Trends</h2><h5><br>Main Data Sources<br>Cuebiq Mobility Index Analysis (uses phone data)<br>NYT COVID-19 Cases Data in the United States (GitHub Repo)</h5><h3><br>Slide below to explore movement changes by week."
+
+d3.select("h4")
+.text("Query a county below to prompt a bar chart animation of COVID-19 cases.")
 
 var margin = {top: 10, left: 10, bottom: 10, right: 10}
   , width = window.outerWidth / 1.1
@@ -365,6 +379,8 @@ var cases_dict = d3.map();
 var dates_dict = d3.map();
 var deaths_dict = d3.map();
 cases_data.forEach( function(d){ cases_dict.set( d.fips, d.cases); deaths_dict.set(d.fips, d.deaths); dates_dict.set(d.fips, d.dates); });
+
+var weeks = ["Week of 2020-03-02", "Week of 2020-03-09", "Week of 2020-03-16", "Week of 2020-03-23", "Week of 2020-03-30", "Week of 2020-04-06", "Week of 2020-04-13", "Week of 2020-04-20"];
 
 var quantize = d3.scaleQuantize()
     .domain([0, 4])
@@ -420,6 +436,8 @@ d3.queue()
 
 function makeMap(us) {
   var val = document.getElementById("myRange").value;
+  document.getElementById("week").innerHTML = weeks[val-1];
+
   var num_error_counties = 0;
 
   svg.append("g")
@@ -438,6 +456,8 @@ function makeMap(us) {
       .on("mouseover", tip.show)
       .on("mouseout", tip.hide)
       .on("click", handleClick);
+
+  console.log(num_error_counties);
 
   function handleClick(d) {
     if (cases_dict.get(d.id)) {
@@ -599,24 +619,30 @@ function addDropdown(fips) {
   $( ".dropbtn" ).show();
   console.log("statess", states_dict);
   s = "";
+  var num_valid = 0;
   for (i = 0; i < fips.length; i++) {
-    s += "<a href='#' id='county" + i + "'></a>";
+    if (cases_dict.get(fips[i])) {
+      s += "<a href='#' id='county" + i + "'></a>";
+      num_valid += 1;
+    }
   }
   document.getElementsByClassName("dropdown-content")[0].innerHTML = s;
   var curr_fips, curr_state;
-  for (i = 0; i < fips.length; i++) {
+  for (i = 0; i < num_valid; i++) {
     curr_fips = fips[i];
     curr_state = states_dict.get(curr_fips);
     $("#county" + i).html(curr_state);
   }
-  displayBar(curr_fips);
 
-
-  // $("#drop").change(function () {
-  //       var end = this.value;
-  //       var firstDropVal = $('#pick').val();
-  //   });
+  $(document).ready(function() {
+    $("a").click(function(event) {
+      targ = event.target.id;
+      console.log(fips[targ[6]]);
+      displayBar(fips[targ[6]]);
+    })
+  })
 }
+
 
 function handleQuery() {
   var query = $("#queriedCounty").val()
@@ -633,6 +659,7 @@ function handleQuery() {
     addDropdown(states_with_county);
   }
   else {
+    $("button#dropdown.dropbtn").hide();
     var fips_q = names_dict[query.toLowerCase()];
     if (cases_dict.get(fips_q)) {
       $( "#alertdiv" ).hide();
@@ -652,6 +679,14 @@ function handleQuery() {
     }
   }
 }
+
+document.addEventListener("keypress", function(e) {
+    if (e.keyCode == 13) {
+      e.preventDefault();
+      handleQuery();
+    }
+  });
+
 
 $('#inlineRadio1').change(function() {
   window.scrollTo({
@@ -682,10 +717,20 @@ dem_data.forEach( function(d){
   pop_dict.set( d.fips, d.pop_2019);
 });
 
+
+var county_dict = d3.map();
+var sab_dict = d3.map();
+og_data.forEach( function(d){ 
+  county_dict.set( d.fips, d.county);
+  sab_dict.set(d.fips, d.sab);
+});
+
+
 function ready(error, us) {
   if (error) throw error;
   $( "#alertdiv" ).hide();
   makeMap(us);
+
   make_bubbles(1, "income")
   var slider = document.querySelector('input[type="range"]');
   slider.addEventListener('change', function () {
