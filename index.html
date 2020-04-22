@@ -109,7 +109,7 @@ body {
 .slider {
   -webkit-appearance: none;
   appearance: none;
-  width: 80%;
+  width: 60%;
   height: 24px;
   background: #d3d3d3;
   opacity: 0.6;
@@ -238,6 +238,15 @@ body {
   text-align: center;
 }
 
+#week {
+  width: 30%;
+  padding-left: 5px;
+  padding-top: 6px;
+  height: 24px;
+  font-weight: normal;
+  color: #585757;
+}
+
 
 span{
     height: 1.3vw;
@@ -275,7 +284,7 @@ span[data-color='5']{
     <div id="info" style="margin-top: 50px"></div>
     <h3></h3>
     <div class="row">
-      <input type="range" min="1" max="7" value="0" class="slider" id="myRange">
+      <input type="range" min="1" max="7" value="0" class="slider" id="myRange"><div id="week"></div>
     </div>    
     <h4 id="title"></h4>
       <div class="row" id="userbox">
@@ -336,7 +345,6 @@ var title = document.getElementById("info").innerHTML = "<h2>COVID-19 Movement &
 d3.select("h4")
 .text("Query a county below to prompt a bar chart animation of COVID-19 cases.")
 
-
 var margin = {top: 10, left: 10, bottom: 10, right: 10}
   , width = window.outerWidth / 1.1
   , width = width - margin.left - margin.right
@@ -368,6 +376,8 @@ var cases_dict = d3.map();
 var dates_dict = d3.map();
 var deaths_dict = d3.map();
 cases_data.forEach( function(d){ cases_dict.set( d.fips, d.cases); deaths_dict.set(d.fips, d.deaths); dates_dict.set(d.fips, d.dates); });
+
+var weeks = ["Week of 2020-03-02", "Week of 2020-03-09", "Week of 2020-03-16", "Week of 2020-03-23", "Week of 2020-03-30", "Week of 2020-04-06", "Week of 2020-04-13", "Week of 2020-04-20"];
 
 var quantize = d3.scaleQuantize()
     .domain([0, 4])
@@ -423,6 +433,8 @@ d3.queue()
 
 function makeMap(us) {
   var val = document.getElementById("myRange").value;
+  document.getElementById("week").innerHTML = weeks[val-1];
+
   var num_error_counties = 0;
 
   svg.append("g")
@@ -441,6 +453,8 @@ function makeMap(us) {
       .on("mouseover", tip.show)
       .on("mouseout", tip.hide)
       .on("click", handleClick);
+
+  console.log(num_error_counties);
 
   function handleClick(d) {
     if (cases_dict.get(d.id)) {
