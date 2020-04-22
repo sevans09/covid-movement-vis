@@ -829,6 +829,7 @@ function ready(error, us) {
   if (error) throw error;
   $( "#alertdiv" ).hide();
   makeMap(us);
+  makeBubblePlot("hello");
   var slider = document.querySelector('input[type="range"]');
   slider.addEventListener('change', function () {
     makeMap(us);
