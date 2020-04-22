@@ -140,7 +140,7 @@ function make_bubbles(val, dem) {
       .attr("cx", function(d) { return d.x} )
       .attr("cy", function(d) { return d.y} )
       .attr("r", function(d) { return d.r} )
-      .style("opacity", 0.7)
+      .style("opacity", 0.8)
       .on('mouseover', tip.show)
       .on('mouseout', tip.hide)
   });
