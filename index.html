@@ -651,28 +651,28 @@ function displayBar(data) {
 function addDropdown(fips) {
   console.log("in dropdown", fips)
   $( ".dropbtn" ).show();
-  console.log("statess", states_dict);
   s = "";
-  var num_valid = 0;
+  var valid = new Array();
   for (i = 0; i < fips.length; i++) {
     if (cases_dict.get(fips[i])) {
       s += "<a href='#' id='county" + i + "'></a>";
-      num_valid += 1;
+      valid.push(i);
     }
   }
+  console.log(valid.length + "valid fipses");
   document.getElementsByClassName("dropdown-content")[0].innerHTML = s;
   var curr_fips, curr_state;
-  for (i = 0; i < num_valid; i++) {
-    curr_fips = fips[i];
+  for (i = 0; i < valid.length; i++) {
+    curr_fips = fips[valid[i]];
     curr_state = states_dict.get(curr_fips);
-    $("#county" + i).html(curr_state);
+    $("#county" + valid[i]).html(curr_state);
   }
 
   $(document).ready(function() {
     $("a").click(function(event) {
       targ = event.target.id;
-      console.log(fips[targ[6]]);
-      displayBar(fips[targ[6]]);
+      console.log(fips[targ.slice(6)]);
+      displayBar(fips[targ.slice(6)]);
     })
   })
 }
