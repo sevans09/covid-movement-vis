@@ -755,13 +755,21 @@ function ready(error, us) {
   if (error) throw error;
   $( "#alertdiv" ).hide();
   makeMap(us);
-
   make_bubbles(1, "income")
   var slider = document.querySelector('input[type="range"]');
   slider.addEventListener('change', function () {
     var val = document.getElementById("myRange").value;
     makeMap(us);
-    make_bubbles(val, "income")
+    make_bubbles(val, "income");
+  });
+  window.addEventListener('keypress', function(e) {
+      var keyCode = e.keyCode;
+      var key = keyCode - 48
+      if (key > 0 && key < 8) {
+        document.getElementById("myRange").value = key;
+        makeMap(us);
+        make_bubbles(key, "income");
+      }
   });
 }
 
