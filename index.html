@@ -251,7 +251,9 @@ body {
   z-index: 1;
 }
 #map-legend {
-  text-align: center;
+  margin-top: -6%;
+  text-align: left;
+  margin-left: 12%;
 }
 
 #week {
@@ -327,10 +329,14 @@ span[data-color='5']{
     </div>   
     <div id="alertdiv"></div>
   </div>
-  <div class="column1"  style="position: sticky; margin-top:50px">
+  <div class="column1"  style="position: sticky; margin-top:10px">
     <svg id="maps"></svg>
-     <div id="map-legend">
-     </div>
+      <div class="column">
+        <div class="row">
+          <div id="map-legend"></div>
+        </div>
+      </div>
+     
      <div id ="bubblediv">
      </div>
   </div>
@@ -428,8 +434,8 @@ var tip = d3.tip()
 
 svg.call(tip)
 
-legend_width = width/2
-legend_height = height/4
+legend_width = width/4.5;
+legend_height = height/4;
 var legend = d3.select("#map-legend")
   .append("svg:svg")
   .attr("width", legend_width)
