@@ -27,7 +27,7 @@
 
 console.log("hello");
 
-const width = 900
+const width = 1200
 const height = 500 
 
 
@@ -76,8 +76,8 @@ var quantize = d3.scaleQuantize()
 
 var radquantize = d3.scaleQuantize()
     .domain([min, max])
-    .range(d3.range(10).map(function(i) {
-      return i;
+    .range(d3.range(8).map(function(i) {
+      return i + 2;
     }))
 
 var nodes = move_dict.keys().map(function(d) {
@@ -144,7 +144,6 @@ var simulation = d3.forceSimulation(nodes)
       });
 
       console.log(JSON.stringify(pos_dict, null, 4))
-    
 
   });
   

@@ -140,6 +140,7 @@ body {
 #bubblediv {
   min-height: 500px;
   height: 500px;
+  min-width: 1000px
   margin: auto;
   margin-top: 50px;
   text-align: center;
@@ -333,6 +334,7 @@ span[data-color='5']{
 
 <script src="js/d3.v4.min.js"></script>
 <script src="js/topojson.v1.min.js"></script>
+<script src="js/bubbles.js"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/0.10.0/lodash.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="js/d3-tip.js"></script>
@@ -340,7 +342,6 @@ span[data-color='5']{
 <script type = "text/javascript" src="us-county-cases.json"></script>
 <script type = "text/javascript" src="./income_pos.json"></script>
 <script type = "text/javascript" src="./demographic-data.json"></script>
-<script type = "text/javascript" src="js/bubbles.js"></script>
 <script>
 
 var title = document.getElementById("info").innerHTML = "<h2>COVID-19 Movement & Cases Tracker<br>with Demographic Data Trends</h2><h5><br>Main Data Sources<br>Cuebiq Mobility Index Analysis (uses phone data)<br>NYT COVID-19 Cases Data in the United States (GitHub Repo)</h5><h3><br>Slide below to explore movement changes by week."
