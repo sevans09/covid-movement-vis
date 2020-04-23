@@ -3,6 +3,19 @@
 <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 
 <style>
+h1.title {
+  margin-bottom: -10px;
+  text-align: center;
+}
+
+h4.title {
+  margin: 0;
+  font-weight: normal;
+  text-align: center;
+  color: #7C746D;
+  font-size: 12px;
+}
+
 
 h5 {
   font-weight: normal;
@@ -282,29 +295,32 @@ span[data-color='5']{
 </style>
 
 
-
+<h1 class="title">COVID-19 Movement & Cases Tracker
+  with Demographic Trends</h1></br>
+<h4 class="title">Movement Index Data: <a href="https://help.cuebiq.com/hc/en-us/articles/360041285051-Reading-Cuebiq-s-COVID-19-Mobility-Insights">Cuebiq Mobility Index Analysis</a> uses phone data to measure the median distance traveled by all devices per county</h4> 
+<h4 class="title">Cases Data: <a href="https://github.com/nytimes/covid-19-data">covid-19-data</a> is a New York Times GitHub repository that is updated each day with new cases and deaths by county</h4> 
 <div class="row">
   <div class="column2">
     <div id="info" style="margin-top: 50px"></div>
-    <h3></h3>
+    <h3 id="sliderinfo"></h3>
     <div class="row">
       <input type="range" min="1" max="7" value="0" class="slider" id="myRange"><div id="week"></div>
     </div>    
-    <h4 id="title"></h4>
-      <div class="row" id="userbox">
-          <div class="wrap">
-            <div class="search">
-               <input type="text" class="searchTerm" id="queriedCounty" placeholder="Enter a county (e.g. Miami)">
-               <button type="submit" class="searchButton" onClick=handleQuery()>
-                 <i class="fa fa-search"></i>
-              </button>
-            </div>
+    <h4 id="queryinfo"></h4>
+    <div class="row" id="userbox">
+        <div class="wrap">
+          <div class="search">
+              <input type="text" class="searchTerm" id="queriedCounty" placeholder="Enter a county (e.g. Miami)">
+              <button type="submit" class="searchButton" onClick=handleQuery()>
+                <i class="fa fa-search"></i>
+            </button>
           </div>
-          <div class="dropdown" id="dropdown">
-            <button class="dropbtn" id="dropdown">State</button>
-            <div class="dropdown-content">
-            </div>
+        </div>
+        <div class="dropdown" id="dropdown">
+          <button class="dropbtn" id="dropdown">State</button>
+          <div class="dropdown-content">
           </div>
+        </div>
      </div>
     <div class="row" id="barchartdiv">
         <div id ="barchart"> </div>
@@ -345,9 +361,10 @@ span[data-color='5']{
 <script type = "text/javascript" src="js/bubbles.js"></script>
 <script>
 
-var title = document.getElementById("info").innerHTML = "<h2>COVID-19 Movement & Cases Tracker<br>with Demographic Data Trends</h2><h5><br>Main Data Sources<br>Cuebiq Mobility Index Analysis (uses phone data)<br>NYT COVID-19 Cases Data in the United States (GitHub Repo)</h5><h3><br>Slide below to explore movement changes by week."
+d3.select("#sliderinfo")
+.text("Slide below to explore movement changes by week.")
 
-d3.select("h4")
+d3.select("#queryinfo")
 .text("Query a county below to prompt a bar chart animation of COVID-19 cases.")
 
 var margin = {top: 10, left: 10, bottom: 10, right: 10}
