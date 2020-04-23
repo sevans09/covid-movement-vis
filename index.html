@@ -212,6 +212,16 @@ body {
   background-color: #4242;
 }
 
+#radiobuttondiv {
+  font-size:16px;
+  padding: 10px;
+  margin-left:28%;
+  bottom: -15%;
+  background-color:#4242;
+  position:absolute;
+}
+
+
 #legend{
   position: absolute;
   z-index: 1;
@@ -341,19 +351,21 @@ span[data-color='5']{
      </div>
   </div>
 </div>
+  <div id="radiobuttondiv">
     <strong>Filter by</strong>&nbsp
-      <div class="form-check form-check-inline">
+      <div class="form-check form-check-inline" id="radiobuttons">
         <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
         <label class="form-check-label" for="inlineRadio1">Income</label>
       </div>
-      <div class="form-check form-check-inline">
+      <div class="form-check form-check-inline" id="radiobuttons">
         <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
         <label class="form-check-label" for="inlineRadio2">Politics</label>
       </div>
-      <div class="form-check form-check-inline">
+      <div class="form-check form-check-inline" id="radiobuttons">
         <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3">
         <label class="form-check-label" for="inlineRadio3">Education</label>
       </div>
+    </div>
 
 <script src="js/d3.v4.min.js"></script>
 <script src="js/topojson.v1.min.js"></script>
