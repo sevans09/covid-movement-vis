@@ -59,7 +59,7 @@ def gen_data():
 
 		cases_data.append(cases_by_county)
 	
-	with open("us-county-cases.json", "w") as outfile: 
+	with open("us-county-cases.json", "w+") as outfile: 
 		outfile.write("cases_data = ")
 		json.dump(cases_data, outfile) 
 

@@ -8,7 +8,7 @@ function make_bubbles(val, dem) {
 
   $("#bubblediv").empty()
   console.log("hello")
-  var width = $("#bubblediv").width();
+  var width = $("#bubblediv").width() + 250;
   var height = $("#bubblediv").height()
 
   var max_pop = 123000;
@@ -140,7 +140,7 @@ function make_bubbles(val, dem) {
       .attr("cx", function(d) { return d.x} )
       .attr("cy", function(d) { return d.y} )
       .attr("r", function(d) { return d.r} )
-      .style("opacity", 0.7)
+      .style("opacity", 0.8)
       .on('mouseover', tip.show)
       .on('mouseout', tip.hide)
   });
