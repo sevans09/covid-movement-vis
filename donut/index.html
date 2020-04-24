@@ -19,10 +19,10 @@
         .height(500)
         .cornerRadius(3) // sets how rounded the corners are on each slice
         .padAngle(0.015) // effectively dictates the gap between slices
-        .variable('% of Cases')
+        .variable('Relative Percentage')
         .category('County');
 
-    d3.tsv('species.tsv', function(error, data) {
+    d3.csv('test.csv', function(error, data) {
         if (error) throw error;
         d3.select('#chart')
             .datum(data) // bind data to the div
