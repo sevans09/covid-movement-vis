@@ -148,9 +148,6 @@ function donutChart() {
             // and returns the html string key: value
             function toolTipHTML(data) {
     
-                function isFloat(n){
-                    return Number(n) === n && n % 1 !== 0;
-                }
                 var tip = '',
                     i   = 0;
 
