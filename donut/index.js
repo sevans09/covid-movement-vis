@@ -142,17 +142,32 @@ function donutChart() {
                 });
             }
 
+
+
             // function to create the HTML string for the tool tip. Loops through each key in data object
             // and returns the html string key: value
             function toolTipHTML(data) {
-
+    
+                function isFloat(n){
+                    return Number(n) === n && n % 1 !== 0;
+                }
                 var tip = '',
                     i   = 0;
 
                 for (var key in data.data) {
 
                     // if value is a number, format it as a percentage
-                    var value = (!isNaN(parseFloat(data.data[key]))) ? percentFormat(data.data[key]) : data.data[key];
+                    var value;
+                    if (!isNaN(data.data[key])) {
+                        if (data.data[key] % 1 == 0)
+                            value = data.data[key];
+                        else
+                            value = percentFormat(data.data[key]);
+                    }
+                    else {
+                        value = data.data[key]
+                    }
+                    // var value = (!isNaN(parseFloat(data.data[key]))) ? percentFormat(data.data[key]) : data.data[key];
 
                     // leave off 'dy' attr for first tspan so the 'dy' attr on text element works. The 'dy' attr on
                     // tspan effectively imitates a line break.
