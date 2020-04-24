@@ -65,48 +65,48 @@ function donutChart() {
 
             // ===========================================================================================
             // add text labels
-            var label = svg.select('.labelName').selectAll('text')
-                .data(pie)
-              .enter().append('text')
-                .attr('dy', '.35em')
-                .html(function(d) {
-                    // add "key: value" for given category. Number inside tspan is bolded in stylesheet.
-                    return d.data[category] + ': <tspan>' + percentFormat(d.data[variable]) + '</tspan>';
-                })
-                .attr('transform', function(d) {
+            // var label = svg.select('.labelName').selectAll('text')
+            //     .data(pie)
+            //   .enter().append('text')
+            //     .attr('dy', '.35em')
+            //     .html(function(d) {
+            //         // add "key: value" for given category. Number inside tspan is bolded in stylesheet.
+            //         return d.data[category] + ': <tspan>' + percentFormat(d.data[variable]) + '</tspan>';
+            //     })
+            //     .attr('transform', function(d) {
 
-                    // effectively computes the centre of the slice.
-                    // see https://github.com/d3/d3-shape/blob/master/README.md#arc_centroid
-                    var pos = outerArc.centroid(d);
+            //         // effectively computes the centre of the slice.
+            //         // see https://github.com/d3/d3-shape/blob/master/README.md#arc_centroid
+            //         var pos = outerArc.centroid(d);
 
-                    // changes the point to be on left or right depending on where label is.
-                    pos[0] = radius * 0.95 * (midAngle(d) < Math.PI ? 1 : -1);
-                    return 'translate(' + pos + ')';
-                })
-                .style('text-anchor', function(d) {
-                    // if slice centre is on the left, anchor text to start, otherwise anchor to end
-                    return (midAngle(d)) < Math.PI ? 'start' : 'end';
-                });
+            //         // changes the point to be on left or right depending on where label is.
+            //         pos[0] = radius * 0.95 * (midAngle(d) < Math.PI ? 1 : -1);
+            //         return 'translate(' + pos + ')';
+            //     })
+            //     .style('text-anchor', function(d) {
+            //         // if slice centre is on the left, anchor text to start, otherwise anchor to end
+            //         return (midAngle(d)) < Math.PI ? 'start' : 'end';
+            //     });
             // ===========================================================================================
 
             // ===========================================================================================
             // add lines connecting labels to slice. A polyline creates straight lines connecting several points
-            var polyline = svg.select('.lines')
-                .selectAll('polyline')
-                .data(pie)
-              .enter().append('polyline')
-                .attr('points', function(d) {
+            // var polyline = svg.select('.lines')
+            //     .selectAll('polyline')
+            //     .data(pie)
+            //   .enter().append('polyline')
+            //     .attr('points', function(d) {
 
-                    // see label transform function for explanations of these three lines.
-                    var pos = outerArc.centroid(d);
-                    pos[0] = radius * 0.95 * (midAngle(d) < Math.PI ? 1 : -1);
-                    return [arc.centroid(d), outerArc.centroid(d), pos]
-                });
+            //         // see label transform function for explanations of these three lines.
+            //         var pos = outerArc.centroid(d);
+            //         pos[0] = radius * 0.95 * (midAngle(d) < Math.PI ? 1 : -1);
+            //         return [arc.centroid(d), outerArc.centroid(d), pos]
+            //     });
             // ===========================================================================================
 
             // ===========================================================================================
             // add tooltip to mouse events on slices and labels
-            d3.selectAll('.labelName text, .slices path').call(toolTip);
+            d3.selectAll('.slices path').call(toolTip);
             // ===========================================================================================
 
             // ===========================================================================================
