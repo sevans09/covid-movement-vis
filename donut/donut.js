@@ -4,7 +4,7 @@ function makeDonut(state) {
         .height(300)
         .cornerRadius(3) // sets how rounded the corners are on each slice
         .padAngle(0.015) // effectively dictates the gap between slices
-        .variable('Relative Percentage')
+        .variable('Percentage')
         .category('County');
 
     d3.csv('donut/test.csv', function(error, data) {
