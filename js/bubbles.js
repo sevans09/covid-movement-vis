@@ -6,18 +6,19 @@ function toTitleCase(str) {
 
 function make_bubbles(val, dem) {
 
+  var margin = {top: 0, right: 50, bottom: 50, left: 50},
   $("#bubblediv").empty()
   console.log("hello")
-  var width = $("#bubblediv").width() + 250;
+  var width = $("#bubblediv").width()
   var height = $("#bubblediv").height()
 
-  var max_pop = 123000;
-  var min_pop = 24000;
-  var max_pop = 123000;
-  var min_pop = 24000;
+  var max_income = 123000;
+  var min_income = 23000;
+  var max_pop = 1000000;
+  var min_pop = 169;
 
   var min_max = {
-    "income": {'min': 24000, 'max': 123000},
+    "income": {'min': min_income, 'max': max_income]},
     "pop"   : {'min': min_pop, 'max': max_pop}
   }
 
@@ -47,13 +48,11 @@ function make_bubbles(val, dem) {
 
   var x = d3.scaleLinear()
     .domain( [min_max[dem].min, min_max[dem].max] )
-    .range( [margin.left, width] );
+    .range( [margin.left, width - margin.right] );
 
   var radquantize = d3.scaleQuantize()
       .domain([min_max['pop'].min, min_max['pop'].max])
-      .range(d3.range(5).map(function(i) {
-        return i+2;
-      }))
+      .range([2, 5])
 
   var xAxis = d3.axisBottom(x);
 
@@ -119,19 +118,25 @@ function make_bubbles(val, dem) {
         x: x(node.median_income),
         fx: x(node.median_income),
         r: radquantize(node.pop_2019),
-        y: y_dict.get(node.fips)
+        // y: y_dict.get(node.fips)
       };
     });
 
     bubbles.append("g")
       .attr("class", "x axis")
+      .force("x", d3.forceX(function(d) { return x(d.income); }).strength(1))
+      .force("y", d3.forceY(( height/2)))
       .attr("transform", "translate(0," + ( height/2)  + ")")
       .call(xAxis);
 
     var simulation = d3.forceSimulation(nodes)
       .force("collide", d3.forceCollide().radius(function(d){ return d.r}))
       .force("manyBody", d3.forceManyBody().strength(-1))
-      .tick()
+      
+    for (var i = 500 - 1; i >= 0; i--) {
+      console.log("tick")
+      simulation.tick()
+    }
 
     var circle = bubbles.selectAll("circle")
       .data(nodes)

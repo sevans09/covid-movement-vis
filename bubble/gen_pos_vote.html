@@ -53,6 +53,7 @@ p {
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script type = "text/javascript" src="../data/move-data/move.json"></script>
 <script type = "text/javascript" src="./test.json"></script>
+<script type = "text/javascript" src="./us-county-cases.json"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.7.1/d3-tip.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script>
@@ -65,21 +66,20 @@ function make_bubbles() {
 
       padding = 1,
       maxRadius = 8,
-      minRadius = 1,
-      numberOfNodes = 3100;
+      minRadius = 1
 
   var max_income = 123000;
   var min_income = 24000;
-  var max_pop = 123000;
-  var min_pop = 24000;
+  var max_pop = 1000000
+  var min_pop = 169;
 
   var x = d3.scaleLinear()
-    .domain( [min_income, max_income] )
+    .domain( [0, 0.51] )
     .range( [margin.left, width + margin.right] );
 
   var radquantize = d3.scaleQuantize()
       .domain([min_pop, max_pop])
-      .range([2, 5])
+      .range([3, 8])
 
   var xAxis = d3.axisBottom(x);
 
@@ -88,7 +88,7 @@ function make_bubbles() {
     .offset([-6, 0])
     .html(function(d) {
       return "<p><strong>Move:</strong> <span>" + d.move + "</span></p>\
-      <p><strong>Income:</strong> <span>" + d.income + "</span></p>";
+      <p><strong>Cases:</strong> <span>" + d.total_cases + "</span></p>";
     });
 
   var svg = d3.select("body").append("svg")
@@ -105,17 +105,12 @@ function make_bubbles() {
 
   var xAxisTitle = svg.append("text")
     .attr("class", "axisTitle")
-    .text("Age in case file")
+    .text("Percent GOP vote per county")
 
   xAxisTitle
     .attr("x", width - xAxisTitle.node().getBBox().width + margin.right)
     .attr("y", margin.top + ( height/2) - xAxisTitle.node().getBBox().height);
 
-  svg.append("text")
-    .attr("x", 50)
-    .attr("y", 30)
-    .attr("dy", "0.71em")
-    .text("People hanging out in groups");
 
   var quantize = d3.scaleQuantize()
       .domain([0, 4])
@@ -132,11 +127,12 @@ function make_bubbles() {
               return "rgb(211, 85, 65)";
       }))
 
-  var max_pop = 1000000;
-  var min_pop = 169;
-
   var move_dict = d3.map();
   og_data.forEach( function(d){ move_dict.set( d.fips, d.move_index) });
+
+
+  var case_dict = d3.map()
+  cases_data.forEach( function(d) {case_dict.set(d.fips, d.total_cases)})
 
   // var y_dict = d3.map();
   // test_pos.forEach( function(d){ y_dict.set( d.fips, (height + margin.top) - d.y) });
@@ -151,8 +147,10 @@ function make_bubbles() {
         fips: node.fips, 
         pop: node.pop_2019,
         income: node.median_income,
-        x: x(node.median_income),
-        fx: x(node.median_income),
+        vote: node.per_gop,
+        total_cases: case_dict.get(node.fips) / node.pop_2019,
+        x: x(case_dict.get(node.fips) / node.pop_2019) ,
+        fx: x(case_dict.get(node.fips) / node.pop_2019) ,
         r: radquantize(node.pop_2019),
         // y: y_dict.get(node.fips)
       };
@@ -164,16 +162,16 @@ function make_bubbles() {
       .call(xAxis);
 
     var simulation = d3.forceSimulation(nodes)
-      .force("x", d3.forceX(function(d) { return x(d.income); }).strength(1))
+      .force("x", d3.forceX(function(d) { return x(d.total_cases); }).strength(1))
       .force("y", d3.forceY(margin.top + ( height/2) ))
       .force("collide", d3.forceCollide().radius(function(d){ return d.r}))
       .force("manyBody", d3.forceManyBody().strength(-1))
    
-    for (var i = 500 - 1; i >= 0; i--) {
+    for (var i = 100 - 1; i >= 0; i--) {
 
+      console.log("tick")
       simulation.tick()
     }
-
 
 
     var circle = svg.selectAll("circle")
@@ -193,7 +191,7 @@ function make_bubbles() {
         pos_dict.set( d.__data__.fips, d.__data__)
       });
 
-      //console.log(JSON.stringify(pos_dict, null, 4))\
+      console.log(JSON.stringify(pos_dict, null, 4))
   });
 
 }

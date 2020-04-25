@@ -1,4 +1,3 @@
-import requests
 import json
 import pandas as pd 
 import csv
@@ -56,6 +55,7 @@ def gen_data():
 		cases_by_county['dates'] = dates
 		cases_by_county['cases'] = num_cases
 		cases_by_county['deaths'] = deaths
+		cases_by_county['total_cases'] = sum(num_cases)
 
 		cases_data.append(cases_by_county)
 	
