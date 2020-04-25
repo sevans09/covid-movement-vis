@@ -15,5 +15,5 @@ TODO:
 - sizing stuff to fit the map and div on the screen?
 - make legend look nice
 - radio buttons for bubble thing
-
+- data filter for donut chart to only get counties with certain state queried
 

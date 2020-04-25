@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Reusable Donut Chart in D3 v4</title>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
+    <link rel="icon" href="data:;base64,=">
+    <link rel="stylesheet" href="index.css">
+    <script src="index.js"></script>
+</head>
+<body>
+
+<div id="chart"></div>
+
+<script>
+    function makeDonut(state) {
+        var donut = donutChart()
+            .width(960)
+            .height(500)
+            .cornerRadius(3) // sets how rounded the corners are on each slice
+            .padAngle(0.015) // effectively dictates the gap between slices
+            .variable('Percentage')
+            .category('County');
+
+        d3.csv('test.csv', function(error, data) {
+            newdata = data.filter(function(d) {
+                if (d.State == state) {
+                    console.log(d);
+                    return d;
+                }
+            })
+            if (error) throw error;
+            d3.select('#chart')
+                .datum(newdata) // bind data to the div
+                .call(donut); // draw chart in div
+        });
+    }
+    
+    makeDonut("Oregon");
+
+</script>
+
+</body>
+</html>

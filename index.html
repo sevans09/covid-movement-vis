@@ -31,6 +31,7 @@ h5 {
   font-size: 10px;
   border: none;
   margin-left: -7%;
+  vertical-align: middle;
 }
 
 .dropdown {
@@ -102,6 +103,9 @@ body {
   font-family: 'Helvetica', sans-serif;
 }
 
+#barchart {
+  margin-bottom: -100px;
+}
 
 .button {
   outline:none;
@@ -150,6 +154,16 @@ body {
   cursor: pointer;
 }
 
+
+#bubblediv {
+  max-height: 500px;
+  min-height: 500px
+  margin: auto;
+  margin-top: 50px;
+  text-align: center;
+  width: 95%;
+  margin-top: -50px;
+}
 
 .column1 {
   float: left;
@@ -201,6 +215,16 @@ body {
   background-color: #4242;
 }
 
+#radiobuttondiv {
+  font-size:16px;
+  padding: 10px;
+  margin-left:4%;
+  bottom: -15%;
+  background-color:#4242;
+  position:absolute;
+}
+
+
 #legend{
   position: absolute;
   z-index: 1;
@@ -215,7 +239,8 @@ body {
 }
 
 #dem_options {
-  float: left;
+  float: right;
+  margin-right: 100px;
 }
 
 #scatterplot {
@@ -314,6 +339,26 @@ span[data-color='5']{
 .q2-9 { fill:#F6F5AE; }
 .q3-9 { fill:rgb(253, 223, 158); }
 .q4-9 { fill:rgb(211, 85, 65); }
+
+polyline{
+    opacity: .3;
+    stroke: black;
+    stroke-width: 2px;
+    fill: none;
+}
+
+/* Make the percentage on the text labels bold*/
+.labelName tspan {
+    font-style: normal;
+    font-weight: 700;
+}
+
+/* In biology we generally italicise species names. */
+.labelName {
+    font-size: 0.9em;
+    font-style: italic;
+}
+
 </style>
 
 
@@ -344,6 +389,17 @@ span[data-color='5']{
           </div>
         </div>
      </div>
+     <h4 id="querystateinfo"></h4>
+     <div class="row" id="userbox">
+      <div class="wrap">
+        <div class="search">
+            <input type="text" class="searchTerm" id="queriedState" placeholder="Enter a state (e.g. Massachusetts)">
+            <button type="submit" class="searchButton" onClick=handleStateQuery()>
+              <i class="fa fa-search"></i>
+          </button>
+        </div>
+      </div>
+   </div>
     <div class="row" id="barchartdiv">
         <div id ="barchart"> </div>
     </div>   
@@ -352,7 +408,7 @@ span[data-color='5']{
   <div class="column1"  style="position: sticky; margin-top:10px">
     <svg id="maps"></svg>
       <div class="column">
-        <div class="row">
+        <div class="row" id="maplegend">
           <div id="map-legend"></div>
         </div>
       </div>
@@ -370,13 +426,11 @@ span[data-color='5']{
         <label class="radio-inline dem_option">
           <input type="radio" name="dem_radio" value="vote">Politics
         </label>
-  
       </form>
        </div>
     </div>
   </div>
 </div>
-
 <script src="js/d3.v4.min.js"></script>
 <script src="js/topojson.v1.min.js"></script>
 <!-- <script src="js/bubbles.js"></script> -->
@@ -388,6 +442,9 @@ span[data-color='5']{
 <script type = "text/javascript" src="./income_pos.json"></script>
 <script type = "text/javascript" src="./bubble/pos-vote.json"></script>
 <script type = "text/javascript" src="./demographic-data.json"></script>
+<!-- <script type = "text/javascript" src="js/bubbles.js"></script> -->
+<script type = "text/javascript" src="donut/donut.js"></script>
+<script type = "text/javascript" src="donut/index.js"></script>
 <script>
 
 d3.select("#sliderinfo")
@@ -395,6 +452,9 @@ d3.select("#sliderinfo")
 
 d3.select("#queryinfo")
 .text("Query a county below or click on a map county object to prompt a bar chart animation of COVID-19 cases.")
+
+d3.select("#querystateinfo")
+.text("Query a state below to prompt a donut chart breakdown of COVID-19 cases.")
 
 var margin = {top: 10, left: 10, bottom: 10, right: 10}
   , width = $("body").width() / 1.1
@@ -668,28 +728,28 @@ function displayBar(data) {
 function addDropdown(fips) {
   console.log("in dropdown", fips)
   $( ".dropbtn" ).show();
-  console.log("statess", states_dict);
   s = "";
-  var num_valid = 0;
+  var valid = new Array();
   for (i = 0; i < fips.length; i++) {
     if (cases_dict.get(fips[i])) {
       s += "<a href='#' id='county" + i + "'></a>";
-      num_valid += 1;
+      valid.push(i);
     }
   }
+  console.log(valid.length + "valid fipses");
   document.getElementsByClassName("dropdown-content")[0].innerHTML = s;
   var curr_fips, curr_state;
-  for (i = 0; i < num_valid; i++) {
-    curr_fips = fips[i];
+  for (i = 0; i < valid.length; i++) {
+    curr_fips = fips[valid[i]];
     curr_state = states_dict.get(curr_fips);
-    $("#county" + i).html(curr_state);
+    $("#county" + valid[i]).html(curr_state);
   }
 
   $(document).ready(function() {
     $("a").click(function(event) {
       targ = event.target.id;
-      console.log(fips[targ[6]]);
-      displayBar(fips[targ[6]]);
+      console.log(fips[targ.slice(6)]);
+      displayBar(fips[targ.slice(6)]);
     })
   })
 }
@@ -731,13 +791,49 @@ function handleQuery() {
   }
 }
 
-document.addEventListener("keypress", function(e) {
-    if (e.keyCode == 13) {
+function handleStateQuery() {
+  console.log("entered");
+  var query = $("#queriedState").val();
+  $("#barchart").empty();
+    var margin = {top: 70, right: 30, bottom: 90, left: 40},
+    width = 300
+    height = 300
+
+  // Bar chart SVG
+  // var svg2 = d3.select("#barchart")
+  //   .append("svg")
+  //   .attr("width", width + margin.left + margin.right)
+  //   .attr("height", height + margin.top + margin.bottom)
+  //   .append("g")
+  //   .attr("transform",
+  //         "translate(" + margin.left + "," + margin.top + ")");
+  makeDonut(query);
+}
+
+// document.addEventListener("keypress", function(e) {
+//     if (e.keyCode == 13) {
+//       e.preventDefault();
+//       //console.log(document.querySelector('button').closest('button'));
+//       handleQuery();
+//     }
+//   });
+
+
+$("#queriedCounty").on('keyup', function (e) {
+    if (e.keyCode === 13) {
       e.preventDefault();
+      document.getElementById('queriedState').value = "";
       handleQuery();
     }
-  });
+});
 
+$("#queriedState").on('keyup', function (e) {
+    if (e.keyCode === 13) {
+      e.preventDefault();
+      document.getElementById('queriedCounty').value = "";
+      handleStateQuery();
+    }
+});
 
 $('#inlineRadio1').change(function() {
   window.scrollTo({
@@ -963,11 +1059,11 @@ function make_bubbles(val, dem) {
 function ready(error, us) {
   if (error) throw error;
   $( "#alertdiv" ).hide();
-  makeMap(us);
-
-  make_bubbles(1, "income")
   var slider = document.querySelector('input[type="range"]');
   var radio = document.querySelector('input[type="radio"]');
+  var val = document.getElementById("myRange").value;
+  var dem = $("input[name='dem_radio']:checked").val();
+
   slider.addEventListener('change', function () {
     var val = document.getElementById("myRange").value;
     makeMap(us);
@@ -975,11 +1071,25 @@ function ready(error, us) {
     make_bubbles(val, dem)
   });
 
+  window.addEventListener('keypress', function(e) {
+      var keyCode = e.keyCode;
+      var key = keyCode - 48
+      if (key > 0 && key < 8) {
+        document.getElementById("myRange").value = key;
+        makeMap(us);
+        dem = $("input[name='dem_radio']:checked").val();
+        make_bubbles(key, dem);
+      }
+  });
+
   $('#radio_options').change(function(){
       dem = $("input[name='dem_radio']:checked").val();
       var val = document.getElementById("myRange").value;
       make_bubbles(val, dem)
   });
+
+  makeMap(us);
+  make_bubbles(val, dem)
 
 }
 
