@@ -475,6 +475,7 @@ og_data.forEach( function(d){ move_dict.set( d.fips, d.move_index) });
 
 var county_dict = d3.map();
 var states_dict = d3.map();
+var state_names_dict = d3.map();
 var names_dict = {};
 var names_and_county_dict = d3.map();
 og_data.forEach( function(d){ 
@@ -483,6 +484,8 @@ og_data.forEach( function(d){
   names_and_county_dict[d.fips] = d.county, d.state;
   names_dict[d.county] = d.fips;
   states_dict.set(d.fips, d.state);
+  if (state_names_dict[d.state] == undefined)
+    state_names_dict[d.state] = d.sab;
 });
 
 var cases_dict = d3.map();
@@ -786,9 +789,11 @@ function handleQuery() {
           $( "#alertdiv" ).show();
           $( "#alertdiv" ).html("County does not exist");
         }
-        const upper = toTitleCase(county_dict.get(query))
-        $( "#alertdiv" ).show();
-        $( "#alertdiv" ).html("No case data for " + upper);
+        else {
+          const upper = toTitleCase(county_dict.get(query))
+          $( "#alertdiv" ).show();
+          $( "#alertdiv" ).html("No case data for " + upper);
+        }
     }
   }
 }
@@ -796,7 +801,11 @@ function handleQuery() {
 function handleStateQuery() {
   console.log("entered");
   var query = $("#queriedState").val();
-  $("#barchart").empty();
+  console.log(state_names_dict[toTitleCase(query)]);
+  if (state_names_dict[toTitleCase(query)]) {
+    $("#alertdiv").hide();
+    $("#barchart").empty();
+    $("#barchartdiv").show();
     var margin = {top: 70, right: 30, bottom: 90, left: 40},
     width = 300
     height = 300
@@ -809,7 +818,14 @@ function handleStateQuery() {
   //   .append("g")
   //   .attr("transform",
   //         "translate(" + margin.left + "," + margin.top + ")");
-  makeDonut(query);
+
+    makeDonut(toTitleCase(query));
+  }
+  else {
+    $( "#barchartdiv" ).hide( "slow" );
+    $( "#alertdiv" ).show();
+    $( "#alertdiv" ).html("State does not exist");
+  }
 }
 
 // document.addEventListener("keypress", function(e) {
