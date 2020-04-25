@@ -207,7 +207,6 @@ body {
 
 #alertdiv {
   margin-top:10%;
-  /* padding-top: 10%; */
   padding: 10% 25% 10% 25%;
   text-align: center;
   font-size: 1.2vw;
@@ -254,6 +253,10 @@ body {
   width: 95%;
   max-height: 500px;
   min-height: 400px;
+}
+
+.axisTitle {
+  z-index: 8000;
 }
 
 .bubble_svg {
@@ -310,7 +313,6 @@ body {
   font-size: 18px;
   padding-left: 10px;
 }
-
 
 span{
     height: 1.3vw;
@@ -371,7 +373,7 @@ polyline{
     <div id="info"></div>
     <h3 id="sliderinfo"></h3>
     <div class="row">
-      <input type="range" min="1" max="7" value="0" class="slider" id="myRange"><div id="week"></div>
+      <input type="range" min="1" max="7" value="4" class="slider" id="myRange"><div id="week"></div>
     </div>    
     <h4 id="queryinfo"></h4>
     <div class="row" id="userbox">
@@ -975,11 +977,12 @@ function make_bubbles(val, dem) {
 
   var xAxisTitle = bubbles.append("text")
     .attr("class", "axisTitle")
-    .text(dem_title[dem])
+    .text(dem_title[dem]);
 
   xAxisTitle
     .attr("x", width - xAxisTitle.node().getBBox().width-50)
-    .attr("y", ( height/2) - xAxisTitle.node().getBBox().height);
+    .attr("y", ( height/2) - xAxisTitle.node().getBBox().height)
+    .attr("z-index", "999");
 
   var quantize = d3.scaleQuantize()
       .domain([0, 4])
@@ -999,8 +1002,6 @@ function make_bubbles(val, dem) {
   var y_dict = d3.map();
 
   y_pos = dem_pos[dem]
-
-  console.log(y_pos)
 
   y_pos.forEach( function(d){ y_dict.set( d.fips, 450 - d.y) });
 
@@ -1090,7 +1091,6 @@ function ready(error, us) {
 
   makeMap(us);
   make_bubbles(val, dem)
-
 }
 
 </script>
