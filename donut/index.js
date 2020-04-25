@@ -142,6 +142,9 @@ function donutChart() {
                 });
             }
 
+            function numberWithCommas(x) {
+                return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            }
 
 
             // function to create the HTML string for the tool tip. Loops through each key in data object
