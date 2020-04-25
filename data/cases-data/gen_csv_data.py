@@ -8,7 +8,7 @@ with open("../../us-county-cases.json", "r") as infile:
 f = csv.writer(open("../../donut/test.csv", "w+"))
 
 # Write CSV Header, If you dont need that, remove this line
-f.writerow(["County", "State", "Cases", "Relative Percentage"])
+f.writerow(["County", "State", "Cases", "Percentage"])
 
 cases = []
 state_dict = {}

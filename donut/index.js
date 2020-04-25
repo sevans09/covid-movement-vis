@@ -125,7 +125,7 @@ function donutChart() {
                         .attr('class', 'toolCircle')
                         .attr('dy', -15) // hard-coded. can adjust this to adjust text vertical alignment in tooltip
                         .html(toolTipHTML(data)) // add text to the circle.
-                        .style('font-size', '.9em')
+                        .style('font-size', '1em')
                         .style('text-anchor', 'middle'); // centres text in tooltip
 
                     svg.append('circle')
