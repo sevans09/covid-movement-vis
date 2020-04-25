@@ -157,7 +157,7 @@ function donutChart() {
                     var value;
                     if (!isNaN(data.data[key])) {
                         if (data.data[key] % 1 == 0)
-                            value = data.data[key];
+                            value = numberWithCommas(data.data[key]);
                         else
                             value = percentFormat(data.data[key]);
                     }
