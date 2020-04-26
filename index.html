@@ -593,14 +593,20 @@ function makeMap(us) {
       $( "#alertdiv" ).html("No case data for " + upper + " County");
     }
 
-    d3.selectAll("counties")
+    d3.selectAll("path")
       .transition()
-      .duration(200)
-      .style("opacity", .1)
+      .duration(1000)
+      .style("opacity", .3)
+      .transition()
+      .duration(6000)
+      .style("opacity", .95);
     d3.select(this)
       .transition()
-      .duration(200)
-      .style("stroke", "red")
+      .duration(1000)
+      .style("stroke", "#424242")
+      .transition()
+      .duration(6000)
+      .style("stroke", "transparent")
   }
 
 
