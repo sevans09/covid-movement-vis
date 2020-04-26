@@ -563,6 +563,7 @@ function makeMap(us) {
     .selectAll("path")
     .data(topojson.feature(us, us.objects.counties).features)
     .enter().append("path")
+    .style("opacity", .95)
     .attr("class", function(d) { 
       if (move_dict.get(d.id)) {
         return quantize(move_dict.get(d.id)[val-1])
@@ -574,8 +575,6 @@ function makeMap(us) {
       .on("mouseover", tip.show)
       .on("mouseout", tip.hide)
       .on("click", handleClick);
-
-  console.log(num_error_counties);
 
   function handleClick(d) {
     if (cases_dict.get(d.id)) {
@@ -590,7 +589,18 @@ function makeMap(us) {
       upper = toTitleCase(county_dict.get(d.id));
       $( "#alertdiv" ).html("No case data for " + upper + " County");
     }
+
+    d3.selectAll("counties")
+      .transition()
+      .duration(200)
+      .style("opacity", .1)
+    d3.select(this)
+      .transition()
+      .duration(200)
+      .style("stroke", "red")
   }
+
+
 
   svg.append("path")
       .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
