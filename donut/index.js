@@ -1,6 +1,6 @@
 function donutChart() {
-    var width,
-        height,
+    var width = 400,
+        height = 400,
         margin = {top: 10, right: 10, bottom: 10, left: 10},
         colour = d3.scaleOrdinal(d3.schemeCategory20c), // colour scheme
         variable, // value in data that will dictate proportions on chart

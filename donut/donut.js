@@ -1,7 +1,7 @@
-function makeDonut(state) {
+function makeDonut(state, width, height) {
     var donut = donutChart()
-        .width(300)
-        .height(300)
+        .width(width)
+        .height(height)
         .cornerRadius(3) // sets how rounded the corners are on each slice
         .padAngle(0.015) // effectively dictates the gap between slices
         .variable('Percentage')
