@@ -174,7 +174,10 @@ body {
 .column2 {
   margin-top: 20px;
   padding-left: .7vw;
+  padding-right: .7vw;
   float: left;
+  background-color: rgb(209, 209, 209);
+  border: 1px solid #a7a7a7;
   width: 26%;
 }
 
@@ -211,7 +214,7 @@ body {
   text-align: center;
   font-size: 1.2vw;
   font-weight: 700;
-  background-color: #4242;
+  background-color: rgba(14, 13, 14, 0.192);
 }
 
 #radiobuttondiv {
@@ -673,7 +676,7 @@ function displayBar(data) {
             return x(d); 
             })
           .attr("width", x.bandwidth())
-          .attr("fill", "#b3b3b3")
+          .attr("fill", "#979797")
           .attr("height", function(d) { 
             return height - y(0); 
           })
