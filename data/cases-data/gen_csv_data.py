@@ -20,7 +20,6 @@ for col in x:
         state_dict[col["state"]]= []
         state_dict[col["state"]].append(col["cases"][len(col["cases"])-1])
 
-print(state_dict)
 
 j = 0
 for col in x:
