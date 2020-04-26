@@ -154,10 +154,8 @@ h1.title {
     max-height: 500px;
     min-height: 500px;
     margin: auto;
-    margin-top: 50px;
     text-align: center;
     width: 95%;
-    margin-top: -50px;
   }
   
   .column1 {
@@ -308,14 +306,21 @@ h1.title {
     font-size: smaller;
   }
   
-  #option_title {
+  /* #option_title {
     padding-top: 10px;
-    font-size: 20px;
-  }
+  } */
   
   .dem_option {
-    font-size: 18px;
     padding-left: 10px;
+    width: 30%;
+    font-weight: normal;
+    color: #585757;
+    font-size: larger;
+    margin: auto;
+  }
+
+  #radio_options {
+    margin-right: 50px;
   }
   
   span{
