@@ -152,7 +152,7 @@ h1.title {
   
   #bubblediv {
     max-height: 500px;
-    min-height: 500px
+    min-height: 500px;
     margin: auto;
     margin-top: 50px;
     text-align: center;
@@ -238,6 +238,12 @@ h1.title {
   #dem_options {
     float: right;
     margin-right: 100px;
+  }
+
+  #slider_div {
+    float: left;
+    margin-left: 30%;
+    margin-bottom: 20px;
   }
   
   #scatterplot {

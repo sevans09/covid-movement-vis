@@ -10,12 +10,6 @@
 <h4 class="title">Cases Data: <a href="https://github.com/nytimes/covid-19-data">covid-19-data</a> is a New York Times GitHub repository that is updated each day with new cases and deaths by county</h4> 
 <div class="row">
   <div class="column2">
-    <div id="info"></div>
-    <h3 id="sliderinfo"></h3>
-    <div class="row">
-      <input type="range" min="1" max="7" value="4" class="slider" id="myRange"><div id="week"></div>
-
-    </div>    
     <h4 id="queryinfo"></h4>
     <div class="row" id="userbox">
         <div class="wrap">
@@ -61,15 +55,22 @@
   <div id="scatterplot">
     <div id ="bubblediv">
       <div id= "dem_options">
-      <div id= "option_title"><strong>Filter by Demographic</strong>&nbsp</div>
-      <form id= "radio_options">
-        <label class="radio-inline dem_option">
-          <input type="radio" name="dem_radio" value="income" checked>Income
-        </label>
-        <label class="radio-inline dem_option">
-          <input type="radio" name="dem_radio" value="vote">Politics
-        </label>
-      </form>
+        <div id= "option_title"><strong>Filter by Demographic</strong>&nbsp</div>
+        <form id= "radio_options">
+          <label class="radio-inline dem_option">
+            <input type="radio" name="dem_radio" value="income" checked>Income
+          </label>
+          <label class="radio-inline dem_option">
+            <input type="radio" name="dem_radio" value="vote">Politics
+          </label>
+        </form>
+       </div>
+       <div id="slider_div">
+        <h3 id="sliderinfo"></h3>
+        <div class="row">
+          <input type="range" min="1" max="7" value="4" class="slider" id="myRange"><div id="week"></div>
+    
+        </div>    
        </div>
     </div>
   </div>
