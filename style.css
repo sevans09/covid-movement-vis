@@ -1,0 +1,361 @@
+h1.title {
+    margin-bottom: -10px;
+    text-align: center;
+  }
+  
+  h4.title {
+    margin: 0;
+    font-weight: normal;
+    text-align: center;
+    color: #7C746D;
+    font-size: 12px;
+  }
+  
+  
+  h5 {
+    font-weight: normal;
+    color: #585757;
+  }
+  
+  .dropbtn {
+    display: none;
+    height: 36px;
+    background-color: #424242;
+    color: white;
+    padding: 12px;
+    font-size: 10px;
+    border: none;
+    margin-left: -7%;
+    vertical-align: middle;
+  }
+  
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 80px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+  }
+  
+  .dropdown-content a {
+    color: black;
+    padding: 10px 10px;
+    text-decoration: none;
+    display: block;
+  }
+  
+  .dropdown-content a:hover {background-color: #ddd; display:block}
+  
+  .dropdown:hover .dropdown-content {display: block;}
+  dropdown-content:hover .dropdown-content {display: block;}
+  
+  .dropdown:hover .dropbtn {background-color: grey;}
+  
+  .search {
+    width: 100%;
+    display: flex;
+  }
+  
+  .searchTerm {
+    width: 100%;
+    border: 3px solid #424242;
+    border-right: none;
+    padding: 5px;
+    height: 20px;
+    border-radius: 5px 0 0 5px;
+    outline: none;
+    color: #424242;
+  }
+  
+  .searchTerm:focus{
+    color: #424242;
+  }
+  
+  .searchButton {
+    height: 36px;
+    border: .5px solid #424242;
+    background: #424242;
+    text-align: center;
+    color: #fff;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+    font-size: 20px;
+  }
+  
+  .wrap{
+    width: 80%;
+    top: 10%;
+    left: 10%; 
+  }
+  
+  body {
+    font-family: 'Helvetica', sans-serif;
+  }
+  
+  #barchart {
+    margin-bottom: -100px;
+  }
+  
+  .button {
+    outline:none;
+    height:30px;
+    width:40px;
+    cursor:pointer;
+  }
+  
+  .button:hover {
+    text-decoration: underline;
+  }
+  
+  .slidecontainer {
+    width: 50%;
+    margin-left: 10%;
+  }
+  
+  .slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 60%;
+    height: 24px;
+    background: #d3d3d3;
+    opacity: 0.6;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+  }
+  
+  .slider:hover {
+    opacity: 1; 
+  }
+  
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none; 
+    appearance: none;
+    width: 25px; 
+    height: 25px; 
+    background: black;
+    cursor: pointer;
+  }
+  
+  .slider::-moz-range-thumb {
+    width: 25px; 
+    height: 25px;
+    background: black; 
+    cursor: pointer;
+  }
+  
+  
+  #bubblediv {
+    max-height: 500px;
+    min-height: 500px
+    margin: auto;
+    margin-top: 50px;
+    text-align: center;
+    width: 95%;
+    margin-top: -50px;
+  }
+  
+  .column1 {
+    float: left;
+    width: 74%;
+    height: auto;
+    margin-bottom: 0px
+  }
+  .column2 {
+    margin-top: 20px;
+    padding-left: .7vw;
+    padding-right: .7vw;
+    float: left;
+    background-color: rgb(209, 209, 209);
+    border: 1px solid #a7a7a7;
+    width: 26%;
+  }
+  
+  .row:after {
+    content: "";
+  }
+  
+  .row {
+    display: flex;
+  }
+  .counties {
+    fill: rgb(255, 247, 230);
+    outline-color: white;
+  }
+  
+  .states {
+    fill: none;
+    stroke: #fff;
+    stroke-linejoin: round;
+  }
+  
+  #decoration{
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    width: 32vw;
+    margin-top: 650px;
+    right: 0;
+  }
+  
+  #alertdiv {
+    margin-top:10%;
+    padding: 10% 25% 10% 25%;
+    text-align: center;
+    font-size: 1.2vw;
+    font-weight: 700;
+    background-color: rgba(14, 13, 14, 0.192);
+  }
+  
+  #radiobuttondiv {
+    font-size:16px;
+    padding: 10px;
+    margin-left:4%;
+    bottom: -15%;
+    background-color:#4242;
+    position:absolute;
+  }
+  
+  
+  #legend{
+    position: absolute;
+    z-index: 1;
+    font-family: "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
+    font-size: 1vw; 
+    font-style: italic; 
+    top: 0;
+    width: 32vw;
+    margin-top: -5%;
+    margin-right: 0vw;
+    right: 0;
+  }
+  
+  #dem_options {
+    float: right;
+    margin-right: 100px;
+  }
+  
+  #scatterplot {
+    width: 100%;
+  }
+  
+  
+  #bubblediv {
+    margin: auto;
+    text-align: center;
+    width: 95%;
+    max-height: 500px;
+    min-height: 400px;
+  }
+  
+  .axisTitle {
+    z-index: 8000;
+  }
+  
+  .bubble_svg {
+    margin-top: 0px;
+  }
+  
+  .tooltip {
+    background: #fff;
+    width: 140px;
+    border-radius: 10px;
+    border: 1px solid #c9c9c9;
+    font-size: 0.6srem;
+    padding: 5px;
+    position: absolute;
+    text-align: center;
+    opacity: 0;
+    z-index: 1;
+  }
+  
+  .d3-tip {
+    background: #fff;
+    width: 140px;
+    border-radius: 10px;
+    border: 1px solid #c9c9c9;
+    font-size: 0.6srem;
+    padding: 5px;
+    position: absolute;
+    text-align: center;
+    opacity: 0;
+    z-index: 1;
+  }
+  #map-legend {
+    margin-top: -6%;
+    text-align: left;
+    margin-left: 12%;
+  }
+  
+  #week {
+    width: 30%;
+    padding-left: 5px;
+    padding-top: 6px;
+    height: 24px;
+    font-weight: normal;
+    color: #585757;
+    font-size: smaller;
+  }
+  
+  #option_title {
+    padding-top: 10px;
+    font-size: 20px;
+  }
+  
+  .dem_option {
+    font-size: 18px;
+    padding-left: 10px;
+  }
+  
+  span{
+      height: 1.3vw;
+      width: calc(100% / 10);
+      background: black;
+      display: inline-block;
+  }
+  span[data-color='1']{
+      background: #9adbb5;
+  }
+  span[data-color='2']{
+      background: rgb(205, 235, 178);
+  }
+  span[data-color='3']{
+      background: #F6F5AE;
+  }
+  span[data-color='4']{
+      background: rgb(253, 223, 158);
+  }
+  span[data-color='5']{
+      background: rgb(211, 85, 65);
+  }
+  
+  .q0-9 { fill:#9adbb5; }
+  .q1-9 { fill:rgb(205, 235, 178); }
+  .q2-9 { fill:#F6F5AE; }
+  .q3-9 { fill:rgb(253, 223, 158); }
+  .q4-9 { fill:rgb(211, 85, 65); }
+  
+  polyline{
+      opacity: .3;
+      stroke: black;
+      stroke-width: 2px;
+      fill: none;
+  }
+  
+  /* Make the percentage on the text labels bold*/
+  .labelName tspan {
+      font-style: normal;
+      font-weight: 700;
+  }
+  
+  /* In biology we generally italicise species names. */
+  .labelName {
+      font-size: 0.9em;
+      font-style: italic;
+  }
+  
