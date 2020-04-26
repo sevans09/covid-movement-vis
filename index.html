@@ -793,6 +793,8 @@ function handleQuery() {
   });
 
   if (states_with_county.length > 1) {
+    $( "#alertdiv" ).hide();
+    $( "#barchartdiv" ).show();
     addDropdown(states_with_county);
   }
   else {
