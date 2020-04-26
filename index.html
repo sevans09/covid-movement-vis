@@ -419,7 +419,8 @@ function addDropdown(fips) {
 
 
 function handleQuery() {
-  var query = $("#queriedCounty").val()
+  var query = $("#queriedCounty").val();
+  $("#barchart").empty();
   var states_with_county = [];
 
   Object.keys(names_and_county_dict)
