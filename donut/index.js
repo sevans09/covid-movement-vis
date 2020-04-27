@@ -1,4 +1,4 @@
-function donutChart() {
+function donutChart(state) {
     var width = 400,
         height = 400,
         margin = {top: 10, right: 10, bottom: 10, left: 10},
@@ -140,6 +140,47 @@ function donutChart() {
                 selection.on('mouseout', function () {
                     d3.selectAll('.toolCircle').remove();
                 });
+
+                selection.on('click', function(data) {
+                    console.log("mouse click");
+                    console.log(state);
+                    console.log(data.data['County']);
+                    var county = data.data['County'];
+                    var states_with_county = new Array();
+                    Object.keys(names_and_county_dict)
+                    .forEach(function eachKey(key) { 
+                      if (names_and_county_dict[key] == data.data['County'].toLowerCase()) {
+                        states_with_county.push(key)
+                      }
+                    });
+                    if (states_with_county.length > 1) {
+                        // $( "#alertdiv" ).hide();
+                        // $( "#barchartdiv" ).show();
+                        console.log(states_with_county);
+                        var curr_fips, curr_state;
+                        for (i = 0; i < states_with_county.length; i++) {
+                          if (states_dict.get(states_with_county[i]) == state) {
+                              displayBar(states_with_county[i]);
+                          }
+                        }
+                    }
+                    else {
+                        $("button#dropdown.dropbtn").hide();
+                        var fips_q = names_dict[county.toLowerCase()];
+                        if (cases_dict.get(fips_q)) {
+                            $( "#alertdiv" ).hide();
+                            $( "#barchartdiv" ).show();
+                            displayBar(fips_q);
+                        }
+                        else {
+                            $( "#barchartdiv" ).hide( "slow" );
+                            // Capitalize each word of the county
+                            const upper = toTitleCase(county_dict.get(county))
+                            $( "#alertdiv" ).show();
+                            $( "#alertdiv" ).html("No case data for " + upper);
+                        }
+                    }
+                })
             }
 
             function numberWithCommas(x) {

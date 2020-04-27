@@ -1,5 +1,5 @@
 function makeDonut(state, width, height) {
-    var donut = donutChart()
+    var donut = donutChart(state)
         .width(width)
         .height(height)
         .cornerRadius(3) // sets how rounded the corners are on each slice
