@@ -123,7 +123,7 @@ h1.title {
     appearance: none;
     width: 60%;
     height: 24px;
-    background: #d3d3d3;
+    background: white;
     opacity: 0.6;
     -webkit-transition: .2s;
     transition: opacity .2s;
@@ -238,11 +238,11 @@ h1.title {
     margin-right: 100px;
   }
 
-  #slider_div {
+  /* #slider_div {
     float: left;
     margin-left: 30%;
     margin-bottom: 20px;
-  }
+  } */
   
   #scatterplot {
     width: 100%;
