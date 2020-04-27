@@ -357,6 +357,11 @@ h1.title {
       stroke-width: 2px;
       fill: none;
   }
+
+  #slider_div {
+    position: absolute;
+    bottom: 0px;
+  }
   
   /* Make the percentage on the text labels bold*/
   .labelName tspan {
