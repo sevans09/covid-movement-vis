@@ -826,10 +826,15 @@ function ready(error, us) {
   var dem = $("input[name='dem_radio']:checked").val();
 
   slider.addEventListener('change', function () {
-    var val = document.getElementById("myRange").value;
-    makeMap(us);
-    dem = $("input[name='dem_radio']:checked").val();
-    make_bubbles_rep(us, val, dem)
+    if(document.getElementById("toggleButton").value=="MAP"){
+      var val = document.getElementById("myRange").value;
+      makeMap(us);
+    }
+    else {
+      var val = document.getElementById("myRange").value;
+      dem = $("input[name='dem_radio']:checked").val();
+      make_bubbles_rep(us, val, dem)
+    }
   });
 
   document.getElementById("toggleButton").addEventListener("click", function(){
