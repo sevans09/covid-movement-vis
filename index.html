@@ -559,7 +559,7 @@ function swapMap() {
 // to be used with swapmap to replace map with bubbles
 function make_bubbles_rep(val, dem) {
 
-var margin = {top: 0, right: 50, bottom: 50, left: 50};
+var margin = {top: 300, right: 250, bottom: 50, left: 50};
 d3.select(".bubble_svg").remove();
 var width = $("#maps").width()
 var height = $("#maps").height()
@@ -707,7 +707,7 @@ function get_node_x(node) {
 
   bubbles.append("g")
     .attr("class", "x axis")
-    .attr("transform", "translate(0," + (height/2)  + ")")
+    .attr("transform", "translate(0," + (height/3)  + ")")
     .call(xAxis);
 
   var simulation = d3.forceSimulation(nodes)
