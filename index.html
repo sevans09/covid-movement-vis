@@ -547,8 +547,12 @@ function get_rad_range(width) {
 }
 
 function swapMap() {
-  $("#maps").hide();
-  $("#bubbles").show();
+
+  $("#bubbles").css("visibility", "visible"); 
+  $("#maps").css("visibility", "hidden");
+  // $("#bubbles").show();
+  // $("#maps").hide();
+  
 }
 
 function make_bubbles(val, dem) {
