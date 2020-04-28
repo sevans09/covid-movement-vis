@@ -43,7 +43,7 @@
         </div>
       </div>
     </div>
-    <button id="toggleButton" onClick=swapMap() value="MAP"> See how the counties stack up</button>
+    <button id="toggleButton" value="MAP"> See how the counties stack up</button>
     <div class="row" id="barchartdiv">
         <div id ="barchart"> </div>
     </div>   
@@ -587,10 +587,8 @@ function get_rad_range(width) {
   return [1.5,3]
 }
 
-function swapMap() {
-
+function swapMap(us) {
   // bubbles are hidden, toggle to bubbles
-  // works
   if(document.getElementById("toggleButton").value=="MAP"){
     console.log('map is true')
     document.getElementById("toggleButton").value="BUBBLE";
@@ -605,7 +603,8 @@ function swapMap() {
   } 
 
   // map is hidden, toggle to map
-  else if(document.getElementById("toggleButton").value=="BUBBLE"){
+  // else if(document.getElementById("toggleButton").value=="BUBBLE"){
+  else {
     document.getElementById("toggleButton").value="MAP";
     console.log("bubble is true")
 
@@ -614,10 +613,6 @@ function swapMap() {
     $("#maps").empty();
     console.log('making map')
     
-    d3.queue()
-      .defer(d3.json, "js/us.json")
-      .await(ready);
-      console.log('us is', us)
     makeMap(us);
   }
 }
@@ -836,6 +831,12 @@ function ready(error, us) {
     make_bubbles_rep(us, val, dem)
   });
 
+  document.getElementById("toggleButton").addEventListener("click", function(){
+    document.getElementById("toggleButton").innerHTML = "Hello World";
+    // 
+    swapMap(us);
+  });
+
   window.addEventListener('keypress', function(e) {
       var keyCode = e.keyCode;
       var key = keyCode - 48
@@ -854,6 +855,8 @@ function ready(error, us) {
   });
 
   makeMap(us);
+  // swapMap(us);
+  
   // make_bubbles_rep(us, val, dem)
   $( "#bubbles" ).hide();
   $("#bubbles").css("visibility", "hidden");
