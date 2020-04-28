@@ -774,18 +774,24 @@ function make_bubbles_rep(val, dem) {
       .attr("transform", "translate(0," + height/2 + ")")
       .on('mouseover', tip.show)
       .on('mouseout', tip.hide)
-      .on('click', function(d) { console.log("d is", d.fips); 
-      clickBubbles(d.fips) })
+      .on('click', function(d) { clickBubbles(d.fips) })
   });
 }
 
 
 function clickBubbles(d) {
-  console.log("n click bubbless", d)
-  $( "#alertdiv" ).hide();
-  $( "#barchartdiv" ).show();
-  displayBar(d);
-  fadeOut(d);
+    if (cases_dict.get(d)) {
+      $( "#alertdiv" ).hide();
+      $( "#barchartdiv" ).show();
+      displayBar(d);
+    }
+    else {
+      $( "#barchartdiv" ).hide( "slow" );
+      // Capitalize each word of the county
+      const upper = toTitleCase(county_dict.get(d))
+      $( "#alertdiv" ).show();
+      $( "#alertdiv" ).html("No case data for " + upper + " County");
+    }
 }
 
 
