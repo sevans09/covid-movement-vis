@@ -17,3 +17,5 @@ TODO:
 - radio buttons for bubble thing
 - data filter for donut chart to only get counties with certain state queried
 
+- slide with bubbles currently makes the map over it, fix this so that slide only changes existing SVG (map or bubbles) - maybe a bool?
+- toggle back and forth between map and bubbles
