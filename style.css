@@ -361,6 +361,7 @@ h1.title {
 
     .myButton {
         cursor:pointer;
+        /* box-shadow: 1px 5px 8px -1px #4242; */
         background-color:white;
         border-radius:6px;
         border:1px solid #424242;
