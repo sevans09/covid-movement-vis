@@ -591,6 +591,7 @@ function swapMap(us) {
   // bubbles are hidden, toggle to bubbles
   if(document.getElementById("toggleButton").value=="MAP"){
     console.log('map is true')
+    document.getElementById("toggleButton").innerHTML = "Back to the map";
     document.getElementById("toggleButton").value="BUBBLE";
 
     $("#bubbles").css("visibility", "visible"); 
@@ -607,7 +608,7 @@ function swapMap(us) {
   else {
     document.getElementById("toggleButton").value="MAP";
     console.log("bubble is true")
-
+    document.getElementById("toggleButton").innerHTML = "See how the counties stack up!";
     $("#bubbles").css("visibility", "hidden"); 
     $("#maps").css("visibility", "visible");
     $("#maps").empty();
@@ -832,8 +833,6 @@ function ready(error, us) {
   });
 
   document.getElementById("toggleButton").addEventListener("click", function(){
-    document.getElementById("toggleButton").innerHTML = "Hello World";
-    // 
     swapMap(us);
   });
 
