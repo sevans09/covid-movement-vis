@@ -46,7 +46,6 @@
       <h4 id="sliderinfo"></h4>
       <div class="row">
         <input type="range" min="1" max="7" value="4" class="slider" id="myRange"><div id="week"></div>
-  
       </div>   
     </div>
   </div>
@@ -58,32 +57,26 @@
         </div>
       </div>
   </div>
-</div>
-<div class = "row">
-  <div id="scatterplot">
-    <div id ="bubblediv" style="display:none">
-      <div id= "dem_options">
-        <div id= "option_title"><h3>Filter by Demographic</h3></div>
-        <form id= "radio_options">
-          <label class="dem_option">
-            <input type="radio" name="dem_radio" value="income" checked>Income
-          </label>
-          <br>
-          <label class="dem_option">
-            <input type="radio" name="dem_radio" value="vote">Politics
-          </label>
-        </form>
-       </div>
-       <!-- <div id="slider_div">
-        <h3 id="sliderinfo"></h3>
-        <div class="row">
-          <input type="range" min="1" max="7" value="4" class="slider" id="myRange"><div id="week"></div>
-    
-        </div>    
-       </div> -->
+  <div class = "row">
+    <div id="scatterplot">
+      <div id ="bubblediv" style="display:none">
+        <div id= "dem_options">
+          <div id= "option_title"><h3>Filter by Demographic</h3></div>
+          <form id= "radio_options">
+            <label class="dem_option">
+              <input type="radio" name="dem_radio" value="income" checked>Income
+            </label>
+            <br>
+            <label class="dem_option">
+              <input type="radio" name="dem_radio" value="vote">Politics
+            </label>
+          </form>
+         </div>
+      </div>
     </div>
   </div>
 </div>
+
 <script src="js/d3.v4.min.js"></script>
 <script src="js/topojson.v1.min.js"></script>
 <!-- <script src="js/bubbles.js"></script> -->
@@ -556,7 +549,6 @@ function get_rad_range(width) {
 function swapMap() {
   $("#maps").hide();
   $("#bubbles").show();
-  alert("in swap")
 }
 
 function make_bubbles(val, dem) {
