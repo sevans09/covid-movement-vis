@@ -358,6 +358,39 @@ h1.title {
       fill: none;
   }
 
+
+    .myButton {
+        cursor:pointer;
+        /* box-shadow: 1px 5px 8px -1px #4242; */
+        background-color:white;
+        border-radius:6px;
+        border:1px solid #424242;
+        display:inline-block;
+        cursor:pointer;
+        color:#424242;
+        font-family: 'Helvetica', sans-serif;
+        font-size:15px;
+        text-align:center;
+        margin-top:20px;
+        padding-right:5%;
+        padding-left:5%;
+        padding-top:2%;
+        padding-bottom:2%;
+        text-decoration:none;
+        /* text-shadow:0px 1px 0px #3d768a; */
+    }
+
+    .myButton:hover {
+        background-color:#4242;
+    }
+    
+    .myButton:active {
+        position:relative;
+        top:1px;
+    }
+
+        
+
   /* #slider_div {
     position: absolute;
     bottom: 0px;
