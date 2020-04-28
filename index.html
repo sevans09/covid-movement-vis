@@ -36,7 +36,8 @@
           </button>
         </div>
       </div>
-   </div>
+    </div>
+    <button onClick=swapMap()> See how the counties stack up</button>
     <div class="row" id="barchartdiv">
         <div id ="barchart"> </div>
     </div>   
@@ -528,6 +529,7 @@ $('#inlineRadio3').change(function() {
   });
 })
 
+
 pop_dict = d3.map()
 dem_data.forEach( function(d){ 
   pop_dict.set( d.fips, d.pop_2019);
@@ -551,6 +553,11 @@ function get_rad_range(width) {
   return [1.5,3]
 }
 
+function swapMap() {
+  $("#maps").hide();
+  $("#bubbles").show();
+  alert("in swap")
+}
 
 function make_bubbles(val, dem) {
 
