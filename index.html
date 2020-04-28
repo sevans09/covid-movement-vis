@@ -51,11 +51,7 @@
   </div>
   <div class="column1"  style="position: sticky; margin-top:10px">
     <svg id="maps"></svg>
-      <div class="column">
-        <div class="row" id="maplegend">
-          <div id="map-legend"></div>
-        </div>
-      </div>
+    <div id="map-legend"></div>
   </div>
   <div class = "row">
     <div id="scatterplot">
@@ -91,6 +87,7 @@
 <!-- <script type = "text/javascript" src="js/bubbles.js"></script> -->
 <script type = "text/javascript" src="donut/donut.js"></script>
 <script type = "text/javascript" src="donut/index.js"></script>
+<script type = "text/javascript" src="js/d3-legend.min.js"> </script>
 <script>
 
 d3.select("#sliderinfo")
@@ -170,20 +167,63 @@ var tip = d3.tip()
 
 svg.call(tip)
 
-legend_width = width/4.5;
-legend_height = height/4;
-var legend = d3.select("#map-legend")
-  .append("svg:svg")
-  .attr("width", legend_width)
-  .attr("height", 10)
-for (var i = 0; i <= 4; i++) {
-  legend.append("svg:rect")
-  .attr("x", i*(legend_width / 5))
-  .attr("height", 10)
-  .attr("width", legend_width/5)
-  .attr("class", "q" + i + "-9 ")
-  
-};
+function in_move_range(move_index, d, val) {
+  move_index = move_index.replace("<= 0.8", "0")
+  move_index = move_index.replace("3 >=", "3.2")
+  index = parseFloat(move_index)
+  var move = move_dict.get(d.id)
+  if (!move) {
+      return 0.95;
+  }
+  move = move[val-1]
+  return ((move > index) && (move < index + 0.8))
+
+}
+
+
+function highlight_move(move_index) {
+   var val = document.getElementById("myRange").value;
+    svg.selectAll("path")
+      .style("opacity", function(d) {
+        return in_move_range(move_index, d, val) ? 1.2 : 0.3
+      })
+      .style("stroke", function(d) {
+        return in_move_range(move_index, d, val) ? "white" : "transparent"
+      });
+  }
+
+function unhighlight_move(move_index) {
+    svg.selectAll("path")
+      .style("opacity", 0.95)
+      .style("stroke", "transparent")
+  }
+
+
+var ordinal = d3.scaleOrdinal()
+  .domain(["<= 0.8", "0.8", "1.6", "2.4", "3 >="])
+  .range(["rgb(154,219,181)", "rgb(205, 235, 178)", "rgb(246,245,174)", 
+          "rgb(253, 223, 158)", "rgb(211, 85, 65)"]);
+
+var legend = d3.select("#map-legend").append("svg");
+
+legend.append("g")
+  .attr("class", "legend")
+  .attr("transform", "translate(20,20)");
+
+var move_legend = d3.legendColor()
+  .shapeWidth(50)
+  .orient('horizontal')
+  .scale(ordinal)
+  .title("Move Index (in miles)");
+
+legend.select(".legend")
+  .call(move_legend)
+
+legend.selectAll("rect")
+  .on("mouseover", highlight_move)
+  .on("mouseout", unhighlight_move)
+
+
 
 function toTitleCase(str) {
     return str.replace(/\w\S*/g, function(txt){
@@ -249,14 +289,15 @@ function makeMap(us) {
       .style("stroke", "transparent")
   }
 
-
-
   svg.append("path")
       .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
       .attr("class", "states")
       .attr("d", path);
 
 }
+
+
+
 
 function fadeOut(countyID) {
   console.log("in fade out");
