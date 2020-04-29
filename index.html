@@ -336,6 +336,11 @@ function makeMap(us) {
     highlight_single(d.id);
   }
 
+  window.onclick = function(event) {
+    if (event.target.id === "maps")
+      unhighlight();
+  };
+
   svg.append("path")
       .datum(topojson.mesh(us, us.objects.states, 
         function(a, b) { return a !== b; }))
