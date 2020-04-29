@@ -300,6 +300,22 @@ function toTitleCase(str) {
     });
 }
 
+function handleClick(fips) {
+  unhighlight();
+  if (cases_dict.get(fips)) {
+    $( "#alertdiv" ).hide();
+    $( "#barchartdiv" ).show();
+    displayBar(fips);
+  }
+  else {
+    $( "#barchartdiv" ).hide( "slow" );
+    $( "#alertdiv" ).show();
+    upper = toTitleCase(county_dict.get(fips));
+    $( "#alertdiv" ).html("No case data for " + upper + " County");
+  }
+  highlight_single(fips);
+}
+
 d3.queue()
     .defer(d3.json, "js/us.json")
     .await(ready);
@@ -326,23 +342,7 @@ function makeMap(us) {
       .attr("d", path)
       .on("mouseover", tip.show)
       .on("mouseout", tip.hide)
-      .on("click", handleClick);
-
-  function handleClick(d) {
-    unhighlight();
-    if (cases_dict.get(d.id)) {
-      $( "#alertdiv" ).hide();
-      $( "#barchartdiv" ).show();
-      displayBar(d.id);
-    }
-    else {
-      $( "#barchartdiv" ).hide( "slow" );
-      $( "#alertdiv" ).show();
-      upper = toTitleCase(county_dict.get(d.id));
-      $( "#alertdiv" ).html("No case data for " + upper + " County");
-    }
-    highlight_single(d.id);
-  }
+      .on("click", function(d) {handleClick(d.id)});
 
   window.onclick = function(event) {
     if (event.target.id === "maps")
@@ -851,29 +851,13 @@ function make_bubbles_rep(us, val, dem) {
       .attr("transform", "translate(0," + height/2 + ")")
       .on('mouseover', tip.show)
       .on('mouseout', tip.hide)
-      .on('click', function(d) { clickBubbles(d.fips) })
+      .on('click', function(d) { handleClick(d.fips) })
 
     bubbles.append("g")
       .attr("class", "x axis")
       .attr("transform", "translate(0," + (height/2)  + ")")
       .call(xAxis);
   });
-}
-
-
-function clickBubbles(d) {
-    if (cases_dict.get(d)) {
-      $( "#alertdiv" ).hide();
-      $( "#barchartdiv" ).show();
-      displayBar(d);
-    }
-    else {
-      $( "#barchartdiv" ).hide( "slow" );
-      // Capitalize each word of the county
-      const upper = toTitleCase(county_dict.get(d))
-      $( "#alertdiv" ).show();
-      $( "#alertdiv" ).html("No case data for " + upper + " County");
-    }
 }
 
 
