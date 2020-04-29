@@ -171,32 +171,57 @@ function in_move_range(move_index, d, val) {
   move_index = move_index.replace("<= 0.8", "0")
   move_index = move_index.replace("3 >=", "3.2")
   index = parseFloat(move_index)
-  var move = move_dict.get(d.id)
+  var move = move_dict.get(d)
   if (!move) {
       return 0.95;
   }
   move = move[val-1]
+  if ((index == 3) && (move >= 3.8)) {
+    return true
+  }
+
   return ((move > index) && (move < index + 0.8))
 
 }
 
 
 function highlight_move(move_index) {
-   var val = document.getElementById("myRange").value;
+  var val = document.getElementById("myRange").value;
+  if(document.getElementById("toggleButton").value=="MAP") {
     svg.selectAll("path")
       .style("opacity", function(d) {
-        return in_move_range(move_index, d, val) ? 1.2 : 0.3
+        return in_move_range(move_index, d.id, val) ? 1.2 : 0.3
       })
       .style("stroke", function(d) {
-        return in_move_range(move_index, d, val) ? "white" : "transparent"
+        return in_move_range(move_index, d.id, val) ? "white" : "transparent"
       });
+  } else {
+    var bubbles = d3.select(".bubble_svg")
+    bubbles.selectAll("circle")
+      .style("opacity", function(d) {
+        return in_move_range(move_index, d.fips, val) ? 0.75 : 0.2
+      })
+      .style("stroke", function(d) {
+        return in_move_range(move_index, d.fips, val) ? "black" : "transparent"
+      })
   }
+}
 
 function unhighlight_move(move_index) {
+  var val = document.getElementById("myRange").value;
+  if(document.getElementById("toggleButton").value=="MAP") {
     svg.selectAll("path")
       .style("opacity", 0.95)
       .style("stroke", "transparent")
   }
+  else {
+    var bubbles = d3.select(".bubble_svg")
+    bubbles.selectAll("circle")
+      .style("opacity", 0.75)
+      .style("stroke", "transparent")
+
+  }
+}
 
 
 var ordinal = d3.scaleOrdinal()
@@ -290,12 +315,12 @@ function makeMap(us) {
   }
 
   svg.append("path")
-      .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
+      .datum(topojson.mesh(us, us.objects.states, 
+        function(a, b) { return a !== b; }))
       .attr("class", "states")
       .attr("d", path);
 
 }
-
 
 
 
@@ -313,7 +338,9 @@ function displayBar(data) {
       .attr('class', 'd3-tip')
       .offset([-5, 0])
       .html(function(d, i) {
-        return "Date: " + dates_dict.get(data)[i] + "<br>Cases: " + cases_dict.get(data)[i] + "<br>Deaths: " + deaths_dict.get(data)[i];
+        return "Date: " + dates_dict.get(data)[i] 
+        + "<br>Cases: " + cases_dict.get(data)[i] 
+        + "<br>Deaths: " + deaths_dict.get(data)[i];
       })
 
     svg.call(bartip)
@@ -538,30 +565,6 @@ $("#queriedState").on('keyup', function (e) {
       handleStateQuery();
     }
 });
-
-$('#inlineRadio1').change(function() {
-  window.scrollTo({
-    top: 500,
-    left: 0,
-    behavior: 'smooth'
-  });
-})
-
-$('#inlineRadio2').change(function() {
-  window.scrollTo({
-    top: 500,
-    left: 0,
-    behavior: 'smooth'
-  });
-})
-
-$('#inlineRadio3').change(function() {
-  window.scrollTo({
-    top: 500,
-    left: 0,
-    behavior: 'smooth'
-  });
-})
 
 
 pop_dict = d3.map()
