@@ -96,6 +96,7 @@ h1.title {
   
   body {
     font-family: 'Helvetica', sans-serif;
+    min-width: 900px;
   }
   
   #barchart {

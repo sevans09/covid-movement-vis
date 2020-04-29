@@ -64,7 +64,7 @@
        style="margin-bottom: -5%; position: relative; z-index: 1;
              float: right; margin-right: 10%"style>Switch to Demographic Trends</a>
     <svg id="maps"></svg>
-    <div style="margin-top:-12%" id="map-legend"></div>
+    <div style="margin-top:-10%" id="map-legend"></div>
   </div>
 </div>
 
@@ -135,9 +135,24 @@ var weeks = ["Week of 2020-03-02", "Week of 2020-03-09",
             "Week of 2020-03-30", "Week of 2020-04-06", 
             "Week of 2020-04-13", "Week of 2020-04-20"];
 
+// var quantize = d3.scaleQuantize()
+//     .domain([0, 4])
+//     .range(d3.range(5).map(function(i) { return "q" + i + "-9"; }));
+
 var quantize = d3.scaleQuantize()
-    .domain([0, 4])
-    .range(d3.range(5).map(function(i) { return "q" + i + "-9"; }));
+      .domain([0, 4])
+      .range(d3.range(5).map(function(i) { 
+          if (i == 0)
+              return "#9adbb5";
+          else if (i == 1)
+              return "rgb(205, 235, 178)";
+          else if (i == 2)
+              return "#F6F5AE";
+          else if (i == 3)
+              return "rgb(253, 223, 158)";
+          else
+              return "rgb(211, 85, 65)";
+      }))
 
 var projection = d3.geoAlbersUsa()
     .scale(width)
@@ -293,7 +308,7 @@ function makeMap(us) {
     .data(topojson.feature(us, us.objects.counties).features)
     .enter().append("path")
     .style("opacity", .95)
-    .attr("class", function(d) { 
+    .attr("fill", function(d) { 
       if (move_dict.get(d.id)) {
         return quantize(move_dict.get(d.id)[val-1])
       } else {
@@ -648,6 +663,32 @@ function swapMap(us) {
   }
 }
 
+function change_move() {
+    var val = document.getElementById("myRange").value;
+    var t = d3.transition()
+        .duration(750);
+
+   if(document.getElementById("toggleButton").value=="MAP") {
+    svg.selectAll("path")
+      .transition(t)
+        .attr("fill", function(d) { 
+          if (move_dict.get(d.id)) {
+            console.log(quantize(move_dict.get(d.id)[val-1]))
+            return quantize(move_dict.get(d.id)[val-1])
+          } });
+   } else {
+
+    var bubbles = d3.select(".bubble_svg")
+    bubbles.selectAll("circle")
+      .attr("move", function(d) {
+        move_dict.get(d.fips)[val-1] });
+  
+    bubbles.selectAll("circle")
+      .transition(t)
+        .style("fill", function(d) { return quantize(move_dict.get(d.fips)[val-1]); });
+
+  }
+}
 
 // to be used with swapmap to replace map with bubbles
 function make_bubbles_rep(us, val, dem) {
@@ -657,11 +698,7 @@ function make_bubbles_rep(us, val, dem) {
   var width = $("#maps").width()
   var height = $("#maps").height()
 
-  console.log(width)
-  console.log(height)
-
   pos = $("#maps").position().top;
-  console.log(pos)
 
   rad_range = get_rad_range(width)
   var max_income = 123000;
@@ -783,7 +820,6 @@ function make_bubbles_rep(us, val, dem) {
     }
     return (dem == "vote") ? node.per_gop : node.cpc
   }
-
     //add other demographics!
     var nodes = data.map(function(node, index) {
       return {
@@ -860,18 +896,20 @@ function ready(error, us) {
   slider.addEventListener('change', function () {
     if(document.getElementById("toggleButton").value=="MAP"){
       var val = document.getElementById("myRange").value;
-      makeMap(us);
+      change_move()
+      //makeMap(us);
     }
     else {
       var val = document.getElementById("myRange").value;
       dem = $("input[name='dem_radio']:checked").val();
-      make_bubbles_rep(us, val, dem)
+      change_move()
+      //make_bubbles_rep(us, val, dem)
     }
   });
 
-  document.getElementById("toggleButton").addEventListener("click", function(){
-    swapMap(us);
-  });
+  document.getElementById("toggleButton").addEventListener("click", 
+    function(){
+    swapMap(us);});
 
   window.addEventListener('keypress', function(e) {
       var keyCode = e.keyCode;
@@ -880,7 +918,7 @@ function ready(error, us) {
         document.getElementById("myRange").value = key;
         makeMap(us);
         dem = $("input[name='dem_radio']:checked").val();
-        make_bubbles_rep(us, key, dem);
+        change_move()
       }
   });
 
