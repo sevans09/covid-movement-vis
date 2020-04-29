@@ -52,12 +52,8 @@
   <div class="column1"  style="position: sticky; margin-top:10px">
     <svg id="maps"></svg>
     <div id="map-legend"></div>
-  </div>
-  <div class = "row">
-    <div id="scatterplot">
-      <div id ="bubblediv" style="display:none">
-        <div id= "dem_options">
-          <div id= "option_title"><h3>Filter by Demographic</h3></div>
+    <div id= "dem_options" style="position: relative; margin-top: -20%">
+          <div id= "option_title"><h3 style="margin-bottom: 5px">Filter by Demographic</h3></div>
           <form id= "radio_options">
             <label class="dem_option">
               <input type="radio" name="dem_radio" value="income" checked>Income
@@ -68,6 +64,22 @@
             </label>
           </form>
          </div>
+  </div>
+  <div class = "row">
+    <div id="scatterplot">
+      <div id ="bubblediv" style="display:none">
+        <!-- <div id= "dem_options">
+          <div id= "option_title"><h3>Filter by Demographic</h3></div>
+          <form id= "radio_options">
+            <label class="dem_option">
+              <input type="radio" name="dem_radio" value="income" checked>Income
+            </label>
+            <br>
+            <label class="dem_option">
+              <input type="radio" name="dem_radio" value="vote">Politics
+            </label>
+          </form>
+         </div> -->
       </div>
     </div>
   </div>
@@ -652,7 +664,7 @@ function make_bubbles_rep(us, val, dem) {
 
   var dem_title = {
     "income": "Median Income",
-    "vote"  : "% Vote for Trump in 2016",
+    "vote"  : "% GOP Vote 2016",
   }
 
   var dem_label = {
@@ -726,8 +738,8 @@ function make_bubbles_rep(us, val, dem) {
     .text(dem_title[dem]);
 
   xAxisTitle
-    .attr("x", width - xAxisTitle.node().getBBox().width-50)
-    .attr("y", ( height/2) - xAxisTitle.node().getBBox().height)
+    .attr("x", width - xAxisTitle.node().getBBox().width - width/4.5)
+    .attr("y", ( height/2) - xAxisTitle.node().getBBox().height - height/5)
 
   var quantize = d3.scaleQuantize()
       .domain([0, 4])
@@ -775,10 +787,6 @@ function make_bubbles_rep(us, val, dem) {
       };
     });
 
-    bubbles.append("g")
-      .attr("class", "x axis")
-      .attr("transform", "translate(0," + (height/2)  + ")")
-      .call(xAxis);
 
     var simulation = d3.forceSimulation(nodes)
       .force("x", d3.forceX(function(d) { return x(d.income); }).strength(1))
@@ -799,6 +807,11 @@ function make_bubbles_rep(us, val, dem) {
       .on('mouseover', tip.show)
       .on('mouseout', tip.hide)
       .on('click', function(d) { clickBubbles(d.fips) })
+
+    bubbles.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + (height/2)  + ")")
+      .call(xAxis);
   });
 }
 
