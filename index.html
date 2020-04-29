@@ -23,7 +23,7 @@
               <input type="text" class="searchTerm" id="queriedCounty" placeholder="Enter a county (e.g. Dutchess)">
               <button type="submit" class="searchButton" onClick=handleQuery()>
                 <i class="fa fa-search"></i>
-            </button>
+              </button>
           </div>
         </div>
         <div class="dropdown" id="dropdown">
@@ -86,7 +86,7 @@
 <script>
 
 d3.select("#sliderinfo")
-.text("Slide below to explore movement changes by week.")
+.text("Slide to explore weekly movement changes.")
 
 d3.select("#queryinfo")
 .text("Query a county or a state...")
@@ -196,7 +196,6 @@ function in_move_range(move_index, d, val) {
 }
 
 function highlight_single(county) {
-  console.log("here");
   console.log(county);
   var val = document.getElementById("myRange").value;
   if(document.getElementById("toggleButton").value=="MAP") {
