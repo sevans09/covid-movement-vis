@@ -13,6 +13,7 @@ Usage:
 
 TODO:
 - make "move index" consistent everywhere on the page
+- SEJAL: fix keypress listeners
 - bar chart legend
 - change color of "State" button
 - add autofocus to lead user to hover over "State" button
