@@ -170,8 +170,11 @@ h1.title {
     padding-left: .7vw;
     padding-right: .7vw;
     float: left;
+    box-shadow: 3px 5px #888888;
     background-color: rgb(223, 222, 222);
     border: 1px solid #b3b2b2;
+    border-radius:10px;
+    box-shadow:
     height:auto;
     width: 26%;
   }
