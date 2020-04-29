@@ -703,7 +703,6 @@ function make_bubbles_rep(val, dem) {
   xAxisTitle
     .attr("x", width - xAxisTitle.node().getBBox().width-50)
     .attr("y", ( height/2) - xAxisTitle.node().getBBox().height)
-    .attr("z-index", "999");
 
   var quantize = d3.scaleQuantize()
       .domain([0, 4])
