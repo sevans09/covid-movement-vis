@@ -326,7 +326,6 @@ function makeMap(us) {
       $( "#alertdiv" ).hide();
       $( "#barchartdiv" ).show();
       displayBar(d.id);
-      fadeOut(d.id);
     }
     else {
       $( "#barchartdiv" ).hide( "slow" );
@@ -334,21 +333,7 @@ function makeMap(us) {
       upper = toTitleCase(county_dict.get(d.id));
       $( "#alertdiv" ).html("No case data for " + upper + " County");
     }
-
-    d3.selectAll("path")
-      .transition()
-      .duration(1000)
-      .style("opacity", .3)
-      .transition()
-      .duration(3000)
-      .style("opacity", .95);
-    d3.select(this)
-      .transition()
-      .duration(1000)
-      .style("stroke", "#424242")
-      .transition()
-      .duration(3000)
-      .style("stroke", "transparent")
+    highlight_single(d.id);
   }
 
   svg.append("path")
@@ -359,11 +344,6 @@ function makeMap(us) {
 
 }
 
-
-
-function fadeOut(countyID) {
-  console.log("in fade out");
-}
 
 function displayBar(data) {
   $("#barchart").empty();
@@ -608,7 +588,6 @@ $("#queriedState").on('keyup', function (e) {
 });
 
 $("#queriedCounty").on('focus', unhighlight);
-
 
 pop_dict = d3.map()
 dem_data.forEach( function(d){ 
