@@ -49,8 +49,9 @@
     </div>   
     <div id="alertdiv" ></div>
   </div>
-  <div class="column1"  style="position: sticky; margin-top:10px">
-    <div id= "dem_options">
+
+  <div class="column1" style="position: sticky; margin-top:10px;">
+    <div id= "dem_options" style="display:none">
       <div id= "option_title"><h3>Filter by Demographic</h3></div>
       <form id= "radio_options">
         <label class="dem_option">
@@ -63,27 +64,8 @@
       </form>
      </div>
 
-     
     <svg id="maps"></svg>
     <div id="map-legend"></div>
-  </div>
-  <div class = "row">
-    <div id="scatterplot">
-      <div id ="bubblediv" style="display:none">
-        <div id= "dem_options">
-          <div id= "option_title"><h3>Filter by Demographic</h3></div>
-          <form id= "radio_options">
-            <label class="dem_option">
-              <input type="radio" name="dem_radio" value="income" checked>Income
-            </label>
-            <br>
-            <label class="dem_option">
-              <input type="radio" name="dem_radio" value="vote">Politics
-            </label>
-          </form>
-         </div>
-      </div>
-    </div>
   </div>
 </div>
 
@@ -611,7 +593,8 @@ function swapMap(us) {
     document.getElementById("toggleButton").innerHTML = "Back to the map";
     document.getElementById("toggleButton").value="BUBBLE";
 
-    $("#bubbles").css("visibility", "visible"); 
+    $("#bubbles").css("visibility", "visible");
+    $("#dem_options").css("visibility", "visible");
     $("#maps").css("visibility", "hidden");
     $("#maps").empty();
 
@@ -627,6 +610,7 @@ function swapMap(us) {
     console.log("bubble is true")
     document.getElementById("toggleButton").innerHTML = "See how the counties stack up!";
     $("#bubbles").css("visibility", "hidden"); 
+    $("#dem_options").css("visibility", "hidden");
     $("#maps").css("visibility", "visible");
     $("#maps").empty();
     console.log('making map')
@@ -836,6 +820,7 @@ function clickBubbles(d) {
 function ready(error, us) {
   if (error) throw error;
   $( "#alertdiv" ).hide();
+  $( "#dem_options" ).show();
   var slider = document.querySelector('input[type="range"]');
   var radio = document.querySelector('input[type="radio"]');
   var val = document.getElementById("myRange").value;
