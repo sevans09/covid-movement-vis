@@ -43,7 +43,7 @@
         </div>
       </div>
     </div>
-    <button onClick=swapMap()> See how the counties stack up</button>
+    <a href="#" id="toggleButton" value="MAP" class="myButton">See how the counties stack up!</a>
     <div class="row" id="barchartdiv">
         <div id ="barchart"> </div>
     </div>   
@@ -587,18 +587,40 @@ function get_rad_range(width) {
   return [1.5,3]
 }
 
-function swapMap() {
-  $("#bubbles").css("visibility", "visible"); 
-  $("#maps").css("visibility", "hidden");
-  $("#maps").empty();
-  var val = document.getElementById("myRange").value;
-  dem = $("input[name='dem_radio']:checked").val();
-  make_bubbles_rep(val, dem)
+function swapMap(us) {
+  // bubbles are hidden, toggle to bubbles
+  if(document.getElementById("toggleButton").value=="MAP"){
+    console.log('map is true')
+    document.getElementById("toggleButton").innerHTML = "Back to the map";
+    document.getElementById("toggleButton").value="BUBBLE";
+
+    $("#bubbles").css("visibility", "visible"); 
+    $("#maps").css("visibility", "hidden");
+    $("#maps").empty();
+
+    var val = document.getElementById("myRange").value;
+    dem = $("input[name='dem_radio']:checked").val();
+    make_bubbles_rep(us, val, dem)
+  } 
+
+  // map is hidden, toggle to map
+  // else if(document.getElementById("toggleButton").value=="BUBBLE"){
+  else {
+    document.getElementById("toggleButton").value="MAP";
+    console.log("bubble is true")
+    document.getElementById("toggleButton").innerHTML = "See how the counties stack up!";
+    $("#bubbles").css("visibility", "hidden"); 
+    $("#maps").css("visibility", "visible");
+    $("#maps").empty();
+    console.log('making map')
+    
+    makeMap(us);
+  }
 }
 
 
 // to be used with swapmap to replace map with bubbles
-function make_bubbles_rep(val, dem) {
+function make_bubbles_rep(us, val, dem) {
 
   var margin = {top: 300, right: 250, bottom: 50, left: 50};
   d3.select(".bubble_svg").remove();
@@ -803,10 +825,19 @@ function ready(error, us) {
   var dem = $("input[name='dem_radio']:checked").val();
 
   slider.addEventListener('change', function () {
-    var val = document.getElementById("myRange").value;
-    makeMap(us);
-    dem = $("input[name='dem_radio']:checked").val();
-    make_bubbles_rep(val, dem)
+    if(document.getElementById("toggleButton").value=="MAP"){
+      var val = document.getElementById("myRange").value;
+      makeMap(us);
+    }
+    else {
+      var val = document.getElementById("myRange").value;
+      dem = $("input[name='dem_radio']:checked").val();
+      make_bubbles_rep(us, val, dem)
+    }
+  });
+
+  document.getElementById("toggleButton").addEventListener("click", function(){
+    swapMap(us);
   });
 
   window.addEventListener('keypress', function(e) {
@@ -816,18 +847,22 @@ function ready(error, us) {
         document.getElementById("myRange").value = key;
         makeMap(us);
         dem = $("input[name='dem_radio']:checked").val();
-        make_bubbles_rep(key, dem);
+        make_bubbles_rep(us, key, dem);
       }
   });
 
   $('#radio_options').change(function(){
       dem = $("input[name='dem_radio']:checked").val();
       var val = document.getElementById("myRange").value;
-      make_bubbles_rep(val, dem)
+      make_bubbles_rep(us, val, dem)
   });
 
   makeMap(us);
-  // make_bubbles_rep(val, dem)
+  swapMap(us);
+  
+  // make_bubbles_rep(us, val, dem)
+  $( "#bubbles" ).hide();
+  $("#bubbles").css("visibility", "hidden");
 }
 
 </script>
