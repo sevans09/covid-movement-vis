@@ -871,17 +871,9 @@ function ready(error, us) {
   var dem = $("input[name='dem_radio']:checked").val();
 
   function changeSlider() {
-    if(document.getElementById("toggleButton").value=="MAP"){
-      var val = document.getElementById("myRange").value;
-      change_move()
-      //makeMap(us);
-    }
-    else {
-      var val = document.getElementById("myRange").value;
-      dem = $("input[name='dem_radio']:checked").val();
-      change_move()
-      //make_bubbles_rep(us, val, dem)
-    }
+    var val = document.getElementById("myRange").value;
+    document.getElementById("week").innerHTML = weeks[val-1];
+    change_move();
   };
 
   slider.addEventListener('change', function() {
