@@ -180,11 +180,35 @@ function in_move_range(move_index, d, val) {
 
 }
 
+function highlight_single(county) {
+  console.log("here");
+  console.log(county);
+  var val = document.getElementById("myRange").value;
+  if(document.getElementById("toggleButton").value=="MAP") {
+    svg.selectAll(".counties path")
+      .style("opacity", function(d) {
+        return (county == d.id) ? 1.2 : 0.3
+      })
+      .style("stroke", function(d) {
+        return county == d.id ? "black" : "transparent"
+      });
+  } else {
+    var bubbles = d3.select(".bubble_svg")
+    bubbles.selectAll("circle")
+      .style("opacity", function(d) {
+        return (county == d.fips) ? 0.75 : 0.2
+      })
+      .style("stroke", function(d) {
+        return (county == d.fips) ? "black" : "transparent"
+      })
+  }
+}
+
 
 function highlight_move(move_index) {
   var val = document.getElementById("myRange").value;
   if(document.getElementById("toggleButton").value=="MAP") {
-    svg.selectAll("path")
+    svg.selectAll(".counties path")
       .style("opacity", function(d) {
         return in_move_range(move_index, d.id, val) ? 1.2 : 0.3
       })
@@ -198,15 +222,16 @@ function highlight_move(move_index) {
         return in_move_range(move_index, d.fips, val) ? 0.75 : 0.2
       })
       .style("stroke", function(d) {
-        return in_move_range(move_index, d.fips, val) ? "black" : "transparent"
+        return in_move_range(move_index, d.fips, val) ? "black" : "white"
       })
   }
 }
 
-function unhighlight_move(move_index) {
+function unhighlight() {
+  console.log("testing");
   var val = document.getElementById("myRange").value;
   if(document.getElementById("toggleButton").value=="MAP") {
-    svg.selectAll("path")
+    svg.selectAll(".counties path")
       .style("opacity", 0.95)
       .style("stroke", "transparent")
   }
@@ -242,7 +267,7 @@ legend.select(".legend")
 
 legend.selectAll("rect")
   .on("mouseover", highlight_move)
-  .on("mouseout", unhighlight_move)
+  .on("mouseout", unhighlight)
 
 
 
@@ -479,7 +504,9 @@ function addDropdown(fips) {
     $("a").click(function(event) {
       targ = event.target.id;
       console.log(fips[targ.slice(6)]);
-      displayBar(fips[targ.slice(6)]);
+      fips_q = fips[targ.slice(6)];
+      highlight_single(fips_q);
+      displayBar(fips_q);
     })
   })
 }
@@ -505,6 +532,7 @@ function handleQuery() {
   else {
     $("button#dropdown.dropbtn").hide();
     var fips_q = names_dict[query.toLowerCase()];
+    highlight_single(fips_q);
     if (cases_dict.get(fips_q)) {
       $( "#alertdiv" ).hide();
       $( "#barchartdiv" ).show();
@@ -561,6 +589,8 @@ $("#queriedState").on('keyup', function (e) {
       handleStateQuery();
     }
 });
+
+$("#queriedCounty").on('focus', unhighlight);
 
 
 pop_dict = d3.map()
