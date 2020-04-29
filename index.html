@@ -52,7 +52,7 @@
   <div class="column1"  style="position: sticky; margin-top:10px">
     <svg id="maps"></svg>
     <div style="margin-top:-12%" id="map-legend"></div>
-    <div id= "dem_options" style="position: relative; margin-top: -15%">
+    <div id= "dem_options" style="position: relative; margin-top: -15%; visibility: hidden">
           <div id= "option_title"><h3 style="margin-bottom: 5px">Filter by Demographic</h3></div>
           <form id= "radio_options">
             <label class="dem_option">
@@ -592,6 +592,7 @@ function swapMap(us) {
     document.getElementById("toggleButton").value="BUBBLE";
 
     $("#bubbles").css("visibility", "visible"); 
+    $("#dem_options").css("visibility", "visible")
     $("#maps").css("visibility", "hidden");
     $("#maps").empty();
 
@@ -610,6 +611,7 @@ function swapMap(us) {
     $("#maps").css("visibility", "visible");
     $("#maps").empty();
     console.log('making map')
+    $("#dem_options").css("visibility", "hidden")
     
     makeMap(us);
   }
