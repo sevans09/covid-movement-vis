@@ -871,7 +871,7 @@ function ready(error, us) {
   var val = document.getElementById("myRange").value;
   var dem = $("input[name='dem_radio']:checked").val();
 
-  slider.addEventListener('change', function () {
+  function changeSlider() {
     if(document.getElementById("toggleButton").value=="MAP"){
       var val = document.getElementById("myRange").value;
       change_move()
@@ -883,22 +883,22 @@ function ready(error, us) {
       change_move()
       //make_bubbles_rep(us, val, dem)
     }
-  });
+  };
 
-  document.getElementById("toggleButton").addEventListener("click", 
-    function(){
-    swapMap(us);});
+  slider.addEventListener('change', changeSlider());
 
   window.addEventListener('keypress', function(e) {
       var keyCode = e.keyCode;
       var key = keyCode - 48
       if (key > 0 && key < 8) {
         document.getElementById("myRange").value = key;
-        makeMap(us);
-        dem = $("input[name='dem_radio']:checked").val();
-        change_move()
+        changeSlider();
       }
   });
+
+  document.getElementById("toggleButton").addEventListener("click", 
+    function(){
+    swapMap(us);});
 
   $('#radio_options').change(function(){
       dem = $("input[name='dem_radio']:checked").val();
