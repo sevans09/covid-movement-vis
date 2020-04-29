@@ -49,6 +49,7 @@
     </div>   
     <div id="alertdiv" ></div>
   </div>
+<<<<<<< HEAD
 
   <div class="column1" style="position: sticky; margin-top:10px;">
     <div id= "dem_options" style="display:none">
@@ -63,12 +64,29 @@
      </div>
 
     <svg style="margin-top:-10%" id="maps"></svg>
+=======
+  <div class="column1"  style="position: sticky; margin-top:10px">
+    <svg id="maps"></svg>
+>>>>>>> f2ef5904339581322227eb806dc3fc9e162b1d34
     <div style="margin-top:-12%" id="map-legend"></div>
+    <div id= "dem_options" style="position: relative; margin-top: -15%">
+          <div id= "option_title"><h3 style="margin-bottom: 5px">Filter by Demographic</h3></div>
+          <form id= "radio_options">
+            <label class="dem_option">
+              <input type="radio" name="dem_radio" value="income" checked>Income
+            </label>
+            <br>
+            <label class="dem_option">
+              <input type="radio" name="dem_radio" value="vote">Politics
+            </label>
+          </form>
+         </div>
   </div>
 </div>
 
 <script src="js/d3.v4.min.js"></script>
 <script src="js/topojson.v1.min.js"></script>
+<!-- <script src="js/bubbles.js"></script> -->
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/0.10.0/lodash.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="js/d3-tip.js"></script>
@@ -77,6 +95,7 @@
 <script type = "text/javascript" src="./income_pos.json"></script>
 <script type = "text/javascript" src="./bubble/pos-vote.json"></script>
 <script type = "text/javascript" src="./demographic-data.json"></script>
+<!-- <script type = "text/javascript" src="js/bubbles.js"></script> -->
 <script type = "text/javascript" src="donut/donut.js"></script>
 <script type = "text/javascript" src="donut/index.js"></script>
 <script type = "text/javascript" src="js/d3-legend.min.js"> </script>
@@ -89,6 +108,8 @@ d3.select("#queryinfo")
 .text("Query a county or a state...")
 
 d3.select("#querystateinfo")
+// .text("Query a state below to prompt a donut chart breakdown of COVID-19 cases.")
+// .text("OR")
 
 var margin = {top: 10, left: 10, bottom: 10, right: 10}
   , width = $("body").width() / 1.1
@@ -587,8 +608,7 @@ function swapMap(us) {
     document.getElementById("toggleButton").innerHTML = "Back to the map";
     document.getElementById("toggleButton").value="BUBBLE";
 
-    $("#bubbles").css("visibility", "visible");
-    $("#dem_options").css("visibility", "visible");
+    $("#bubbles").css("visibility", "visible"); 
     $("#maps").css("visibility", "hidden");
     $("#maps").empty();
 
@@ -604,7 +624,6 @@ function swapMap(us) {
     console.log("bubble is true")
     document.getElementById("toggleButton").innerHTML = "See how the counties stack up!";
     $("#bubbles").css("visibility", "hidden"); 
-    $("#dem_options").css("visibility", "hidden");
     $("#maps").css("visibility", "visible");
     $("#maps").empty();
     console.log('making map')
@@ -644,7 +663,7 @@ function make_bubbles_rep(us, val, dem) {
 
   var dem_title = {
     "income": "Median Income",
-    "vote"  : "% Vote for Trump in 2016",
+    "vote"  : "% GOP Vote 2016",
   }
 
   var dem_label = {
@@ -718,8 +737,8 @@ function make_bubbles_rep(us, val, dem) {
     .text(dem_title[dem]);
 
   xAxisTitle
-    .attr("x", width - xAxisTitle.node().getBBox().width-50)
-    .attr("y", ( height/2) - xAxisTitle.node().getBBox().height)
+    .attr("x", width - xAxisTitle.node().getBBox().width - width/4.5)
+    .attr("y", ( height/2) - xAxisTitle.node().getBBox().height - height/5)
 
   var quantize = d3.scaleQuantize()
       .domain([0, 4])
@@ -767,10 +786,6 @@ function make_bubbles_rep(us, val, dem) {
       };
     });
 
-    bubbles.append("g")
-      .attr("class", "x axis")
-      .attr("transform", "translate(0," + (height/2)  + ")")
-      .call(xAxis);
 
     var simulation = d3.forceSimulation(nodes)
       .force("x", d3.forceX(function(d) { return x(d.income); }).strength(1))
@@ -791,6 +806,11 @@ function make_bubbles_rep(us, val, dem) {
       .on('mouseover', tip.show)
       .on('mouseout', tip.hide)
       .on('click', function(d) { clickBubbles(d.fips) })
+
+    bubbles.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + (height/2)  + ")")
+      .call(xAxis);
   });
 }
 
@@ -814,7 +834,6 @@ function clickBubbles(d) {
 function ready(error, us) {
   if (error) throw error;
   $( "#alertdiv" ).hide();
-  $( "#dem_options" ).show();
   var slider = document.querySelector('input[type="range"]');
   var radio = document.querySelector('input[type="radio"]');
   var val = document.getElementById("myRange").value;
