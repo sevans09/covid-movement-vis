@@ -201,6 +201,8 @@ function highlight_single(county) {
   var val = document.getElementById("myRange").value;
   if(document.getElementById("toggleButton").value=="MAP") {
     svg.selectAll(".counties path")
+      .transition()
+      .duration(500)
       .style("opacity", function(d) {
         return (county == d.id) ? 1.2 : 0.3
       })
@@ -210,6 +212,8 @@ function highlight_single(county) {
   } else {
     var bubbles = d3.select(".bubble_svg")
     bubbles.selectAll("circle")
+      .transition()
+      .duration(500)
       .style("opacity", function(d) {
         return (county == d.fips) ? 0.75 : 0.2
       })
@@ -224,6 +228,8 @@ function highlight_move(move_index) {
   var val = document.getElementById("myRange").value;
   if(document.getElementById("toggleButton").value=="MAP") {
     svg.selectAll(".counties path")
+      .transition()
+      .duration(500)
       .style("opacity", function(d) {
         return in_move_range(move_index, d.id, val) ? 1.2 : 0.3
       })
@@ -233,6 +239,8 @@ function highlight_move(move_index) {
   } else {
     var bubbles = d3.select(".bubble_svg")
     bubbles.selectAll("circle")
+      .transition()
+      .duration(500)
       .style("opacity", function(d) {
         return in_move_range(move_index, d.fips, val) ? 0.75 : 0.2
       })
@@ -247,12 +255,16 @@ function unhighlight() {
   var val = document.getElementById("myRange").value;
   if(document.getElementById("toggleButton").value=="MAP") {
     svg.selectAll(".counties path")
+      .transition()
+      .duration(500)
       .style("opacity", 0.95)
       .style("stroke", "transparent")
   }
   else {
     var bubbles = d3.select(".bubble_svg")
     bubbles.selectAll("circle")
+      .transition()
+      .duration(500)
       .style("opacity", 0.75)
       .style("stroke", "transparent")
 
