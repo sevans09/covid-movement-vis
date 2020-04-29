@@ -43,17 +43,14 @@
         </div>
       </div>
     </div>
-    <a href="#" id="toggleButton" value="MAP" class="myButton">See how the counties stack up!</a>
     <div class="row" id="barchartdiv">
         <div id ="barchart"> </div>
     </div>   
     <div id="alertdiv" ></div>
   </div>
-
   <div class="column1" style="position: sticky; margin-top:10px;">
-    <svg id="maps"></svg>
-    <div style="margin-top:-12%" id="map-legend"></div>
-    <div id= "dem_options" style="position: relative; margin-top: -15%; visibility: hidden">
+     <div id= "dem_options" style="position: relative; margin-bottom: -15%; margin-top: 3%;
+             float: left; margin-left: 10%; visibility: hidden">
           <div id= "option_title"><h3 style="margin-bottom: 5px">Filter by Demographic</h3></div>
         <form id= "radio_options">
           <input type="radio" name="dem_radio" value="income" id="income_check" checked>Income
@@ -63,6 +60,11 @@
             <label class="dem_option" for="politics_check"></label>
         </form>
     </div>
+    <a href="#" id="toggleButton" value="MAP" class="myButton"
+       style="margin-bottom: -5%; position: relative; z-index: 1;
+             float: right; margin-right: 10%"style>Switch to Demographic Trends</a>
+    <svg id="maps"></svg>
+    <div style="margin-top:-12%" id="map-legend"></div>
   </div>
 </div>
 
@@ -604,7 +606,7 @@ function swapMap(us) {
   else {
     document.getElementById("toggleButton").value="MAP";
     $( "#dem_options" ).hide();
-    document.getElementById("toggleButton").innerHTML = "See how the counties stack up!";
+    document.getElementById("toggleButton").innerHTML = "Switch to Demographic Trends";
     $("#bubbles").css("visibility", "hidden"); 
     $("#maps").css("visibility", "visible");
     $("#maps").empty();
