@@ -65,7 +65,7 @@
      </div>
 
     <svg style="margin-top:-10%" id="maps"></svg>
-    <div id="map-legend"></div>
+    <div style="margin-top:-12%" id="map-legend"></div>
   </div>
 </div>
 
@@ -295,14 +295,14 @@ function makeMap(us) {
       .duration(1000)
       .style("opacity", .3)
       .transition()
-      .duration(4000)
+      .duration(3000)
       .style("opacity", .95);
     d3.select(this)
       .transition()
       .duration(1000)
       .style("stroke", "#424242")
       .transition()
-      .duration(4000)
+      .duration(3000)
       .style("stroke", "transparent")
   }
 
