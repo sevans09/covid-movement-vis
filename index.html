@@ -52,19 +52,19 @@
 
   <div class="column1" style="position: sticky; margin-top:10px;">
     <div id= "dem_options" style="display:none">
-      <div id= "option_title"><h3>Filter by Demographic</h3></div>
+      <div id= "option_title" ><h3>Filter by Demographic</h3></div>
       <form id= "radio_options">
         <input type="radio" name="dem_radio" value="income" id="income_check" checked>Income
           <label class="dem_option" for="income_check"></label>
         <br>
-        <input type="radio" name="other" value="vote" id="politics_check">Politics
+        <input type="radio" name="dem_radio" value="vote" id="politics_check">Politics
           <label class="dem_option" for="politics_check"></label>
       </form>
      </div>
 
     <svg id="maps"></svg>
     <div  id="map-legend"></div>
-    <div id= "dem_options" style="position: relative; margin-top: -15%">
+    <div id= "dem_options" style="position: relative; margin-top: -15%; display:none">
           <div id= "option_title"><h3 style="margin-bottom: 5px">Filter by Demographic</h3></div>
           <form id= "radio_options">
             <label class="dem_option">
@@ -599,10 +599,9 @@ function get_rad_range(width) {
 function swapMap(us) {
   // bubbles are hidden, toggle to bubbles
   if(document.getElementById("toggleButton").value=="MAP"){
-    console.log('map is true')
     document.getElementById("toggleButton").innerHTML = "Back to the map";
     document.getElementById("toggleButton").value="BUBBLE";
-
+    $( "#dem_options" ).show();
     $("#bubbles").css("visibility", "visible"); 
     $("#maps").css("visibility", "hidden");
     $("#maps").empty();
@@ -616,7 +615,7 @@ function swapMap(us) {
   // else if(document.getElementById("toggleButton").value=="BUBBLE"){
   else {
     document.getElementById("toggleButton").value="MAP";
-    console.log("bubble is true")
+    $( "#dem_options" ).hide();
     document.getElementById("toggleButton").innerHTML = "See how the counties stack up!";
     $("#bubbles").css("visibility", "hidden"); 
     $("#maps").css("visibility", "visible");
@@ -829,6 +828,8 @@ function clickBubbles(d) {
 function ready(error, us) {
   if (error) throw error;
   $( "#alertdiv" ).hide();
+  $( "#dem_options" ).hide();
+  
   var slider = document.querySelector('input[type="range"]');
   var radio = document.querySelector('input[type="radio"]');
   var val = document.getElementById("myRange").value;
