@@ -321,6 +321,7 @@ function makeMap(us) {
       .on("click", handleClick);
 
   function handleClick(d) {
+    unhighlight();
     if (cases_dict.get(d.id)) {
       $( "#alertdiv" ).hide();
       $( "#barchartdiv" ).show();
@@ -528,6 +529,7 @@ function addDropdown(fips) {
 
 
 function handleQuery() {
+
   var query = $("#queriedCounty").val();
   $("#barchart").empty();
   var states_with_county = [];
