@@ -369,8 +369,8 @@ function displayBar(data) {
       .offset([-5, 0])
       .html(function(d, i) {
         return "Date: " + dates_dict.get(data)[i] 
-        + "<br>Cases: " + cases_dict.get(data)[i] 
-        + "<br>Deaths: " + deaths_dict.get(data)[i];
+        + "<br>Cases: " + num_with_commas(cases_dict.get(data)[i])
+        + "<br>Deaths: " + num_with_commas(deaths_dict.get(data)[i]);
       })
 
     svg.call(bartip)
