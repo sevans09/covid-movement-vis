@@ -165,6 +165,7 @@ var tip = d3.tip()
       .attr('class', 'd3-tip')
       .offset([-5, 0])
       .html(function(d) {
+        // d3.select(".d3-tip").style("background-color", "rgba(214, 213, 213, 0.79)");
         var dataRow = county_dict.get(d.id)
            if (dataRow) {
                var val = document.getElementById("myRange").value;

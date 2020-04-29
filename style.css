@@ -291,7 +291,9 @@ h1.title {
     text-align: center;
     opacity: 0;
     z-index: 1;
+    background-color: rgba(248, 248, 248, 0.527);
   }
+
   #map-legend {
     margin-top: -6%;
     text-align: left;
