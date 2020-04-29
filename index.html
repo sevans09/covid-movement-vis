@@ -885,7 +885,9 @@ function ready(error, us) {
     }
   };
 
-  slider.addEventListener('change', changeSlider());
+  slider.addEventListener('change', function() {
+    changeSlider();
+  });
 
   window.addEventListener('keypress', function(e) {
       var keyCode = e.keyCode;
