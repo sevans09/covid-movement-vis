@@ -64,14 +64,13 @@
       </form>
      </div>
 
-    <svg id="maps"></svg>
+    <svg style="margin-top:-10%" id="maps"></svg>
     <div id="map-legend"></div>
   </div>
 </div>
 
 <script src="js/d3.v4.min.js"></script>
 <script src="js/topojson.v1.min.js"></script>
-<!-- <script src="js/bubbles.js"></script> -->
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/0.10.0/lodash.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="js/d3-tip.js"></script>
@@ -80,7 +79,6 @@
 <script type = "text/javascript" src="./income_pos.json"></script>
 <script type = "text/javascript" src="./bubble/pos-vote.json"></script>
 <script type = "text/javascript" src="./demographic-data.json"></script>
-<!-- <script type = "text/javascript" src="js/bubbles.js"></script> -->
 <script type = "text/javascript" src="donut/donut.js"></script>
 <script type = "text/javascript" src="donut/index.js"></script>
 <script type = "text/javascript" src="js/d3-legend.min.js"> </script>
@@ -93,8 +91,6 @@ d3.select("#queryinfo")
 .text("Query a county or a state...")
 
 d3.select("#querystateinfo")
-// .text("Query a state below to prompt a donut chart breakdown of COVID-19 cases.")
-// .text("OR")
 
 var margin = {top: 10, left: 10, bottom: 10, right: 10}
   , width = $("body").width() / 1.1
