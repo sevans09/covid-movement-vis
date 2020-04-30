@@ -195,21 +195,25 @@ function in_move_range(move_index, d, val) {
 }
 
 function change_move() {
-    var val = document.getElementById("myRange").value;
-    document.getElementById("week").innerHTML = weeks[val-1];
-    var t = d3.transition()
-        .duration(750);
+  var save_fips = selected_fips;
+  unhighlight();
 
-   if(document.getElementById("toggleButton").value=="MAP") {
+  var val = document.getElementById("myRange").value;
+  document.getElementById("week").innerHTML = weeks[val-1];
+  var t = d3.transition()
+      .duration(750);
+
+  if(document.getElementById("toggleButton").value=="MAP") {
     svg.selectAll("path")
       .transition(t)
         .attr("fill", function(d) { 
           if (move_dict.get(d.id)) {
-            console.log(quantize(move_dict.get(d.id)[val-1]))
             return quantize(move_dict.get(d.id)[val-1])
-          } });
-   } else {
-
+          }
+        });
+  } 
+  else 
+  {
     var bubbles = d3.select(".bubble_svg")
     bubbles.selectAll("circle")
       .attr("move", function(d) {
@@ -219,6 +223,7 @@ function change_move() {
       .transition(t)
         .style("fill", function(d) { return quantize(move_dict.get(d.fips)[val-1]); });
   }
+  save_fips = selected_fips;
   if (selected_fips != null)
     highlight_single(selected_fips);
 }
