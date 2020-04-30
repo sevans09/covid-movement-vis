@@ -368,8 +368,8 @@ function displayBar(data) {
       .offset([-5, 0])
       .html(function(d, i) {
         return "Date: " + dates_dict.get(data)[i] 
-        + "<br>Cases: " + num_with_commas(cases_dict.get(data)[i])
-        + "<br>Deaths: " + num_with_commas(deaths_dict.get(data)[i]);
+        + "<br>Cases: " + numberWithCommas(cases_dict.get(data)[i])
+        + "<br>Deaths: " + numberWithCommas(deaths_dict.get(data)[i]);
       })
 
     svg.call(bartip)
@@ -565,7 +565,7 @@ function handleQuery() {
 }
 
 function handleStateQuery() {
-  console.log("entered");
+  // $('#queriedState').blur();
   var query = $("#queriedState").val();
   console.log(state_names_dict[toTitleCase(query)]);
   if (state_names_dict[toTitleCase(query)]) {
@@ -601,6 +601,7 @@ $("#queriedState").on('keyup', function (e) {
 });
 
 $("#queriedCounty").on('focus', unhighlight);
+$("#queriedState").on('focus', unhighlight);
 
 pop_dict = d3.map()
 dem_data.forEach( function(d){ 
