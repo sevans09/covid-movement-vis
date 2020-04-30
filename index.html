@@ -187,10 +187,9 @@ function in_move_range(move_index, d, val) {
       return 0.95;
   }
   move = move[val-1]
-  if ((index == 3) && (move >= 3.8)) {
+  if ((index == 3.0) && (move >= 3.8)) {
     return true
   }
-
   return ((move > index) && (move < index + 0.8))
 
 }
@@ -269,7 +268,6 @@ function unhighlight() {
 
   }
 }
-
 
 var ordinal = d3.scaleOrdinal()
   .domain(["<= 0.8", "0.8", "1.6", "2.4", "3 >="])
@@ -530,7 +528,6 @@ function addDropdown(fips) {
   })
 }
 
-
 function handleQuery() {
   $('#queriedCounty').blur();
   var query = $("#queriedCounty").val();
@@ -650,7 +647,6 @@ function swapMap(us) {
   }
 }
 
-
 function ready(error, us) {
   if (error) throw error;
   $( "#alertdiv" ).hide();
@@ -661,20 +657,8 @@ function ready(error, us) {
   var val = document.getElementById("myRange").value;
   var dem = $("input[name='dem_radio']:checked").val();
 
-  function changeSlider() {
-    if(document.getElementById("toggleButton").value=="MAP"){
-      var val = document.getElementById("myRange").value;
-      change_move()
-    }
-    else {
-      var val = document.getElementById("myRange").value;
-      dem = $("input[name='dem_radio']:checked").val();
-      change_move()
-    }
-  };
-
   slider.addEventListener('change', function() {
-    changeSlider();
+    change_move();
   });
 
   window.addEventListener('keypress', function(e) {
@@ -682,25 +666,21 @@ function ready(error, us) {
       var key = keyCode - 48
       if (key > 0 && key < 8) {
         document.getElementById("myRange").value = key;
-        changeSlider();
+        change_move();
       }
   });
 
+  document.getElementById("toggleButton").value="MAP";
+  makeMap(us);
+
   document.getElementById("toggleButton").addEventListener("click", 
-    function(){
-    swapMap(us);});
+    function(){ swapMap(us);});
 
   $('#radio_options').change(function(){
       dem = $("input[name='dem_radio']:checked").val();
       var val = document.getElementById("myRange").value;
       update_demographic(dem, val)
   });
-
-  makeMap(us);
-  swapMap(us);
-  
-  $( "#bubbles" ).hide();
-  $("#bubbles").css("visibility", "hidden");
 }
 
 </script>
