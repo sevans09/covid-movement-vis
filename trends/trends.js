@@ -83,34 +83,6 @@ function get_move(d) {
   return move_dict.get(d.fips)[val-1]
 }
 
-function change_move() {
-    var val = document.getElementById("myRange").value;
-    var t = d3.transition()
-        .duration(750);
-
-   if(document.getElementById("toggleButton").value=="MAP") {
-    svg.selectAll("path")
-      .transition(t)
-        .attr("fill", function(d) { 
-          if (move_dict.get(d.id)) {
-            console.log(quantize(move_dict.get(d.id)[val-1]))
-            return quantize(move_dict.get(d.id)[val-1])
-          } });
-   } else {
-
-    var bubbles = d3.select(".bubble_svg")
-    bubbles.selectAll("circle")
-      .attr("move", function(d) {
-        move_dict.get(d.fips)[val-1] });
-  
-    bubbles.selectAll("circle")
-      .transition(t)
-        .style("fill", function(d) { return quantize(move_dict.get(d.fips)[val-1]); });
-  }
-  if (selected_fips != null)
-    highlight_single(selected_fips);
-}
-
 function make_x_axis(dem) {
 
   var margin = {top: 300, right: 250, bottom: 50, left: 50};
