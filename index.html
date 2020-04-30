@@ -196,6 +196,7 @@ function in_move_range(move_index, d, val) {
 
 function change_move() {
     var val = document.getElementById("myRange").value;
+    document.getElementById("week").innerHTML = weeks[val-1];
     var t = d3.transition()
         .duration(750);
 
