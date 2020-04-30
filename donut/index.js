@@ -109,13 +109,9 @@ function donutChart(state) {
                       }
                     });
                     if (states_with_county.length > 1) {
-                        // $( "#alertdiv" ).hide();
-                        // $( "#barchartdiv" ).show();
                         console.log(states_with_county);
-                        var curr_fips, curr_state;
                         for (i = 0; i < states_with_county.length; i++) {
                           if (states_dict.get(states_with_county[i]) == state) {
-                              console.log(states_with_county[i]);
                               highlight_single(states_with_county[i]);
                               displayBar(states_with_county[i]);
                           }
