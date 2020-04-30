@@ -321,6 +321,9 @@ legend.selectAll("rect")
   .on("mouseover", highlight_move)
   .on("mouseout", unhighlight)
 
+function numberWithCommas(x) {
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
 
 
 function toTitleCase(str) {

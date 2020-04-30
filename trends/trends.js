@@ -27,6 +27,21 @@ var dem_pos = {
   "vote"  : pos_vote
 }
 
+var quantize = d3.scaleQuantize()
+    .domain([0, 4])
+    .range(d3.range(5).map(function(i) { 
+        if (i == 0)
+            return "#9adbb5";
+        else if (i == 1)
+            return "rgb(205, 235, 178)";
+        else if (i == 2)
+            return "#F6F5AE";
+        else if (i == 3)
+            return "rgb(253, 223, 158)";
+        else
+            return "rgb(211, 85, 65)";
+    }))
+
 var move_dict = d3.map();
 og_data.forEach( function(d){ move_dict.set( d.fips, d.move_index) });
 
@@ -202,21 +217,6 @@ function make_bubbles_rep(us, val, dem) {
   $("#maps").css("visibility", "visible");
 
   bubbles.call(tip);
-
-  var quantize = d3.scaleQuantize()
-      .domain([0, 4])
-      .range(d3.range(5).map(function(i) { 
-          if (i == 0)
-              return "#9adbb5";
-          else if (i == 1)
-              return "rgb(205, 235, 178)";
-          else if (i == 2)
-              return "#F6F5AE";
-          else if (i == 3)
-              return "rgb(253, 223, 158)";
-          else
-              return "rgb(211, 85, 65)";
-      }))
 
   var y_dict = d3.map();
   y_pos = dem_pos[dem]
