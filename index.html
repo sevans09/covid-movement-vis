@@ -500,14 +500,13 @@ function addDropdown(fips) {
       valid.push(i);
     }
   }
-  console.log(valid.length + "valid fipses");
   document.getElementsByClassName("dropdown-content")[0].innerHTML = s;
   var curr_fips, curr_state;
   for (i = 0; i < valid.length; i++) {
     curr_fips = fips[valid[i]];
     curr_state = states_dict.get(curr_fips);
     $("#county" + valid[i]).html(curr_state);
-  }
+  } 
 
   $(document).ready(function() {
     $("a").click(function(event) {
