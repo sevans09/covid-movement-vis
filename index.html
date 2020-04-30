@@ -61,7 +61,7 @@
         </form>
     </div>
     <a href="#" id="toggleButton" value="MAP" class="myButton"
-       style="margin-bottom: -5%; position: relative; z-index: 1;
+       style="margin-bottom: -5%; position: relmargin-bottom:500px;ative; z-index: 1;
              float: right; margin-right: 5%"style>Switch to Demographic Trends</a>
     <svg id="maps"></svg>
     <div style="margin-top:-10%" id="map-legend"></div>
@@ -490,6 +490,7 @@ function displayBar(data) {
 
 function addDropdown(fips) {
   console.log("in dropdown", fips)
+  $( ".dropdown" ).show();
   $( ".dropbtn" ).show();
   s = "";
   var valid = new Array();
@@ -515,6 +516,7 @@ function addDropdown(fips) {
       fips_q = fips[targ.slice(6)];
       highlight_single(fips_q);
       displayBar(fips_q);
+      $( ".dropdown" ).hide();
     })
   })
 }
