@@ -61,55 +61,10 @@ function donutChart(state) {
               .enter().append('path')
                 .attr('fill', function(d) { return colour(d.data[category]); })
                 .attr('d', arc);
-            // ===========================================================================================
-
-            // ===========================================================================================
-            // add text labels
-            // var label = svg.select('.labelName').selectAll('text')
-            //     .data(pie)
-            //   .enter().append('text')
-            //     .attr('dy', '.35em')
-            //     .html(function(d) {
-            //         // add "key: value" for given category. Number inside tspan is bolded in stylesheet.
-            //         return d.data[category] + ': <tspan>' + percentFormat(d.data[variable]) + '</tspan>';
-            //     })
-            //     .attr('transform', function(d) {
-
-            //         // effectively computes the centre of the slice.
-            //         // see https://github.com/d3/d3-shape/blob/master/README.md#arc_centroid
-            //         var pos = outerArc.centroid(d);
-
-            //         // changes the point to be on left or right depending on where label is.
-            //         pos[0] = radius * 0.95 * (midAngle(d) < Math.PI ? 1 : -1);
-            //         return 'translate(' + pos + ')';
-            //     })
-            //     .style('text-anchor', function(d) {
-            //         // if slice centre is on the left, anchor text to start, otherwise anchor to end
-            //         return (midAngle(d)) < Math.PI ? 'start' : 'end';
-            //     });
-            // ===========================================================================================
-
-            // ===========================================================================================
-            // add lines connecting labels to slice. A polyline creates straight lines connecting several points
-            // var polyline = svg.select('.lines')
-            //     .selectAll('polyline')
-            //     .data(pie)
-            //   .enter().append('polyline')
-            //     .attr('points', function(d) {
-
-            //         // see label transform function for explanations of these three lines.
-            //         var pos = outerArc.centroid(d);
-            //         pos[0] = radius * 0.95 * (midAngle(d) < Math.PI ? 1 : -1);
-            //         return [arc.centroid(d), outerArc.centroid(d), pos]
-            //     });
-            // ===========================================================================================
-
-            // ===========================================================================================
+            
             // add tooltip to mouse events on slices and labels
             d3.selectAll('.slices path').call(toolTip);
-            // ===========================================================================================
-
-            // ===========================================================================================
+            
             // Functions
 
             // calculates the angle for the middle of a slice
@@ -160,6 +115,8 @@ function donutChart(state) {
                         var curr_fips, curr_state;
                         for (i = 0; i < states_with_county.length; i++) {
                           if (states_dict.get(states_with_county[i]) == state) {
+                              console.log(states_with_county[i]);
+                              highlight_single(states_with_county[i]);
                               displayBar(states_with_county[i]);
                           }
                         }
