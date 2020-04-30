@@ -139,6 +139,8 @@ var weeks = ["Week of 2020-03-02", "Week of 2020-03-09",
 //     .domain([0, 4])
 //     .range(d3.range(5).map(function(i) { return "q" + i + "-9"; }));
 
+var selected_fips = null;
+
 var quantize = d3.scaleQuantize()
       .domain([0, 4])
       .range(d3.range(5).map(function(i) { 
@@ -199,6 +201,7 @@ function highlight_single(county) {
   console.log(county);
   var val = document.getElementById("myRange").value;
   if(document.getElementById("toggleButton").value=="MAP") {
+    console.log("map");
     svg.selectAll(".counties path")
       .transition()
       .duration(500)
@@ -209,6 +212,7 @@ function highlight_single(county) {
         return county == d.id ? "black" : "transparent"
       });
   } else {
+    console.log("bubbles");
     var bubbles = d3.select(".bubble_svg")
     bubbles.selectAll("circle")
       .transition()
@@ -220,6 +224,7 @@ function highlight_single(county) {
         return (county == d.fips) ? "black" : "transparent"
       })
   }
+  console.log("done");
 }
 
 
@@ -246,6 +251,7 @@ function highlight_move(move_index) {
 }
 
 function unhighlight() {
+  selected_fips = null;
   console.log("testing");
   var val = document.getElementById("myRange").value;
   if(document.getElementById("toggleButton").value=="MAP") {
@@ -319,6 +325,7 @@ d3.queue()
     .defer(d3.json, "js/us.json")
     .await(ready);
 
+
 function makeMap(us) {
   var val = document.getElementById("myRange").value;
   document.getElementById("week").innerHTML = weeks[val-1];
@@ -354,10 +361,14 @@ function makeMap(us) {
       .attr("class", "states")
       .attr("d", path);
 
+  if (selected_fips != null)
+    highlight_single(selected_fips);
 }
 
 
 function displayBar(data) {
+  selected_fips = data;
+  console.log("selected fips", selected_fips);
   $("#barchart").empty();
     var margin = {top: 30, right: 30, bottom: 50, left: 40};
     width = 250;
@@ -645,6 +656,8 @@ function swapMap(us) {
     var val = document.getElementById("myRange").value;
     dem = $("input[name='dem_radio']:checked").val();
     make_bubbles_rep(us, val, dem)
+    if (selected_fips != null)
+      highlight_single(selected_fips);
   } 
 
   // map is hidden, toggle to map
@@ -664,6 +677,9 @@ function swapMap(us) {
 }
 
 function change_move() {
+    // if (selected_fips != null)
+    //   highlight_single(selected_fips);
+
     var val = document.getElementById("myRange").value;
     var t = d3.transition()
         .duration(750);
@@ -688,6 +704,8 @@ function change_move() {
         .style("fill", function(d) { return quantize(move_dict.get(d.fips)[val-1]); });
 
   }
+  if (selected_fips != null)
+    highlight_single(selected_fips);
 }
 
 // to be used with swapmap to replace map with bubbles
@@ -863,7 +881,12 @@ function make_bubbles_rep(us, val, dem) {
       .attr("class", "x axis")
       .attr("transform", "translate(0," + (height/2)  + ")")
       .call(xAxis);
+
+    if (selected_fips != null)
+      highlight_single(selected_fips);
   });
+
+
 }
 
 
