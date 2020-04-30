@@ -6,7 +6,7 @@
 <title>COVID-19 App</title>
 <h1 class="title">COVID-19 Movement & Cases Tracker
   with Demographic Trends</h1></br>
-<h4 class="title">Movement Index Data: <a href="https://help.cuebiq.com/hc/en-us/articles/360041285051-Reading-Cuebiq-s-COVID-19-Mobility-Insights">Cuebiq Mobility Index Analysis</a> uses phone data to measure the median distance traveled by all devices per county</h4> 
+<h4 class="title">Move Index Data: <a href="https://help.cuebiq.com/hc/en-us/articles/360041285051-Reading-Cuebiq-s-COVID-19-Mobility-Insights">Cuebiq Mobility Index Analysis</a> uses phone data to measure the median distance traveled by all devices per county</h4> 
 <h4 class="title">Cases Data: <a href="https://github.com/nytimes/covid-19-data">covid-19-data</a> is a New York Times GitHub repository that is updated each day with new cases and deaths by county</h4> 
 <div class="row">
   <div class="column2" style="position: relative">
@@ -20,7 +20,7 @@
     <div class="row" id="userbox">
         <div class="wrap">
           <div class="search">
-              <input type="text" class="searchTerm" id="queriedCounty" placeholder="Enter a county (e.g. Dutchess)">
+              <input type="text" class="searchTerm" id="queriedCounty" placeholder="Enter a county (e.g. Santa Barbara)">
               <button type="submit" class="searchButton" onClick=handleQuery()>
                 <i class="fa fa-search"></i>
               </button>
@@ -89,7 +89,7 @@ d3.select("#sliderinfo")
 .text("Slide to explore weekly movement changes.")
 
 d3.select("#queryinfo")
-.text("Query a county or a state...")
+.text("Query a county OR state to view number of COVID-19 cases")
 
 d3.select("#querystateinfo")
 // .text("Query a state below to prompt a donut chart breakdown of COVID-19 cases.")
