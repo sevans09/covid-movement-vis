@@ -3,6 +3,7 @@ function donutChart(state) {
         height = 400,
         margin = {top: 10, right: 10, bottom: 10, left: 10},
         colour = d3.scaleOrdinal(d3.schemeCategory20c), // colour scheme
+        // colour = d3.scaleOrdinal(["#dcc9e2","#d0aad2","#d08ac2","#dd63ae","#e33890","#d71c6c","#b70b4f","#8f023a","#67001f", "#8e0152","#c51b7d","#de77ae","#f1b6da","#fde0ef"]),
         variable, // value in data that will dictate proportions on chart
         category, // compare data by
         padAngle, // effectively dictates the gap between slices
@@ -60,6 +61,7 @@ function donutChart(state) {
                 .data(pie)
               .enter().append('path')
                 .attr('fill', function(d) { return colour(d.data[category]); })
+                // .attr('fill', '#979797')
                 .attr('d', arc);
             
             // add tooltip to mouse events on slices and labels
@@ -109,6 +111,7 @@ function donutChart(state) {
                         .attr('class', 'toolCircle')
                         .attr('r', radius * 0.55) // radius of tooltip circle
                         .style('fill', colour(data.data[category])) // colour based on category mouse is over
+                        // .attr('fill', '#979797')
                         .style('fill-opacity', 0.35);
 
                     var fips_q = getFips(data);
