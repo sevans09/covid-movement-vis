@@ -61,7 +61,7 @@
         </form>
     </div>
     <a href="#" id="toggleButton" value="MAP" class="myButton"
-       style="margin-bottom: -5%; position: relmargin-bottom:500px;ative; z-index: 1;
+       style="margin-bottom: -5%; position: relative; z-index: 1;
              float: right; margin-right: 5%"style>Switch to Demographic Trends</a>
     <svg id="maps"></svg>
     <div style="margin-top:-10%" id="map-legend"></div>
@@ -368,8 +368,8 @@ function displayBar(data) {
       .offset([-5, 0])
       .html(function(d, i) {
         return "Date: " + dates_dict.get(data)[i] 
-        + "<br>Cases: " + numberWithCommas(cases_dict.get(data)[i])
-        + "<br>Deaths: " + numberWithCommas(deaths_dict.get(data)[i]);
+        + "<br>Cases: " + num_with_commas(cases_dict.get(data)[i])
+        + "<br>Deaths: " + num_with_commas(deaths_dict.get(data)[i]);
       })
 
     svg.call(bartip)
@@ -490,8 +490,8 @@ function displayBar(data) {
 
 function addDropdown(fips) {
   console.log("in dropdown", fips)
-  $( ".dropdown" ).show();
   $( ".dropbtn" ).show();
+  $( ".dropdown" ).show();
   s = "";
   var valid = new Array();
   for (i = 0; i < fips.length; i++) {
@@ -500,22 +500,23 @@ function addDropdown(fips) {
       valid.push(i);
     }
   }
+  console.log(valid.length + "valid fipses");
   document.getElementsByClassName("dropdown-content")[0].innerHTML = s;
   var curr_fips, curr_state;
   for (i = 0; i < valid.length; i++) {
     curr_fips = fips[valid[i]];
     curr_state = states_dict.get(curr_fips);
     $("#county" + valid[i]).html(curr_state);
-  } 
+  }
 
   $(document).ready(function() {
     $("a").click(function(event) {
+      $( ".dropdown" ).hide();
       targ = event.target.id;
       console.log(fips[targ.slice(6)]);
       fips_q = fips[targ.slice(6)];
       highlight_single(fips_q);
       displayBar(fips_q);
-      $( ".dropdown" ).hide();
     })
   })
 }
@@ -542,30 +543,35 @@ function handleQuery() {
   else {
     $("button#dropdown.dropbtn").hide();
     var fips_q = names_dict[query.toLowerCase()];
-    highlight_single(fips_q);
+    
     if (cases_dict.get(fips_q)) {
+      highlight_single(fips_q);
       $( "#alertdiv" ).hide();
       $( "#barchartdiv" ).show();
       displayBar(fips_q);
     }
-    else {
+    else if (typeof(fips_q) == "undefined") {
+      console.log('fips undef')
+      $( "#alertdiv" ).show();
+      $( "#alertdiv" ).html("County does not exist");     
+    }
+    else  {
+      highlight_single(fips_q);
       $( "#barchartdiv" ).hide( "slow" );
         // Capitalize each word of the county
-        if (typeof(county_dict.get(query)) == "undefined") {
-          $( "#alertdiv" ).show();
-          $( "#alertdiv" ).html("County does not exist");
-        }
-        else {
-          const upper = toTitleCase(county_dict.get(query))
+        console.log("type is",typeof(county_dict.get(query)))
+        console.log('fips q', fips_q)
+          console.log("fips not undef")
+          const upper = toTitleCase(county_dict.get(fips_q))
           $( "#alertdiv" ).show();
           $( "#alertdiv" ).html("No case data for " + upper);
-        }
+        // }
     }
   }
 }
 
 function handleStateQuery() {
-  // $('#queriedState').blur();
+  console.log("entered");
   var query = $("#queriedState").val();
   console.log(state_names_dict[toTitleCase(query)]);
   if (state_names_dict[toTitleCase(query)]) {
@@ -601,7 +607,6 @@ $("#queriedState").on('keyup', function (e) {
 });
 
 $("#queriedCounty").on('focus', unhighlight);
-$("#queriedState").on('focus', unhighlight);
 
 pop_dict = d3.map()
 dem_data.forEach( function(d){ 
@@ -873,9 +878,17 @@ function ready(error, us) {
   var dem = $("input[name='dem_radio']:checked").val();
 
   function changeSlider() {
-    var val = document.getElementById("myRange").value;
-    document.getElementById("week").innerHTML = weeks[val-1];
-    change_move();
+    if(document.getElementById("toggleButton").value=="MAP"){
+      var val = document.getElementById("myRange").value;
+      change_move()
+      //makeMap(us);
+    }
+    else {
+      var val = document.getElementById("myRange").value;
+      dem = $("input[name='dem_radio']:checked").val();
+      change_move()
+      //make_bubbles_rep(us, val, dem)
+    }
   };
 
   slider.addEventListener('change', function() {
