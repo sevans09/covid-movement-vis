@@ -900,22 +900,8 @@ function ready(error, us) {
   var val = document.getElementById("myRange").value;
   var dem = $("input[name='dem_radio']:checked").val();
 
-  function changeSlider() {
-    if(document.getElementById("toggleButton").value=="MAP"){
-      var val = document.getElementById("myRange").value;
-      change_move()
-      //makeMap(us);
-    }
-    else {
-      var val = document.getElementById("myRange").value;
-      dem = $("input[name='dem_radio']:checked").val();
-      change_move()
-      //make_bubbles_rep(us, val, dem)
-    }
-  };
-
   slider.addEventListener('change', function() {
-    changeSlider();
+    change_move();
   });
 
   window.addEventListener('keypress', function(e) {
@@ -923,9 +909,12 @@ function ready(error, us) {
       var key = keyCode - 48
       if (key > 0 && key < 8) {
         document.getElementById("myRange").value = key;
-        changeSlider();
+        change_move();
       }
   });
+
+  document.getElementById("toggleButton").value="MAP";
+  makeMap(us);
 
   document.getElementById("toggleButton").addEventListener("click", 
     function(){
@@ -937,9 +926,6 @@ function ready(error, us) {
       make_bubbles_rep(us, val, dem)
   });
 
-  makeMap(us);
-  swapMap(us);
-  
   // make_bubbles_rep(us, val, dem)
   $( "#bubbles" ).hide();
   $("#bubbles").css("visibility", "hidden");
