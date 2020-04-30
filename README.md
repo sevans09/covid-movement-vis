@@ -12,12 +12,5 @@ Usage:
 
 
 TODO:
-- make "move index" consistent everywhere on the page
-- SEJAL: fix keypress listeners
 - bar chart legend
-- change color of "State" button
-- add autofocus to lead user to hover over "State" button
-- define move index more clearly
-- sizing stuff to fit the map and div on the screen?
-- radio buttons for bubble thing
-- data filter for donut chart to only get counties with certain state queried
+- fix color of donut chart

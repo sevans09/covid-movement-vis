@@ -137,6 +137,7 @@ var weeks = ["Week of 2020-03-02", "Week of 2020-03-09",
             "Week of 2020-04-13", "Week of 2020-04-20"];
 
 var selected_fips = null;
+var selected_state = null;
 
 var quantize = d3.scaleQuantize()
       .domain([0, 4])
@@ -226,6 +227,8 @@ function change_move() {
   save_fips = selected_fips;
   if (selected_fips != null)
     highlight_single(selected_fips);
+  else if (selected_state != null)
+    makeDonut(toTitleCase(selected_state), 320, 320);
 }
 
 function highlight_single(county) {
@@ -400,6 +403,7 @@ function makeMap(us) {
 
 
 function displayBar(data) {
+  selected_state = null;
   selected_fips = data;
   console.log("selected fips", selected_fips);
   $("#barchart").empty();
@@ -615,16 +619,15 @@ function handleQuery() {
 
 function handleStateQuery() {
   console.log("entered");
+  selected_state = $("#queriedState").val();
   var query = $("#queriedState").val();
   console.log(state_names_dict[toTitleCase(query)]);
   if (state_names_dict[toTitleCase(query)]) {
     $("#alertdiv").hide();
     $("#barchart").empty();
     $("#barchartdiv").show();
-    width = 320,
-    height = 320;
 
-    makeDonut(toTitleCase(query), width, height);
+    makeDonut(toTitleCase(query), 320, 320);
   }
   else {
     $( "#barchartdiv" ).hide( "slow" );
