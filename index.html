@@ -491,6 +491,7 @@ function displayBar(data) {
 function addDropdown(fips) {
   console.log("in dropdown", fips)
   $( ".dropbtn" ).show();
+  $( ".dropdown" ).show();
   s = "";
   var valid = new Array();
   for (i = 0; i < fips.length; i++) {
@@ -510,6 +511,7 @@ function addDropdown(fips) {
 
   $(document).ready(function() {
     $("a").click(function(event) {
+      $( ".dropdown" ).hide();
       targ = event.target.id;
       console.log(fips[targ.slice(6)]);
       fips_q = fips[targ.slice(6)];
