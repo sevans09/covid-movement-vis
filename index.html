@@ -6,7 +6,7 @@
 <title>COVID-19 App</title>
 <h1 class="title">COVID-19 Movement & Cases Tracker
   with Demographic Trends</h1></br>
-<h4 class="title">Movement Index Data: <a href="https://help.cuebiq.com/hc/en-us/articles/360041285051-Reading-Cuebiq-s-COVID-19-Mobility-Insights">Cuebiq Mobility Index Analysis</a> uses phone data to measure the median distance traveled by all devices per county</h4> 
+<h4 class="title">Move Index Data: <a href="https://help.cuebiq.com/hc/en-us/articles/360041285051-Reading-Cuebiq-s-COVID-19-Mobility-Insights">Cuebiq Mobility Index Analysis</a> uses phone data to measure the median distance traveled by all devices per county</h4> 
 <h4 class="title">Cases Data: <a href="https://github.com/nytimes/covid-19-data">covid-19-data</a> is a New York Times GitHub repository that is updated each day with new cases and deaths by county</h4> 
 <div class="row">
   <div class="column2" style="position: relative; min-height:500px">
@@ -20,7 +20,7 @@
     <div class="row" id="userbox">
         <div class="wrap">
           <div class="search">
-              <input type="text" class="searchTerm" id="queriedCounty" placeholder="Enter a county (e.g. Dutchess)">
+              <input type="text" class="searchTerm" id="queriedCounty" placeholder="Enter a county (e.g. Santa Barbara)">
               <button type="submit" class="searchButton" onClick=handleQuery()>
                 <i class="fa fa-search"></i>
               </button>
@@ -70,16 +70,15 @@
 
 <script src="js/d3.v4.min.js"></script>
 <script src="js/topojson.v1.min.js"></script>
-<!-- <script src="js/bubbles.js"></script> -->
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/0.10.0/lodash.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="js/d3-tip.js"></script>
 <script type = "text/javascript" src="move_index.json"></script>
 <script type = "text/javascript" src="us-county-cases.json"></script>
-<script type = "text/javascript" src="./income_pos.json"></script>
-<script type = "text/javascript" src="./bubble/pos-vote.json"></script>
-<script type = "text/javascript" src="./demographic-data.json"></script>
-<!-- <script type = "text/javascript" src="js/bubbles.js"></script> -->
+<script type = "text/javascript" src="trends/income_pos.json"></script>
+<script type = "text/javascript" src="trends/pos-vote.json"></script>
+<script type = "text/javascript" src="trends/demographic-data.json"></script>
+<script type = "text/javascript" src="trends/trends.js"></script>
 <script type = "text/javascript" src="donut/donut.js"></script>
 <script type = "text/javascript" src="donut/index.js"></script>
 <script type = "text/javascript" src="js/d3-legend.min.js"> </script>
@@ -89,11 +88,9 @@ d3.select("#sliderinfo")
 .text("Slide to explore weekly movement changes.")
 
 d3.select("#queryinfo")
-.text("Query a county or a state...")
+.text("Query a county OR state to view number of COVID-19 cases")
 
 d3.select("#querystateinfo")
-// .text("Query a state below to prompt a donut chart breakdown of COVID-19 cases.")
-// .text("OR")
 
 var margin = {top: 10, left: 10, bottom: 10, right: 10}
   , width = $("body").width() / 1.1
@@ -115,6 +112,7 @@ var states_dict = d3.map();
 var state_names_dict = d3.map();
 var names_dict = {};
 var names_and_county_dict = d3.map();
+
 og_data.forEach( function(d){ 
   county_dict.set( d.fips, d.county);
   var countyState = d.county + " " + d.state;
@@ -128,16 +126,18 @@ og_data.forEach( function(d){
 var cases_dict = d3.map();
 var dates_dict = d3.map();
 var deaths_dict = d3.map();
-cases_data.forEach( function(d){ cases_dict.set( d.fips, d.cases); deaths_dict.set(d.fips, d.deaths); dates_dict.set(d.fips, d.dates); });
+cases_data.forEach( function(d)
+  { cases_dict.set( d.fips, d.cases); 
+    deaths_dict.set(d.fips, d.deaths); 
+    dates_dict.set(d.fips, d.dates); });
 
 var weeks = ["Week of 2020-03-02", "Week of 2020-03-09", 
             "Week of 2020-03-16", "Week of 2020-03-23", 
             "Week of 2020-03-30", "Week of 2020-04-06", 
             "Week of 2020-04-13", "Week of 2020-04-20"];
 
-// var quantize = d3.scaleQuantize()
-//     .domain([0, 4])
-//     .range(d3.range(5).map(function(i) { return "q" + i + "-9"; }));
+var selected_fips = null;
+var selected_state = null;
 
 var quantize = d3.scaleQuantize()
       .domain([0, 4])
@@ -170,7 +170,8 @@ var tip = d3.tip()
            if (dataRow) {
                var val = document.getElementById("myRange").value;
                return "County: " + toTitleCase(county_dict.get(d.id)) + 
-                      "<br>State: " + toTitleCase(states_dict.get(d.id)) + "<br>Move Index: " + move_dict.get(d.id)[val-1]
+                      "<br>State: " + toTitleCase(states_dict.get(d.id)) 
+                      + "<br>Move Index: " + move_dict.get(d.id)[val-1]
            } else {
                county_dict.get(d.id) + ": No data.";
            }
@@ -187,18 +188,54 @@ function in_move_range(move_index, d, val) {
       return 0.95;
   }
   move = move[val-1]
-  if ((index == 3) && (move >= 3.8)) {
+  if ((index == 3.0) && (move >= 3.8)) {
     return true
   }
-
   return ((move > index) && (move < index + 0.8))
 
+}
+
+function change_move() {
+  var save_fips = selected_fips;
+  unhighlight();
+
+  var val = document.getElementById("myRange").value;
+  document.getElementById("week").innerHTML = weeks[val-1];
+  var t = d3.transition()
+      .duration(750);
+
+  if(document.getElementById("toggleButton").value=="MAP") {
+    svg.selectAll("path")
+      .transition(t)
+        .attr("fill", function(d) { 
+          if (move_dict.get(d.id)) {
+            return quantize(move_dict.get(d.id)[val-1])
+          }
+        });
+  } 
+  else 
+  {
+    var bubbles = d3.select(".bubble_svg")
+    bubbles.selectAll("circle")
+      .attr("move", function(d) {
+        move_dict.get(d.fips)[val-1] });
+  
+    bubbles.selectAll("circle")
+      .transition(t)
+        .style("fill", function(d) { return quantize(move_dict.get(d.fips)[val-1]); });
+  }
+  save_fips = selected_fips;
+  if (selected_fips != null)
+    highlight_single(selected_fips);
+  else if (selected_state != null)
+    makeDonut(toTitleCase(selected_state), 320, 320);
 }
 
 function highlight_single(county) {
   console.log(county);
   var val = document.getElementById("myRange").value;
   if(document.getElementById("toggleButton").value=="MAP") {
+    console.log("map");
     svg.selectAll(".counties path")
       .transition()
       .duration(500)
@@ -209,6 +246,7 @@ function highlight_single(county) {
         return county == d.id ? "black" : "transparent"
       });
   } else {
+    console.log("bubbles");
     var bubbles = d3.select(".bubble_svg")
     bubbles.selectAll("circle")
       .transition()
@@ -220,6 +258,7 @@ function highlight_single(county) {
         return (county == d.fips) ? "black" : "transparent"
       })
   }
+  console.log("done");
 }
 
 
@@ -246,6 +285,7 @@ function highlight_move(move_index) {
 }
 
 function unhighlight() {
+  selected_fips = null;
   console.log("testing");
   var val = document.getElementById("myRange").value;
   if(document.getElementById("toggleButton").value=="MAP") {
@@ -265,7 +305,6 @@ function unhighlight() {
 
   }
 }
-
 
 var ordinal = d3.scaleOrdinal()
   .domain(["<= 0.8", "0.8", "1.6", "2.4", "3 >="])
@@ -291,6 +330,9 @@ legend.selectAll("rect")
   .on("mouseover", highlight_move)
   .on("mouseout", unhighlight)
 
+function num_with_commas(x) {
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
 
 
 function toTitleCase(str) {
@@ -318,6 +360,7 @@ function handleClick(fips) {
 d3.queue()
     .defer(d3.json, "js/us.json")
     .await(ready);
+
 
 function makeMap(us) {
   var val = document.getElementById("myRange").value;
@@ -354,10 +397,15 @@ function makeMap(us) {
       .attr("class", "states")
       .attr("d", path);
 
+  if (selected_fips != null)
+    highlight_single(selected_fips);
 }
 
 
 function displayBar(data) {
+  selected_state = null;
+  selected_fips = data;
+  console.log("selected fips", selected_fips);
   $("#barchart").empty();
     var margin = {top: 30, right: 30, bottom: 50, left: 40};
     width = 250;
@@ -521,7 +569,6 @@ function addDropdown(fips) {
   })
 }
 
-
 function handleQuery() {
   $('#queriedCounty').blur();
   var query = $("#queriedCounty").val();
@@ -572,16 +619,15 @@ function handleQuery() {
 
 function handleStateQuery() {
   console.log("entered");
+  selected_state = $("#queriedState").val();
   var query = $("#queriedState").val();
   console.log(state_names_dict[toTitleCase(query)]);
   if (state_names_dict[toTitleCase(query)]) {
     $("#alertdiv").hide();
     $("#barchart").empty();
     $("#barchartdiv").show();
-    width = 320,
-    height = 320;
 
-    makeDonut(toTitleCase(query), width, height);
+    makeDonut(toTitleCase(query), 320, 320);
   }
   else {
     $( "#barchartdiv" ).hide( "slow" );
@@ -608,30 +654,10 @@ $("#queriedState").on('keyup', function (e) {
 
 $("#queriedCounty").on('focus', unhighlight);
 
-pop_dict = d3.map()
-dem_data.forEach( function(d){ 
-  pop_dict.set( d.fips, d.pop_2019);
-});
-
-
-var county_dict = d3.map();
-var sab_dict = d3.map();
-og_data.forEach( function(d){ 
-  county_dict.set( d.fips, d.county);
-  sab_dict.set(d.fips, d.sab);
-});
-
-function get_rad_range(width) {
-  if (width >= 900) {
-    return [3,8]
-  }
-  else if (width >= 600) {
-    return [2,5]
-  }
-  return [1.5,3]
-}
 
 function swapMap(us) {
+  var save_fips = selected_fips;
+  unhighlight();
   // bubbles are hidden, toggle to bubbles
   if(document.getElementById("toggleButton").value=="MAP"){
     document.getElementById("toggleButton").innerHTML = "Back to the map";
@@ -645,10 +671,10 @@ function swapMap(us) {
     var val = document.getElementById("myRange").value;
     dem = $("input[name='dem_radio']:checked").val();
     make_bubbles_rep(us, val, dem)
+    if (selected_fips != null)
+      highlight_single(selected_fips);
   } 
-
   // map is hidden, toggle to map
-  // else if(document.getElementById("toggleButton").value=="BUBBLE"){
   else {
     document.getElementById("toggleButton").value="MAP";
     $( "#dem_options" ).hide();
@@ -658,214 +684,12 @@ function swapMap(us) {
     $("#maps").empty();
     console.log('making map')
     $("#dem_options").css("visibility", "hidden")
-    
     makeMap(us);
   }
+  selected_fips = save_fips;
+  if (selected_fips != null)
+    highlight_single(selected_fips);
 }
-
-function change_move() {
-    var val = document.getElementById("myRange").value;
-    var t = d3.transition()
-        .duration(750);
-
-   if(document.getElementById("toggleButton").value=="MAP") {
-    svg.selectAll("path")
-      .transition(t)
-        .attr("fill", function(d) { 
-          if (move_dict.get(d.id)) {
-            console.log(quantize(move_dict.get(d.id)[val-1]))
-            return quantize(move_dict.get(d.id)[val-1])
-          } });
-   } else {
-
-    var bubbles = d3.select(".bubble_svg")
-    bubbles.selectAll("circle")
-      .attr("move", function(d) {
-        move_dict.get(d.fips)[val-1] });
-  
-    bubbles.selectAll("circle")
-      .transition(t)
-        .style("fill", function(d) { return quantize(move_dict.get(d.fips)[val-1]); });
-
-  }
-}
-
-// to be used with swapmap to replace map with bubbles
-function make_bubbles_rep(us, val, dem) {
-
-  var margin = {top: 300, right: 250, bottom: 50, left: 50};
-  d3.select(".bubble_svg").remove();
-  var width = $("#maps").width()
-  var height = $("#maps").height()
-
-  pos = $("#maps").position().top;
-
-  rad_range = get_rad_range(width)
-  var max_income = 123000;
-  var min_income = 18000;
-  var max_pop = 1000000;
-  var min_pop = 169;
-  var min_vote = 0
-  var max_vote = 1
-
-  var min_max = {
-    "income": {'min': min_income, 'max': max_income},
-    "pop"   : {'min': min_pop, 'max': max_pop},
-    "vote"  : {'min': min_vote, 'max': max_vote}
-  }
-
-  var dem_title = {
-    "income": "Median Income",
-    "vote"  : "% GOP Vote 2016",
-  }
-
-  var dem_label = {
-    "income": "Income: $",
-    "vote"  : "GOP Vote: %",
-  }
-
-  var dem_pos = {
-    "income": income_pos,
-    "vote"  : pos_vote
-  }
-
-
-  function numberWithCommas(x) {
-      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  }
-
-  function get_x_value(data) {
-    if (dem == "income") {
-      return numberWithCommas(data.income)
-    }
-    return (dem == "vote") ? data.vote : data.cases
-  }
-
-  var move_dict = d3.map();
-  og_data.forEach( function(d){ move_dict.set( d.fips, d.move_index) });
-
-  var county_dict = d3.map();
-  var sab_dict = d3.map();
-  og_data.forEach( function(d){ 
-    county_dict.set( d.fips, d.county);
-    sab_dict.set(d.fips, d.sab);
-  });
-
-  var x = d3.scaleLinear()
-    .domain( [min_max[dem].min, min_max[dem].max] )
-    .range( [margin.left, width - margin.right] );
-
-  var radquantize = d3.scaleQuantize()
-      .domain([min_max['pop'].min, min_max['pop'].max])
-      .range(rad_range)
-
-  var xAxis = d3.axisBottom(x);
-
-  var tip = d3.tip()
-      .attr('class', 'd3-tip')
-      .offset([-5, 0])
-      .html(function(d) {
-        return "County: " + toTitleCase(d.county) 
-        + " (" + d.sab + ")<br>Move Index: " + d.move 
-        + "<br>Population: " + numberWithCommas(d.pop) 
-        + "<br>" + dem_label[dem] + get_x_value(d);
-      })
-
-
-  d3.json("./bubble/dem-data.json", function(error, data) {
-    if (error) throw error;
-
-  var bubbles = d3.select("#maps").append("svg")
-    .attr("width", width)
-    .attr("height", height)
-    .attr("class", "bubble_svg")
-    .attr("shape-rendering", "geometric-precision");
-
-  $("#maps").css("visibility", "visible");
-
-  bubbles.call(tip);
-
-  var xAxisTitle = bubbles.append("text")
-    .attr("class", "axisTitle")
-    .text(dem_title[dem]);
-
-  xAxisTitle
-    .attr("x", width - xAxisTitle.node().getBBox().width - width/4.5)
-    .attr("y", ( height/2) - xAxisTitle.node().getBBox().height - height/5)
-
-  var quantize = d3.scaleQuantize()
-      .domain([0, 4])
-      .range(d3.range(5).map(function(i) { 
-          if (i == 0)
-              return "#9adbb5";
-          else if (i == 1)
-              return "rgb(205, 235, 178)";
-          else if (i == 2)
-              return "#F6F5AE";
-          else if (i == 3)
-              return "rgb(253, 223, 158)";
-          else
-              return "rgb(211, 85, 65)";
-      }))
-
-  var y_dict = d3.map();
-
-  y_pos = dem_pos[dem]
-
-  y_pos.forEach( function(d){ y_dict.set(d.fips, 250 - d.y )});
-
-  function get_node_x(node) {
-    if (dem == "income") {
-      return node.median_income
-    }
-    return (dem == "vote") ? node.per_gop : node.cpc
-  }
-    //add other demographics!
-    var nodes = data.map(function(node, index) {
-      return {
-        index: index,
-        move: move_dict.get(node.fips)[val-1],
-        fips: node.fips, 
-        pop: node.pop_2019,
-        income: node.median_income,
-        county: node.county,
-        sab: node.sab,
-        vote: node.per_gop,
-        x: x(get_node_x(node)),
-        fx: x(get_node_x(node)),
-        r: radquantize(node.pop_2019),
-        y: y_dict.get(node.fips)
-      };
-    });
-
-
-    var simulation = d3.forceSimulation(nodes)
-      .force("x", d3.forceX(function(d) { return x(d.income); }).strength(1))
-      .force("collide", d3.forceCollide().radius(function(d){ return d.r}))
-      .force("manyBody", d3.forceManyBody().strength(-1))
-      .tick();
-
-    var circle = bubbles.selectAll("circle")
-      .data(nodes)
-      .enter().append("circle")
-      .style("fill", function(d) { return quantize(d.move); })
-      .attr("cx", function(d) { return d.x} )
-      .attr("cy", function(d) { return d.y} )
-      .attr("r", function(d) { return d.r} )
-      .style("opacity", function(d) {
-        return ((d.y + height/2) <= d.r || (d.y + height/2) >= (height - d.r)) ?  0 : 0.75})
-      .attr("transform", "translate(0," + height/2 + ")")
-      .on('mouseover', tip.show)
-      .on('mouseout', tip.hide)
-      .on('click', function(d) { handleClick(d.fips) })
-
-    bubbles.append("g")
-      .attr("class", "x axis")
-      .attr("transform", "translate(0," + (height/2)  + ")")
-      .call(xAxis);
-  });
-}
-
 
 function ready(error, us) {
   if (error) throw error;
@@ -877,22 +701,8 @@ function ready(error, us) {
   var val = document.getElementById("myRange").value;
   var dem = $("input[name='dem_radio']:checked").val();
 
-  function changeSlider() {
-    if(document.getElementById("toggleButton").value=="MAP"){
-      var val = document.getElementById("myRange").value;
-      change_move()
-      //makeMap(us);
-    }
-    else {
-      var val = document.getElementById("myRange").value;
-      dem = $("input[name='dem_radio']:checked").val();
-      change_move()
-      //make_bubbles_rep(us, val, dem)
-    }
-  };
-
   slider.addEventListener('change', function() {
-    changeSlider();
+    change_move();
   });
 
   window.addEventListener('keypress', function(e) {
@@ -900,26 +710,21 @@ function ready(error, us) {
       var key = keyCode - 48
       if (key > 0 && key < 8) {
         document.getElementById("myRange").value = key;
-        changeSlider();
+        change_move();
       }
   });
 
+  document.getElementById("toggleButton").value="MAP";
+  makeMap(us);
+
   document.getElementById("toggleButton").addEventListener("click", 
-    function(){
-    swapMap(us);});
+    function(){ swapMap(us);});
 
   $('#radio_options').change(function(){
       dem = $("input[name='dem_radio']:checked").val();
       var val = document.getElementById("myRange").value;
-      make_bubbles_rep(us, val, dem)
+      update_demographic(dem, val)
   });
-
-  makeMap(us);
-  swapMap(us);
-  
-  // make_bubbles_rep(us, val, dem)
-  $( "#bubbles" ).hide();
-  $("#bubbles").css("visibility", "hidden");
 }
 
 </script>

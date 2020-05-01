@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+svg {
+  font: 20px sans-serif;
+}
+
+p {
+  margin: 6px 2px;
+}
+
+.axisTitle {
+  font: bold 12px sans-serif ;
+}
+
+.x.axis .domain {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.d3-tip {
+  line-height: 1;
+  font-weight: bold;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border-radius: 2px;
+  font: 14px sans-serif;
+}
+
+/* Creates a small triangle extender for the tooltip */
+.d3-tip:after {
+  box-sizing: border-box;
+  display: inline;
+  font-size: 10px;
+  width: 100%;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.8);
+  content: "\25BC";
+  position: absolute;
+  text-align: center;
+}
+
+/* Style northward tooltips differently */
+.d3-tip.n:after {
+  margin: -1px 0 0 0;
+  top: 100%;
+  left: 0;
+}
+</style>
+<body>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script type = "text/javascript" src="../data/move-data/move.json"></script>
+<script type = "text/javascript" src="./test.json"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.7.1/d3-tip.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+
+
+function make_bubbles() {
+  var margin = {top: 50, right: 50, bottom: 50, left: 50},
+      width = $("body").width() - margin.left - margin.right,
+      height = 500 - margin.top - margin.bottom,
+
+      padding = 1,
+      maxRadius = 8,
+      minRadius = 1,
+      numberOfNodes = 3100;
+
+  var max_income = 123000;
+  var min_income = 24000;
+  var max_pop = 123000;
+  var min_pop = 24000;
+
+  var x = d3.scaleLinear()
+    .domain( [min_income, max_income] )
+    .range( [margin.left, width + margin.right] );
+
+  var radquantize = d3.scaleQuantize()
+      .domain([min_pop, max_pop])
+      .range([2, 5])
+
+  var xAxis = d3.axisBottom(x);
+
+  var tip = d3.tip()
+    .attr('class', 'd3-tip')
+    .offset([-6, 0])
+    .html(function(d) {
+      return "<p><strong>Move:</strong> <span>" + d.move + "</span></p>\
+      <p><strong>Income:</strong> <span>" + d.income + "</span></p>";
+    });
+
+  var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .attr("shape-rendering", "geometric-precision");
+
+  svg.call(tip);
+
+  svg.append("g")
+    .attr("class", "x axis")
+    .attr("transform", "translate(0," + ( margin.top + ( height/2) ) + ")")
+    .call(xAxis);
+
+  var xAxisTitle = svg.append("text")
+    .attr("class", "axisTitle")
+    .text("Age in case file")
+
+  xAxisTitle
+    .attr("x", width - xAxisTitle.node().getBBox().width + margin.right)
+    .attr("y", margin.top + ( height/2) - xAxisTitle.node().getBBox().height);
+
+  svg.append("text")
+    .attr("x", 50)
+    .attr("y", 30)
+    .attr("dy", "0.71em")
+    .text("People hanging out in groups");
+
+  var quantize = d3.scaleQuantize()
+      .domain([0, 4])
+      .range(d3.range(5).map(function(i) { 
+          if (i == 0)
+              return "#9adbb5";
+          else if (i == 1)
+              return "rgb(205, 235, 178)";
+          else if (i == 2)
+              return "#F6F5AE";
+          else if (i == 3)
+              return "rgb(253, 223, 158)";
+          else
+              return "rgb(211, 85, 65)";
+      }))
+
+  var max_pop = 1000000;
+  var min_pop = 169;
+
+  var move_dict = d3.map();
+  og_data.forEach( function(d){ move_dict.set( d.fips, d.move_index) });
+
+  // var y_dict = d3.map();
+  // test_pos.forEach( function(d){ y_dict.set( d.fips, (height + margin.top) - d.y) });
+
+  d3.json("./dem-data.json", function(error, data) {
+    if (error) throw error;
+
+    var nodes = data.map(function(node, index) {
+      return {
+        index: index,
+        move: move_dict.get(node.fips)[4],
+        fips: node.fips, 
+        pop: node.pop_2019,
+        income: node.median_income,
+        x: x(node.median_income),
+        fx: x(node.median_income),
+        r: radquantize(node.pop_2019),
+        // y: y_dict.get(node.fips)
+      };
+    });
+
+    svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + ( margin.top + ( height/2) ) + ")")
+      .call(xAxis);
+
+    var simulation = d3.forceSimulation(nodes)
+      .force("x", d3.forceX(function(d) { return x(d.income); }).strength(1))
+      .force("y", d3.forceY(margin.top + ( height/2) ))
+      .force("collide", d3.forceCollide().radius(function(d){ return d.r}))
+      .force("manyBody", d3.forceManyBody().strength(-1))
+   
+    for (var i = 500 - 1; i >= 0; i--) {
+
+      simulation.tick()
+    }
+
+
+
+    var circle = svg.selectAll("circle")
+      .data(nodes)
+      .enter().append("circle")
+      .style("fill", function(d) { return quantize(d.move); })
+      .attr("cx", function(d) { return d.x} )
+      .attr("cy", function(d) { return d.y} )
+      .attr("r", function(d) { return d.r} )
+      .attr("transform", "translate(0," + 0 + ")")
+      .style("opacity", 0.85)
+      .on('mouseover', tip.show)
+      .on('mouseout', tip.hide)
+
+      pos_dict = d3.map()
+      circle._groups[0].forEach( function(d){ 
+        pos_dict.set( d.__data__.fips, d.__data__)
+      });
+
+      //console.log(JSON.stringify(pos_dict, null, 4))\
+  });
+
+}
+
+make_bubbles()
+</script>
+</body>
