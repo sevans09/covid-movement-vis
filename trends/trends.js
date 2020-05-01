@@ -19,7 +19,7 @@ var dem_title = {
 
 var dem_label = {
   "income": "Income: $",
-  "vote"  : "GOP Vote: %",
+  "vote"  : "% GOP Vote: ",
 }
 
 var dem_pos = {
@@ -71,6 +71,8 @@ function get_rad_range(width) {
 function numberWithCommas(x) {
       return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
+
+percentFormat = d3.format(',.2%');
 
 function get_x_value(dem, data) {
   if (dem == "income") {
@@ -149,7 +151,7 @@ function update_demographic(dem, val) {
         return "County: " + toTitleCase(d.county) 
         + " (" + d.sab + ")<br>Move Index: " + get_move(d)
         + "<br>Population: " + numberWithCommas(d.pop) 
-        + "<br>" + dem_label[dem] + get_x_value(dem, d);
+        + "<br>" + dem_label[dem] + percentFormat(get_x_value(dem, d));
   })
 
   bubbles.call(tip);
