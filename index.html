@@ -534,6 +534,47 @@ function displayBar(data) {
       .attr("text-anchor", "middle")  
       .style("font-size", "16px") 
       .text(title);
+
+    // add legend   
+    var legend = svg2.append("g")
+        .attr("class", "legend")
+        .attr("x", 5)
+        .attr("y", 150)
+        .attr("height", 100)
+        .attr("width", 100);
+        // .attr('transform', 'translate(-20,50)');
+
+    var colors = ["#979797",  "#c02c59"];
+    var text_strings = ["Cases", "Deaths"]
+
+    var legendRect = legend.selectAll('rect').data(colors);
+
+    console.log("bar");
+    legendRect.enter()
+        .append("rect")
+        .attr("x", 10)
+        .attr("width", 10)
+        .attr("height", 10)
+        .attr("y", function(d, i) {
+            return i * 15 + 10;
+        })
+        .style("fill", function(d) {
+            console.log(d);
+            return d;
+        });
+
+    var legendText = legend.selectAll('text').data(text_strings);
+
+    legendText.enter()
+        .append("text")
+        .style("font-size", "10px")
+        .attr("x", 25)
+        .attr("y", function(d, i) {
+            return i * 15 + 19;
+        })
+        .text(function(d) {
+            return d;
+        });
   }
 
 function addDropdown(fips) {
