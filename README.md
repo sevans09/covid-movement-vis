@@ -10,7 +10,3 @@ Usage:
 `chmod u+x pull_nyt.sh`  
 `./pull_nyt.sh`  
 
-
-TODO:
-- bar chart legend
-- fix color of donut chart
