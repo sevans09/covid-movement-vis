@@ -411,12 +411,20 @@ function displayBar(data) {
     width = 250;
     height = 250;
 
+    function get_new_cases(data, i) {
+      if (cases_dict.get(data)[i-1])
+        return cases_dict.get(data)[i] - cases_dict.get(data)[i-1];
+      else 
+        return 0;
+    }
+
     var bartip = d3.tip()
       .attr('class', 'd3-tip')
       .offset([-5, 0])
       .html(function(d, i) {
         return "Date: " + dates_dict.get(data)[i] 
-        + "<br>Cases: " + num_with_commas(cases_dict.get(data)[i])
+        + "<br>Total Cases: " + num_with_commas(cases_dict.get(data)[i])
+        + "<br>New Cases: " + get_new_cases(data, i)
         + "<br>Deaths: " + num_with_commas(deaths_dict.get(data)[i]);
       })
 
