@@ -671,7 +671,7 @@ function handleQuery() {
 }
 
 function handleStateQuery() {
-  console.log("entered");
+  $('#queriedState').blur();
   selected_state = $("#queriedState").val();
   var query = $("#queriedState").val();
   console.log(state_names_dict[toTitleCase(query)]);
