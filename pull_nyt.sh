@@ -9,5 +9,5 @@ mv us-county-cases.json ../../
 python gen_csv_data.py
 cd ../../
 echo "Tail: "
-tail -c 54 us-county-cases.json
+tail -c 56 us-county-cases.json
 echo "\n"
