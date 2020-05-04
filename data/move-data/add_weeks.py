@@ -55,7 +55,7 @@ def gen_data():
 	print(move_data)
 
 	print("gen data start")
-	move_dates       = ['april-6', 'april-13']
+	move_dates       = ['april-6', 'april-13', 'april-20', 'april-27']
 	fips             = read_fips_data()
 	replace_counties = read_replace_data()
 	data     = dict()
