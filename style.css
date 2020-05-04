@@ -20,7 +20,7 @@ h1.title {
   .dropbtn {
     display: none;
     height: 36px;
-    background-color: #c02c59;
+    background-color: #565656;
     color: white;
     padding: 12px;
     font-size: 10px;
@@ -55,7 +55,7 @@ h1.title {
   .dropdown:hover .dropdown-content {display: block;}
   dropdown-content:hover .dropdown-content {display: block;}
   
-  .dropdown:hover .dropbtn {background-color: #a6264c;}
+  .dropdown:hover .dropbtn {background-color: #565656;}
   
 
 
@@ -66,7 +66,7 @@ h1.title {
   
   .searchTerm {
     width: 100%;
-    border: 3px solid #c02c59;
+    border: 3px solid #565656;
     border-right: none;
     padding: 5px;
     height: 20px;
@@ -81,8 +81,8 @@ h1.title {
   
   .searchButton {
     height: 36px;
-    border: .5px solid #c02c59;
-    background: #c02c59;
+    border: .5px solid #565656;
+    background: #565656;
     text-align: center;
     color: #fff;
     border-radius: 0 5px 5px 0;
@@ -141,7 +141,7 @@ h1.title {
     appearance: none;
     width: 25px; 
     height: 25px; 
-    background: #c02c59;
+    background: #565656;
     cursor: pointer;
   }
   
@@ -374,8 +374,8 @@ h1.title {
         /* box-shadow: 1px 5px 8px -1px #4242; */
         background-color:white;
         border-radius:6px;
-        border:1px solid #c02c59;
-        box-shadow: 1px 2px  #a6264c;
+        border:1px solid #565656;
+        box-shadow: 1px 2px  #565656;
         display:inline-block;
         cursor:pointer;
         color:black;
