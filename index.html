@@ -13,7 +13,7 @@
     <div id="slider_div">
       <h4 id="sliderinfo"></h4>
       <div class="row">
-        <input type="range" min="1" max="7" value="4" class="slider" id="myRange"><div id="week"></div>
+        <input type="range" min="1" max="9" value="4" class="slider" id="myRange"><div id="week"></div>
       </div>   
     </div>
     <h4 id="queryinfo"></h4>
@@ -134,7 +134,8 @@ cases_data.forEach( function(d)
 var weeks = ["Week of 2020-03-02", "Week of 2020-03-09", 
             "Week of 2020-03-16", "Week of 2020-03-23", 
             "Week of 2020-03-30", "Week of 2020-04-06", 
-            "Week of 2020-04-13", "Week of 2020-04-20"];
+            "Week of 2020-04-13", "Week of 2020-04-20", 
+            "Week of 2020-04-27"];
 
 var selected_fips = null;
 var selected_state = null;
@@ -207,8 +208,11 @@ function change_move() {
   if(document.getElementById("toggleButton").value=="MAP") {
     svg.selectAll("path")
       .transition(t)
-        .attr("fill", function(d) { 
+        .attr("fill", function(d) {
+
           if (move_dict.get(d.id)) {
+            if (!move_dict.get(d.id)[val-1])
+              console.log(names_and_county_dict[d.id]);
             return quantize(move_dict.get(d.id)[val-1])
           }
         });
@@ -757,7 +761,7 @@ function ready(error, us) {
   window.addEventListener('keypress', function(e) {
       var keyCode = e.keyCode;
       var key = keyCode - 48
-      if (key > 0 && key < 8) {
+      if (key > 0 && key < 10) {
         document.getElementById("myRange").value = key;
         change_move();
       }
