@@ -3,28 +3,34 @@ var max_income = 123000;
 var min_income = 18000;
 var max_pop = 1000000;
 var min_pop = 169;
-var min_vote = 0
-var max_vote = 1
+var min_vote = 0;
+var max_vote = 1;
+var min_unemp = 0.012;
+var max_unemp = 0.301;
 
 var min_max = {
   "income": {'min': min_income, 'max': max_income},
   "pop"   : {'min': min_pop, 'max': max_pop},
-  "vote"  : {'min': min_vote, 'max': max_vote}
+  "vote"  : {'min': min_vote, 'max': max_vote},
+  "unemp" : {'min': min_unemp, 'max': max_unemp}
 }
 
 var dem_title = {
   "income": "Median Income",
   "vote"  : "% GOP Vote 2016",
+  "unemp" : "Unemployment Rate"
 }
 
 var dem_label = {
   "income": "Income: $",
   "vote"  : "% GOP Vote: ",
+  "unemp" : "Unemployment"
 }
 
 var dem_pos = {
   "income": income_pos,
-  "vote"  : pos_vote
+  "vote"  : pos_vote,
+  "unemp" : unemp_pos
 }
 
 var quantize = d3.scaleQuantize()
@@ -52,9 +58,14 @@ og_data.forEach( function(d){
   sab_dict.set(d.fips, d.sab);
 });
 
-pop_dict = d3.map()
+var pop_dict = d3.map()
 dem_data.forEach( function(d){ 
   pop_dict.set( d.fips, d.pop_2019);
+});
+
+var unemp_dict = d3.map()
+unemp_data.forEach( function(d) {
+  unemp_dict.set(d.id, d.rate);
 });
 
 
@@ -76,21 +87,29 @@ percentFormat = d3.format(',.2%');
 
 function get_x_value(dem, data) {
   if (dem == "income") {
-      return numberWithCommas(data.income)
+      return numberWithCommas(data.income);
     }
-  return (dem == "vote") ? data.vote : data.cases
+  else if (dem == "unemp") {
+    return percentFormat(data.unemp);
+  }
+  return (dem == "vote") ? percentFormat(data.vote) : data.cases;
 }
 
 function get_node_x(dem, node) {
     if (dem == "income") {
       return node.median_income
     }
+    else if (dem == "unemp")
+      return node.unemp
     return (dem == "vote") ? node.per_gop : node.cpc
 }
 
 function get_d_x(dem, node) {
     if (dem == "income") {
       return node.income
+    }
+    else if (dem == "unemp") {
+      return node.unemp
     }
     return (dem == "vote") ? node.vote : node.cpc
 }
@@ -151,7 +170,7 @@ function update_demographic(dem, val) {
         return "County: " + toTitleCase(d.county) 
         + " (" + d.sab + ")<br>Move Index: " + get_move(d)
         + "<br>Population: " + numberWithCommas(d.pop) 
-        + "<br>" + dem_label[dem] + percentFormat(get_x_value(dem, d));
+        + "<br>" + dem_label[dem] + ": " + get_x_value(dem, d);
   })
 
   bubbles.call(tip);
@@ -161,12 +180,12 @@ function update_demographic(dem, val) {
     .range([margin.left, width - margin.right]);
 
   var y_dict = d3.map();
-  y_pos = dem_pos[dem]
+  y_pos = dem_pos[dem];
   y_pos.forEach( function(d){ y_dict.set(d.fips, 250 - d.y )});
 
   var circle = bubbles.selectAll("circle")
-    .attr("x", function(d) { x(get_d_x(dem, d))})
-    .attr("y", function(d) { y_dict.get(d.fips)})
+    .attr("x", function(d) { return x(get_d_x(dem, d))})
+    .attr("y", function(d) { return y_dict.get(d.fips)})
     .on('mouseover', tip.show)
     .on('mouseout', tip.hide)
     .transition(t)
@@ -222,7 +241,7 @@ function make_bubbles_rep(us, val, dem) {
 
   var y_dict = d3.map();
   y_pos = dem_pos[dem]
-  y_pos.forEach( function(d){ y_dict.set(d.fips, 250 - d.y )});
+  y_pos.forEach( function(d){ console.log(d.y); y_dict.set(d.fips, 250 - d.y )});
 
   //add education metric
   var nodes = data.map(function(node, index) {
@@ -234,6 +253,7 @@ function make_bubbles_rep(us, val, dem) {
         county: node.county,
         sab: node.sab,
         vote: node.per_gop,
+        unemp: unemp_dict.get(node.fips),
         x: x(get_node_x(dem, node)),
         fx: x(get_node_x(dem, node)),
         r: radquantize(node.pop_2019),
