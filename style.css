@@ -297,7 +297,7 @@ h1.title {
     text-align: center;
     opacity: 0;
     z-index: 1;
-    background-color: rgba(248, 248, 248, 0.527);
+    background-color: rgba(248, 248, 248, 0.767);
   }
 
   #map-legend {
