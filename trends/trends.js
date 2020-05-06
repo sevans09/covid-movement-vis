@@ -5,8 +5,8 @@ var max_pop = 1000000;
 var min_pop = 169;
 var min_vote = 0;
 var max_vote = 1;
-var min_unemp = 0.012;
-var max_unemp = 0.301;
+var min_unemp = 0;
+var max_unemp = .26;
 
 var min_max = {
   "income": {'min': min_income, 'max': max_income},
@@ -241,7 +241,7 @@ function make_bubbles_rep(us, val, dem) {
 
   var y_dict = d3.map();
   y_pos = dem_pos[dem]
-  y_pos.forEach( function(d){ console.log(d.y); y_dict.set(d.fips, 250 - d.y )});
+  y_pos.forEach( function(d){ y_dict.set(d.fips, 250 - d.y )});
 
   //add education metric
   var nodes = data.map(function(node, index) {
