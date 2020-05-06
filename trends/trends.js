@@ -150,6 +150,8 @@ function make_x_axis(dem) {
 }
 
 function update_demographic(dem, val) {
+  console.log("update");
+  console.log(dem);
   var margin = {top: 300, right: 250, bottom: 50, left: 50};
   var t = d3.transition()
         .duration(750);
@@ -198,6 +200,8 @@ function update_demographic(dem, val) {
 
 // to be used with swapmap to replace map with bubbles
 function make_bubbles_rep(us, val, dem) {
+  console.log(dem);
+  console.log("swap map");
 
   var margin = {top: 300, right: 250, bottom: 50, left: 50};
   d3.select(".bubble_svg").remove();
@@ -216,16 +220,6 @@ function make_bubbles_rep(us, val, dem) {
       .domain([min_max['pop'].min, min_max['pop'].max])
       .range(rad_range)
 
-  var tip = d3.tip()
-      .attr('class', 'd3-tip')
-      .offset([-5, 0])
-      .html(function(d) {
-        return "County: " + toTitleCase(d.county) 
-        + " (" + d.sab + ")<br>Move Index: " + get_move(d)
-        + "<br>Population: " + numberWithCommas(d.pop) 
-        + "<br>" + dem_label[dem] + get_x_value(dem, d);
-  })
-
   d3.json("./bubble/dem-data.json", function(error, data) {
     if (error) throw error;
 
@@ -236,6 +230,17 @@ function make_bubbles_rep(us, val, dem) {
     .attr("shape-rendering", "geometric-precision");
 
   $("#maps").css("visibility", "visible");
+
+
+  var tip = d3.tip()
+      .attr('class', 'd3-tip')
+      .offset([-5, 0])
+      .html(function(d) {
+        return "County: " + toTitleCase(d.county) 
+        + " (" + d.sab + ")<br>Move Index: " + get_move(d)
+        + "<br>Population: " + numberWithCommas(d.pop) 
+        + "<br>" + dem_label[dem] + ": " + get_x_value(dem, d);
+  })
 
   bubbles.call(tip);
 
@@ -261,18 +266,18 @@ function make_bubbles_rep(us, val, dem) {
       };
     });
 
-    var simulation = d3.forceSimulation(nodes)
-      .force("x", d3.forceX(function(d) { return d.x; }).strength(1))
-      .force("collide", d3.forceCollide().radius(function(d){ return d.r}))
-      .force("manyBody", d3.forceManyBody().strength(-1))
-      .tick();
+    // var simulation = d3.forceSimulation(nodes)
+    //   .force("x", d3.forceX(function(d) { return d.x; }).strength(1))
+    //   .force("collide", d3.forceCollide().radius(function(d){ return d.r}))
+    //   .force("manyBody", d3.forceManyBody().strength(-1))
+    //   .tick();
 
     var circle = bubbles.selectAll("circle")
       .data(nodes)
       .enter().append("circle")
       .style("fill", function(d) { return quantize(move_dict.get(d.fips)[val-1]); })
-      .attr("cx", function(d) { return d.x} )
-      .attr("cy", function(d) { return d.y} )
+      .attr("cx", function(d) { return x(get_d_x(dem, d))} )
+      .attr("cy", function(d) { return y_dict.get(d.fips)} )
       .attr("r", function(d) { return d.r} )
       .style("opacity", function(d) {
         return ((d.y + height/2) <= d.r || (d.y + height/2) >= (height - d.r)) ?  0 : 0.75})
