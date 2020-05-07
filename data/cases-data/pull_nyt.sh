@@ -1,5 +1,5 @@
 #!/bin/bash
-cd ../covid-19-data
+cd ../../../covid-19-data
 git pull
 cp us-counties.csv ../covid-movement-vis/data/cases-data/
 cd ../covid-movement-vis/data/cases-data
