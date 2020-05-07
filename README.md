@@ -3,10 +3,23 @@
 ### Data Visualization Final Project
 #### Sammy Stolzenbach, Sejal Dua, and Sook-Hee Evans
 
-Visit site at https://bit.ly/covidmobility
+Visit site at https://bit.ly/covidmobility  
+Medium Article: https://towardsdatascience.com/covid-19-data-visualization-tracking-movement-and-demographic-trends-de8e30aeb140
 
-### Pull NYT Data
-Usage:  
-`chmod u+x pull_nyt.sh`  
-`./pull_nyt.sh`  
+#### Slider
+![](gifs/slider.gif)  
 
+#### Tooltip
+![](gifs/tooltip.gif)  
+
+#### Legend
+![](gifs/legend.gif)  
+
+#### Bar Chart
+![](gifs/barchart.gif)  
+
+#### Donut Chart
+![](gifs/donut.gif)  
+
+#### Demographic Trends
+![](gifs/dem_trends.gif)  
