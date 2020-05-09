@@ -1,3 +1,4 @@
 .DS_Store
 data/cases-data/csv2json/
+data/cases-data/pull_nyt.sh
 js/.DS_Store

@@ -1,4 +1,6 @@
 #!/bin/bash
+cd /Users/sejaldua/Desktop/Spring2020/COMP177/covid-movement-vis/data/cases-data
+git pull
 cd ../../../covid-19-data
 git pull
 cp us-counties.csv ../covid-movement-vis/data/cases-data/
@@ -11,3 +13,7 @@ cd ../../
 echo "Tail: "
 tail -c 56 us-county-cases.json
 echo "\n"
+now=$(date)
+git add .
+git commit -m "pull $now data"
+git push origin master
