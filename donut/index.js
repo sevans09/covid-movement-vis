@@ -191,6 +191,9 @@ function donutChart(state) {
                 var tip = '',
                     i   = 0;
 
+                data.data["Population"] = pop_dict.get(getFips(data));
+                
+
                 for (var key in data.data) {
 
                     // if value is a number, format it as a percentage
