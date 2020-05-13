@@ -173,20 +173,24 @@ var path = d3.geoPath()
     .projection(projection);
 
 var tip = d3.tip()
-      .attr('class', 'd3-tip')
-      .offset([-5, 0])
-      .html(function(d) {
-        // d3.select(".d3-tip").style("background-color", "rgba(214, 213, 213, 0.79)");
-        var dataRow = county_dict.get(d.id)
-           if (dataRow) {
-               var val = document.getElementById("myRange").value;
-               return "County: " + toTitleCase(county_dict.get(d.id)) + 
-                      "<br>State: " + toTitleCase(states_dict.get(d.id)) 
-                      + "<br>Move Index: " + move_dict.get(d.id)[val-1]
-           } else {
-               county_dict.get(d.id) + ": No data.";
-           }
-      })
+  .attr('class', 'd3-tip')
+  .offset([-5, 0])
+  .html(function(d) {
+    // d3.select(".d3-tip").style("background-color", "rgba(214, 213, 213, 0.79)");
+    var dataRow = county_dict.get(d.id)
+    var cases;
+    if (cases_dict.get(d.id))
+      cases = num_with_commas(cases_dict.get(d.id)[cases_dict.get(d.id).length-1]);
+    else
+      cases = "---";
+    if (dataRow) {
+      var val = document.getElementById("myRange").value;
+      return "County: " + toTitleCase(county_dict.get(d.id)) + "<br>State: " 
+        +  toTitleCase(states_dict.get(d.id)) + "<br>Cases: " + cases + "<br>Population: " + num_with_commas(pop_dict.get(d.id)) + "<br>Move Index: " + move_dict.get(d.id)[val-1]
+    } else {
+        county_dict.get(d.id) + ": No data.";
+    }
+  })
 
 svg.call(tip)
 
