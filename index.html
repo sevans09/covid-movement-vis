@@ -422,6 +422,8 @@ function displayBar(data) {
     var margin = {top: 30, right: 30, bottom: 50, left: 40};
     width = 250;
     height = 250;
+    height = ($( window ).height() / 3);
+    width = ($( window ).width() / 5);
 
     function get_new_cases(data, i) {
       if (cases_dict.get(data)[i-1])
