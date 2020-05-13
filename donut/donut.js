@@ -10,7 +10,6 @@ function makeDonut(state, width, height) {
     d3.csv('donut/test.csv', function(error, data) {
         newdata = data.filter(function(d) {
             if (d.State == state) {
-                console.log(d);
                 return d;
             }
         })

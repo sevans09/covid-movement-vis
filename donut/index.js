@@ -55,6 +55,39 @@ function donutChart(state) {
             svg.append('g').attr('class', 'lines');
             // ===========================================================================================
 
+            function genericToolTipHTML(dict) 
+            {
+                console.log(dict);
+                var tip = '',
+                    i = 0;
+
+                for (var key in dict) {
+                    console.log(key);
+                    var value;
+                    // if value is a number, format it as a percentage
+                    if (!isNaN(dict[key])) {
+                        if (dict[key] % 1 == 0)
+                            value = numberWithCommas(dict[key]);
+                        else
+                            value = percentFormat(dict[key]);
+                    }
+                    else {
+                        value = dict[key]
+                    }
+                    console.log(value);
+                    // var value = (!isNaN(parseFloat(data.data[key]))) ? percentFormat(data.data[key]) : data.data[key];
+
+                    // leave off 'dy' attr for first tspan so the 'dy' attr on text element works. The 'dy' attr on
+                    // tspan effectively imitates a line break.
+                    if (i === 0) tip += '<tspan x="0">' + key + ': ' + value + '</tspan>';
+                    else tip += '<tspan x="0" dy="1.2em">' + key + ': ' + value + '</tspan>';
+                    i++;
+                }
+
+                console.log(tip);
+                return tip;
+            }
+
             // ===========================================================================================
             // add and colour the donut slices
             var path = svg.select('.slices')
@@ -63,7 +96,6 @@ function donutChart(state) {
               .enter().append('path')
                 .attr('fill', function(d) { 
                     var county = getFips(d);
-                    console.log(county);
                     var val = document.getElementById("myRange").value;
                     if (move_dict.get(county))
                         return quantize(move_dict.get(county)[val-1]);
@@ -71,6 +103,7 @@ function donutChart(state) {
                         return "#979797"; })
                 // .attr('fill', '#979797')
                 .attr('d', arc);
+
             
             // add tooltip to mouse events on slices and labels
             d3.selectAll('.slices path').call(toolTip);
@@ -106,7 +139,7 @@ function donutChart(state) {
 
                 // add tooltip (svg circle element) when mouse enters label or slice
                 selection.on('mouseenter', function (data) {
-
+                    d3.selectAll('.toolCircle').remove();
                     svg.append('text')
                         .attr('class', 'toolCircle')
                         .attr('dy', -15) // hard-coded. can adjust this to adjust text vertical alignment in tooltip
@@ -118,7 +151,6 @@ function donutChart(state) {
                         .attr('class', 'toolCircle')
                         .attr('r', radius * 0.55) // radius of tooltip circle
                         .style('fill', function() {
-                            console.log(data.data['County']);
                             var county = getFips(data);
                             var val = document.getElementById("myRange").value;
                             if (move_dict.get(county))
@@ -137,12 +169,18 @@ function donutChart(state) {
                 selection.on('mouseout', function () {
                     unhighlight();
                     d3.selectAll('.toolCircle').remove();
+                    state_map = {State: state, Population: 10000000};
+                    svg.append('text')
+                        .attr('class', 'toolCircle')
+                        .attr('dy', -15) // hard-coded. can adjust this to adjust text vertical alignment in tooltip
+                        .html(genericToolTipHTML(state_map)) // add text to the circle.
+                        .style('font-size', '1em')
+                        .style('text-anchor', 'middle');
                 });
 
                 selection.on('click', function(data) {
                     console.log("mouse click");
                     console.log(state);
-                    console.log(data.data['County']);
                     var fips_q = getFips(data);
                     // var county = data.data['County'];
                     // var states_with_county = new Array();
