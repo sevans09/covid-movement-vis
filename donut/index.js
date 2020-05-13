@@ -54,13 +54,16 @@ function donutChart(state) {
             svg.append('g').attr('class', 'lines');
             // ===========================================================================================
 
-            function toolTipHTML(dict) 
+            function toolTipHTML(dict, mode) 
             {
                 console.log(dict);
                 var tip = '',
                     i = 0;
 
                 for (var key in dict) {
+                    if (mode == 1 && key == "State")
+                        continue;
+
                     var value;
                     // if value is a number, format it as a percentage
                     if (!isNaN(dict[key])) {
@@ -123,7 +126,7 @@ function donutChart(state) {
                 .attr('d', arc);
 
             console.log(num_counties, move_total);
-            var state_map = {"State": state, "Cases": cases_total, "Population": pop_total, "Cases Per Capita": cases_total / pop_total, "Average Move Index": parseFloat(move_total / has_move, 2)};
+            var state_map = {"State": state, "Cases": cases_total, "Population": pop_total, "Cases Per Capita": cases_total / pop_total, "Avg. Move Index": parseFloat(move_total / has_move, 2)};
             
             // add tooltip to mouse events on slices and labels
             d3.selectAll('.slices path').call(toolTip);
@@ -154,8 +157,8 @@ function donutChart(state) {
                 svg.append('text')
                     .attr('class', 'toolCircle')
                     .attr('dy', -25) // hard-coded. can adjust this to adjust text vertical alignment in tooltip
-                    .html(toolTipHTML(state_map)) // add text to the circle.
-                    .style('font-size', '1em')
+                    .html(toolTipHTML(state_map, 0)) // add text to the circle.
+                    .style('font-size', '12px')
                     .style('text-anchor', 'middle');
 
                 // add tooltip (svg circle element) when mouse enters label or slice
@@ -164,8 +167,8 @@ function donutChart(state) {
                     svg.append('text')
                         .attr('class', 'toolCircle')
                         .attr('dy', -25) // hard-coded. can adjust this to adjust text vertical alignment in tooltip
-                        .html(toolTipHTML(data.data)) // add text to the circle.
-                        .style('font-size', '1em')
+                        .html(toolTipHTML(data.data, 1)) // add text to the circle.
+                        .style('font-size', '12px')
                         .style('text-anchor', 'middle'); // centres text in tooltip
 
                     svg.append('circle')
@@ -194,7 +197,7 @@ function donutChart(state) {
                         .attr('class', 'toolCircle')
                         .attr('dy', -25) // hard-coded. can adjust this to adjust text vertical alignment in tooltip
                         .html(toolTipHTML(state_map)) // add text to the circle.
-                        .style('font-size', '1em')
+                        .style('font-size', '12px')
                         .style('text-anchor', 'middle');
                 });
 
