@@ -1,3 +1,19 @@
+function handleClick(fips) {
+  unhighlight();
+  if (cases_dict.get(fips)) {
+    $( "#alertdiv" ).hide();
+    $( "#barchartdiv" ).show();
+    displayBar(fips);
+  }
+  else {
+    $( "#barchartdiv" ).hide( "slow" );
+    $( "#alertdiv" ).show();
+    upper = toTitleCase(county_dict.get(fips));
+    $( "#alertdiv" ).html("No case data for " + upper + " County");
+  }
+  highlight_single(fips);
+}
+
 function displayBar(data) {
     selected_state = null;
     selected_fips = data;
