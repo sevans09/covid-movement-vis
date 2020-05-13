@@ -48,34 +48,32 @@ function donutChart(state) {
                 .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
             // ===========================================================================================
 
-            // ===========================================================================================
             // g elements to keep elements within svg modular
             svg.append('g').attr('class', 'slices');
             svg.append('g').attr('class', 'labelName');
             svg.append('g').attr('class', 'lines');
             // ===========================================================================================
 
-            function genericToolTipHTML(dict) 
+            function toolTipHTML(dict) 
             {
                 console.log(dict);
                 var tip = '',
                     i = 0;
 
                 for (var key in dict) {
-                    console.log(key);
                     var value;
                     // if value is a number, format it as a percentage
                     if (!isNaN(dict[key])) {
                         if (dict[key] % 1 == 0)
                             value = numberWithCommas(dict[key]);
+                        else if (key.indexOf("Move Index") !== -1)
+                            value = dict[key].toFixed(2);
                         else
                             value = percentFormat(dict[key]);
                     }
                     else {
                         value = dict[key]
                     }
-                    console.log(value);
-                    // var value = (!isNaN(parseFloat(data.data[key]))) ? percentFormat(data.data[key]) : data.data[key];
 
                     // leave off 'dy' attr for first tspan so the 'dy' attr on text element works. The 'dy' attr on
                     // tspan effectively imitates a line break.
@@ -84,10 +82,14 @@ function donutChart(state) {
                     i++;
                 }
 
-                console.log(tip);
                 return tip;
             }
 
+            var pop_total = 0,
+                cases_total = 0,
+                move_total = 0,
+                num_counties = 0
+                has_move = 0;
             // ===========================================================================================
             // add and colour the donut slices
             var path = svg.select('.slices')
@@ -95,23 +97,36 @@ function donutChart(state) {
                 .data(pie)
               .enter().append('path')
                 .attr('fill', function(d) { 
+
                     var county = getFips(d);
+
+                    // population and cases
+                    if (pop_dict.get(county) && cases_dict.get(county)) {
+                        num_counties++;
+                        pop_total += pop_dict.get(county);
+                        d.data["Population"] = pop_dict.get(county);
+                        cases_total += parseInt(d.data.Cases);
+                    }
+                    
+                    // move index stuff
                     var val = document.getElementById("myRange").value;
-                    if (move_dict.get(county))
+                    if (move_dict.get(county)) {
+                        has_move++;
+                        move_total += move_dict.get(county)[val-1];
+                        d.data["Move Index"] = move_dict.get(county)[val-1];
                         return quantize(move_dict.get(county)[val-1]);
+                    }
                     else
-                        return "#979797"; })
+                        return "#979797"; 
+                })
                 // .attr('fill', '#979797')
                 .attr('d', arc);
 
+            console.log(num_counties, move_total);
+            var state_map = {"State": state, "Cases": cases_total, "Population": pop_total, "Cases Per Capita": cases_total / pop_total, "Average Move Index": parseFloat(move_total / has_move, 2)};
             
             // add tooltip to mouse events on slices and labels
             d3.selectAll('.slices path').call(toolTip);
-            
-            // Functions
-
-            // calculates the angle for the middle of a slice
-            function midAngle(d) { return d.startAngle + (d.endAngle - d.startAngle) / 2; }
 
             function getFips(data) {
                 var county = data.data['County'];
@@ -136,14 +151,20 @@ function donutChart(state) {
 
             // function that creates and adds the tool tip to a selected element
             function toolTip(selection) {
+                svg.append('text')
+                    .attr('class', 'toolCircle')
+                    .attr('dy', -25) // hard-coded. can adjust this to adjust text vertical alignment in tooltip
+                    .html(toolTipHTML(state_map)) // add text to the circle.
+                    .style('font-size', '1em')
+                    .style('text-anchor', 'middle');
 
                 // add tooltip (svg circle element) when mouse enters label or slice
                 selection.on('mouseenter', function (data) {
                     d3.selectAll('.toolCircle').remove();
                     svg.append('text')
                         .attr('class', 'toolCircle')
-                        .attr('dy', -15) // hard-coded. can adjust this to adjust text vertical alignment in tooltip
-                        .html(toolTipHTML(data)) // add text to the circle.
+                        .attr('dy', -25) // hard-coded. can adjust this to adjust text vertical alignment in tooltip
+                        .html(toolTipHTML(data.data)) // add text to the circle.
                         .style('font-size', '1em')
                         .style('text-anchor', 'middle'); // centres text in tooltip
 
@@ -169,11 +190,10 @@ function donutChart(state) {
                 selection.on('mouseout', function () {
                     unhighlight();
                     d3.selectAll('.toolCircle').remove();
-                    state_map = {State: state, Population: 10000000};
                     svg.append('text')
                         .attr('class', 'toolCircle')
-                        .attr('dy', -15) // hard-coded. can adjust this to adjust text vertical alignment in tooltip
-                        .html(genericToolTipHTML(state_map)) // add text to the circle.
+                        .attr('dy', -25) // hard-coded. can adjust this to adjust text vertical alignment in tooltip
+                        .html(toolTipHTML(state_map)) // add text to the circle.
                         .style('font-size', '1em')
                         .style('text-anchor', 'middle');
                 });
@@ -182,26 +202,6 @@ function donutChart(state) {
                     console.log("mouse click");
                     console.log(state);
                     var fips_q = getFips(data);
-                    // var county = data.data['County'];
-                    // var states_with_county = new Array();
-                    // Object.keys(names_and_county_dict)
-                    // .forEach(function eachKey(key) { 
-                    //   if (names_and_county_dict[key] == data.data['County'].toLowerCase()) {
-                    //     states_with_county.push(key)
-                    //   }
-                    // });
-                    // if (states_with_county.length > 1) {
-                    //     console.log(states_with_county);
-                    //     for (i = 0; i < states_with_county.length; i++) {
-                    //       if (states_dict.get(states_with_county[i]) == state) {
-                    //           displayBar(states_with_county[i]);
-                    //       }
-                    //     }
-                    // }
-                    // else {
-                    //     $("button#dropdown.dropbtn").hide();
-                    //     var fips_q = names_dict[county.toLowerCase()];
-                    
                     if (cases_dict.get(fips_q)) {
                         $( "#alertdiv" ).hide();
                         $( "#barchartdiv" ).show();
@@ -220,44 +220,6 @@ function donutChart(state) {
             function numberWithCommas(x) {
                 return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             }
-
-
-            // function to create the HTML string for the tool tip. Loops through each key in data object
-            // and returns the html string key: value
-            function toolTipHTML(data) {
-    
-                var tip = '',
-                    i   = 0;
-
-                data.data["Population"] = pop_dict.get(getFips(data));
-                
-
-                for (var key in data.data) {
-
-                    // if value is a number, format it as a percentage
-                    var value;
-                    if (!isNaN(data.data[key])) {
-                        if (data.data[key] % 1 == 0)
-                            value = numberWithCommas(data.data[key]);
-                        else
-                            value = percentFormat(data.data[key]);
-                    }
-                    else {
-                        value = data.data[key]
-                    }
-                    // var value = (!isNaN(parseFloat(data.data[key]))) ? percentFormat(data.data[key]) : data.data[key];
-
-                    // leave off 'dy' attr for first tspan so the 'dy' attr on text element works. The 'dy' attr on
-                    // tspan effectively imitates a line break.
-                    if (i === 0) tip += '<tspan x="0">' + key + ': ' + value + '</tspan>';
-                    else tip += '<tspan x="0" dy="1.2em">' + key + ': ' + value + '</tspan>';
-                    i++;
-                }
-
-                return tip;
-            }
-            // ===========================================================================================
-
         });
     }
 
