@@ -13,7 +13,7 @@ cd ../../
 echo "Tail: "
 tail -c 56 us-county-cases.json
 echo "\n"
-now="$(date --date='-1 day' +'%m/%d')"
+now="$(date -j -v-1d +'%m/%d')"
 git add .
 git commit -m "pull $now data"
 git push origin master
