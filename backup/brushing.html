@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+
+<head>
+  <style>
+    div {
+      display: inline-block;
+      vertical-align: top;
+    }
+    
+    #bar_chart {
+      border: 2px solid lightgray;
+      border-radius: 15px;
+    }
+    
+    #json {
+      max-height: 600px;
+      width: 200px;
+      overflow: scroll;
+      border: 2px solid gray;
+      border-radius: 15px;
+    }
+    
+    .zoom {
+      cursor: move;
+      fill: none;
+      pointer-events: all;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="bar_chart">
+  </div>
+
+  <div id="json"></div>
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script>
+    //************* generate data ************
+    var data = [];
+    var space = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    var spaceLength = space.length;
+    makedata();
+
+    function makedata() {
+      var obj = {};
+
+      for (var i = 0; i < spaceLength; i++) {
+        obj = {};
+        value = Math.floor(Math.random() * 500);
+        rand = Math.floor(Math.random() * space.length)
+        name = space.charAt(rand);
+        obj["name"] = name;
+        obj["val"] = value;
+        data.push(obj);
+        space = space.slice(0, rand) + space.slice(rand + 1, space.length)
+      }
+    }
+
+    // var margin = {
+    //     top: 50,
+    //     right: 20,
+    //     bottom: 90,
+    //     left: 50
+    //   },
+
+    //   margin2 = {
+    //     top: 530,
+    //     right: 20,
+    //     bottom: 30,
+    //     left: 50
+    //   },
+    //   width = 600 - margin.left - margin.right,
+    //   height = 600 - margin.top - margin.bottom,
+    //   height2 = 600 - margin2.top - margin2.bottom;
+
+    var margin = {top: 30, right: 30, bottom: 90, left: 40};
+    var width = 300  - margin.left - margin.right;
+    var height = 400 - margin.top - margin.bottom;
+    var margin2 = {top: 330, right: 30, bottom: 30, left: 40}
+    var height2 = 400 - margin2.top - margin2.bottom;
+
+    var x = d3.scaleBand()
+      .domain(data.map(function(d) {
+        return d.name
+      }))
+      .range([0, width]);
+
+    var x2 = d3.scaleBand()
+      .domain(data.map(function(d) {
+        return d.name
+      }))
+      .range([0, width]);
+
+    var y = d3.scaleLinear()
+      .domain([0, d3.max(data, function(d) {
+        return d.val
+      })])
+      .range([height, 0]);
+
+    var y2 = d3.scaleLinear()
+      .domain([0, d3.max(data, function(d) {
+        return d.val
+      })])
+      .range([height2, 0]);
+
+    var brush = d3.brushX()
+      .extent([
+        [0, 0],
+        [width, height2]
+      ])
+      .on("brush", brushed);
+
+    var zoom = d3.zoom()
+      .scaleExtent([1, Infinity])
+      .translateExtent([
+        [0, 0],
+        [width, height]
+      ])
+      .extent([
+        [0, 0],
+        [width, height]
+      ])
+      .on("zoom", zoomed);
+
+    var svg = d3.select("#bar_chart")
+      // .data(data)
+      .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+    // .append("g")
+    // .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    svg.append("defs").append("clipPath")
+      .attr("id", "clip")
+      .append("rect")
+      .attr("width", width)
+      .attr("height", height);
+
+    var focus = svg.append("g")
+      .attr("class", "focus")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    var context = svg.append("g")
+      .attr("class", "context")
+      .attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
+
+    var xAxis = d3.axisBottom(x);
+    var xAxis2 = d3.axisBottom(x2);
+
+    focus.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x).tickValues(x.domain().filter( (d,i) => !(i % 7) )));
+
+    // Add the Y Axis
+    focus.append("g")
+      .attr("class", "axis")
+      .call(d3.axisLeft(y)
+        .ticks(7));
+
+    var tooltip = d3.select("#info")
+      .append("div")
+      .style("position", "absolute")
+      .style("z-index", "10")
+      .style("visibility", "hidden");
+
+    svg.append("rect")
+      .attr("class", "zoom")
+      .attr("width", width)
+      .attr("height", height)
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+      .call(zoom);
+
+    var focus_group = focus.append("g");
+    focus_group.attr("clip-path", "url(#clip)");
+
+    var rects = focus_group.selectAll('rect')
+      .data(data);
+
+    //********* Bar Chart 1 ****************
+    var newRects1 = rects.enter();
+
+    newRects1.append('rect')
+      .attr('class', 'bar mainBars')
+      .attr('x', function(d, i) {
+        return x(d.name) + x.bandwidth()/2;
+      })
+      .attr('y', function(d, i) {
+        return y(d.val);
+      })
+      .attr('height', function(d, i) {
+        return height - y(d.val)
+      })
+      .attr('opacity', 0.85)
+      .attr('width', 10)
+      .style('fill', 'lightblue')
+      .style('stroke', 'gray');
+
+    var focus_group = context.append("g");
+    focus_group.attr("clip-path", "url(#clip)");
+
+    var brushRects = focus_group.selectAll('rect')
+      .data(data);
+
+    //********* Brush Bar Chart ****************
+    var brushRects1 = brushRects.enter();
+
+    brushRects1.append('rect')
+      .attr('class', 'bar mainBars')
+      .attr('x', function(d, i) {
+        return x2(d.name);
+      })
+      .attr('y', function(d, i) {
+        return y2(d.val);
+      })
+      .attr('height', function(d, i) {
+        return height2 - y2(d.val)
+      })
+      .attr('opacity', 0.85)
+      .attr('width', 3)
+      .attr("transform", "translate(" + 4 + ",0)")
+      .style('fill', 'lightblue')
+      .style('stroke', 'gray');
+
+    //append brush xAxis2
+    context.append("g")
+      .attr("class", "axis x-axis")
+      .attr("transform", "translate(0," + height2 + ")")
+      .call(d3.axisBottom(x2).tickValues(x2.domain().filter( (d,i) => !(i % 7) )));
+
+    context.append("g")
+      .attr("class", "brush")
+      .call(brush)
+      .call(brush.move, x.range());
+
+    //create brush function redraw scatterplot with selection
+    function brushed() {
+      if (d3.event.sourceEvent && d3.event.sourceEvent.type === "zoom") return; // ignore brush-by-zoom
+
+      // get bounds of selection
+      var s = d3.event.selection,
+          nD = [];
+      x2.domain().forEach((d)=>{
+        var pos = x2(d) + x2.bandwidth()/2;
+        if (pos > s[0] && pos < s[1]){
+          nD.push(d);
+        }
+      });
+      
+      x.domain(nD);
+      
+      focus.selectAll(".mainBars")
+        .style("opacity", function(d){
+          return x.domain().indexOf(d.name) === -1 ? 0 : 100;
+        })
+        .attr("x", function(d) {
+          return x(d.name)+ x.bandwidth()/2 - 5;
+        })
+        .attr("y", function(d) {
+          return y(d.val);
+        })
+        .attr('height', function(d, i) {
+          return height - y(d.val)
+        })
+        .attr('opacity', 1.0)
+        .attr('width', 5);
+
+        
+      focus.select(".x.axis").call(d3.axisBottom(x).tickValues(x.domain().filter( (d,i) => !(i % 7) )));
+      svg.select(".zoom").call(zoom.transform, d3.zoomIdentity
+        .scale(width / (s[1] - s[0]))
+        .translate(-s[0], 0));
+    }
+
+    function zoomed() {
+      /*
+      if (d3.event.sourceEvent && d3.event.sourceEvent.type === "brush") return; // ignore zoom-by-brush
+      var t = d3.event.transform;
+      
+      x.domain(t.rescaleX(x2).domain());
+      focus.selectAll(".mainBars")
+        .attr("x", function(d) {
+          return x(d.name) + x.bandwidth()/2;
+        })
+        .attr("y", function(d) {
+          return y(d.val);
+        })
+        .attr('height', function(d, i) {
+          return height - y(d.val)
+        })
+        .attr('opacity', 0.85)
+        .attr('width', 10);
+      focus.select(".x-axis").call(xAxis);
+      context.select(".brush").call(brush.move, x.range().map(t.invertX, t));
+      */
+    }
+  </script>
