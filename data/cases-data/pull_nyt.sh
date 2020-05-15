@@ -14,6 +14,6 @@ echo "Tail: "
 tail -c 56 us-county-cases.json
 echo "\n"
 now="$(date -j -v-1d +'%m/%d')"
-git add .
+git add data/cases-data/old-us-counties-cases.json data/cases-data/us-counties.csv donut/test.csv us-county-cases.json
 git commit -m "pull $now data"
 git push origin master
