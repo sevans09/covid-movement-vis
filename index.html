@@ -92,6 +92,7 @@
 <script type = "text/javascript" src="donut/donut.js"></script>
 <script type = "text/javascript" src="donut/index.js"></script>
 <script type = "text/javascript" src="js/d3-legend.min.js"> </script>
+<script type = "text/javascript" src="js/detect_location.js"> </script>
 <script>
 
 d3.select("#sliderinfo")
@@ -486,6 +487,8 @@ function swapMap(us) {
 }
 
 function ready(error, us) {
+  getLocation();
+
   if (error) throw error;
   $( "#alertdiv" ).hide();
   $( "#dem_options" ).hide();
