@@ -33,6 +33,7 @@ function requestData(lat, long) {
             console.log(data["state_name"]);
             // display bar chart with geolocated fips code
             displayBar(geo_fips);
+            highlight_single(geo_fips);
             // make donut chart with geolocated state name
             //makeDonut(toTitleCase(geo_state), 320, 320);
         }
