@@ -32,9 +32,9 @@ function requestData(lat, long) {
             geo_state = data["state_name"];
             console.log(data["state_name"]);
             // display bar chart with geolocated fips code
-            // displayBar(geo_fips);
+            displayBar(geo_fips);
             // make donut chart with geolocated state name
-            makeDonut(toTitleCase(geo_state), 320, 320);
+            //makeDonut(toTitleCase(geo_state), 320, 320);
         }
         else if (request.readyState == 4 && request.status != 200) {
             document.getElementById("results").innerHTML = "Uh Oh. Something went wrong."
