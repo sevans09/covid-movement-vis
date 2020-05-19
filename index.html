@@ -4,6 +4,9 @@
 <link href="style.css" rel="stylesheet">
 <script type="text/javascript" src="js/bar.js"></script>
 <script type="text/javascript" src="js/map.js"></script>
+<script type="text/javascript" src="js/movement.js"></script>
+<script type="text/javascript" src="js/query.js"></script>
+<script type="text/javascript" src="js/setup.js"></script>
 
 <title>COVID-19 App</title>
 <h1 class="title">COVID-19 Movement & Cases Tracker
@@ -100,8 +103,6 @@ d3.select("#sliderinfo")
 d3.select("#queryinfo")
 .text("Query a county OR state to view number of COVID-19 cases")
 
-d3.select("#querystateinfo")
-
 var margin = {top: 10, left: 10, bottom: 10, right: 10}
   , width = $("body").width() / 1.1
   , width = width - margin.left - margin.right
@@ -190,136 +191,6 @@ var tip = d3.tip()
 
 svg.call(tip)
 
-function in_move_range(move_index, d, val) {
-  move_index = move_index.replace("<= 0.8", "0")
-  move_index = move_index.replace("3 >=", "3.2")
-  index = parseFloat(move_index)
-  var move = move_dict.get(d)
-  if (!move) {
-      return 0.95;
-  }
-  move = move[val-1]
-  if ((index == 3.0) && (move >= 3.8)) {
-    return true
-  }
-  return ((move > index) && (move < index + 0.8))
-
-}
-
-function change_move() {
-  var save_fips = selected_fips;
-  unhighlight();
-
-  var val = document.getElementById("myRange").value;
-  document.getElementById("week").innerHTML = weeks[val-1];
-  var t = d3.transition()
-      .duration(750);
-
-  if(document.getElementById("toggleButton").value=="MAP") {
-    svg.selectAll("path")
-      .transition(t)
-        .attr("fill", function(d) {
-
-          if (move_dict.get(d.id)) {
-            if (!move_dict.get(d.id)[val-1])
-              console.log(names_and_county_dict[d.id]);
-            return quantize(move_dict.get(d.id)[val-1])
-          }
-        });
-  } 
-  else 
-  {
-    var bubbles = d3.select(".bubble_svg")
-    bubbles.selectAll("circle")
-      .attr("move", function(d) {
-        move_dict.get(d.fips)[val-1] });
-  
-    bubbles.selectAll("circle")
-      .transition(t)
-        .style("fill", function(d) { return quantize(move_dict.get(d.fips)[val-1]); });
-  }
-  save_fips = selected_fips;
-  if (selected_fips != null)
-    highlight_single(selected_fips);
-  else if (selected_state != null)
-    makeDonut(toTitleCase(selected_state), 320, 320);
-}
-
-function highlight_single(county) {
-  console.log(county);
-  var val = document.getElementById("myRange").value;
-  if(document.getElementById("toggleButton").value=="MAP") {
-    console.log("map");
-    svg.selectAll(".counties path")
-      .transition()
-      .duration(500)
-      .style("opacity", function(d) {
-        return (county == d.id) ? 1.2 : 0.3
-      })
-      .style("stroke", function(d) {
-        return county == d.id ? "black" : "transparent"
-      });
-  } else {
-    console.log("bubbles");
-    var bubbles = d3.select(".bubble_svg")
-    bubbles.selectAll("circle")
-      .transition()
-      .duration(500)
-      .style("opacity", function(d) {
-        return (county == d.fips) ? 0.75 : 0.2
-      })
-      .style("stroke", function(d) {
-        return (county == d.fips) ? "black" : "transparent"
-      })
-  }
-  console.log("done");
-}
-
-
-function highlight_move(move_index) {
-  var val = document.getElementById("myRange").value;
-  if(document.getElementById("toggleButton").value=="MAP") {
-    svg.selectAll(".counties path")
-      .style("opacity", function(d) {
-        return in_move_range(move_index, d.id, val) ? 1.2 : 0.3
-      })
-      .style("stroke", function(d) {
-        return in_move_range(move_index, d.id, val) ? "white" : "transparent"
-      });
-  } else {
-    var bubbles = d3.select(".bubble_svg")
-    bubbles.selectAll("circle")
-      .style("opacity", function(d) {
-        return in_move_range(move_index, d.fips, val) ? 0.75 : 0.2
-      })
-      .style("stroke", function(d) {
-        return in_move_range(move_index, d.fips, val) ? "black" : "white"
-      })
-  }
-}
-
-function unhighlight() {
-  selected_fips = null;
-  console.log("testing");
-  var val = document.getElementById("myRange").value;
-  if(document.getElementById("toggleButton").value=="MAP") {
-    svg.selectAll(".counties path")
-      .transition()
-      .duration(500)
-      .style("opacity", 0.95)
-      .style("stroke", "transparent")
-  }
-  else {
-    var bubbles = d3.select(".bubble_svg")
-    bubbles.selectAll("circle")
-      .transition()
-      .duration(500)
-      .style("opacity", 0.75)
-      .style("stroke", "transparent")
-
-  }
-}
-
 var ordinal = d3.scaleOrdinal()
   .domain(["<= 0.8", "0.8", "1.6", "2.4", "3 >="])
   .range(["rgb(154,219,181)", "rgb(205, 235, 178)", "rgb(246,245,174)", 
@@ -344,177 +215,9 @@ legend.selectAll("rect")
   .on("mouseover", highlight_move)
   .on("mouseout", unhighlight)
 
-function num_with_commas(x) {
-      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
-
-
-function toTitleCase(str) {
-    return str.replace(/\w\S*/g, function(txt){
-        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-    });
-}
-
 d3.queue()
     .defer(d3.json, "js/us.json")
     .await(ready);
 
-function handleQuery() {
-  $('#queriedCounty').blur();
-  var query = $("#queriedCounty").val();
-  $("#barchart").empty();
-  var states_with_county = [];
-
-  Object.keys(names_and_county_dict)
-  .forEach(function eachKey(key) { 
-    if (names_and_county_dict[key] == query.toLowerCase()) {
-      states_with_county.push(key)
-    }
-  });
-
-  if (states_with_county.length > 1) {
-    $( "#alertdiv" ).hide();
-    $( "#barchartdiv" ).show();
-    addDropdown(states_with_county);
-  }
-  else {
-    $("button#dropdown.dropbtn").hide();
-    var fips_q = names_dict[query.toLowerCase()];
-    
-    if (cases_dict.get(fips_q)) {
-      highlight_single(fips_q);
-      $( "#alertdiv" ).hide();
-      $( "#barchartdiv" ).show();
-      displayBar(fips_q);
-    }
-    else if (typeof(fips_q) == "undefined") {
-      console.log('fips undef')
-      $( "#alertdiv" ).show();
-      $( "#alertdiv" ).html("County does not exist");     
-    }
-    else  {
-      highlight_single(fips_q);
-      $( "#barchartdiv" ).hide( "slow" );
-        // Capitalize each word of the county
-        console.log("type is",typeof(county_dict.get(query)))
-        console.log('fips q', fips_q)
-          console.log("fips not undef")
-          const upper = toTitleCase(county_dict.get(fips_q))
-          $( "#alertdiv" ).show();
-          $( "#alertdiv" ).html("No case data for " + upper);
-        // }
-    }
-  }
-}
-
-function handleStateQuery() {
-  $('#queriedState').blur();
-  selected_state = $("#queriedState").val();
-  var query = $("#queriedState").val();
-  console.log(state_names_dict[toTitleCase(query)]);
-  if (state_names_dict[toTitleCase(query)]) {
-    $("#alertdiv").hide();
-    $("#barchart").empty();
-    $("#barchartdiv").show();
-
-    makeDonut(toTitleCase(query), 320, 320);
-  }
-  else {
-    $( "#barchartdiv" ).hide( "slow" );
-    $( "#alertdiv" ).show();
-    $( "#alertdiv" ).html("State does not exist");
-  }
-}
-
-$("#queriedCounty").on('keyup', function (e) {
-    if (e.keyCode === 13) {
-      e.preventDefault();
-      document.getElementById('queriedState').value = "";
-      handleQuery();
-    }
-});
-
-$("#queriedState").on('keyup', function (e) {
-    if (e.keyCode === 13) {
-      e.preventDefault();
-      document.getElementById('queriedCounty').value = "";
-      handleStateQuery();
-    }
-});
-
 $("#queriedCounty").on('focus', unhighlight);
-
-
-function swapMap(us) {
-  var save_fips = selected_fips;
-  unhighlight();
-  // bubbles are hidden, toggle to bubbles
-  if(document.getElementById("toggleButton").value=="MAP"){
-    document.getElementById("toggleButton").innerHTML = "Back to the map";
-    document.getElementById("toggleButton").value="BUBBLE";
-    $( "#dem_options" ).show();
-    $("#bubbles").css("visibility", "visible"); 
-    $("#dem_options").css("visibility", "visible")
-    $("#maps").css("visibility", "hidden");
-    $("#maps").empty();
-
-    var val = document.getElementById("myRange").value;
-    dem = $("input[name='dem_radio']:checked").val();
-    make_bubbles_rep(us, val, dem)
-    if (selected_fips != null)
-      highlight_single(selected_fips);
-  } 
-  // map is hidden, toggle to map
-  else {
-    document.getElementById("toggleButton").value="MAP";
-    $( "#dem_options" ).hide();
-    document.getElementById("toggleButton").innerHTML = "Switch to Demographic Trends";
-    $("#bubbles").css("visibility", "hidden"); 
-    $("#maps").css("visibility", "visible");
-    $("#maps").empty();
-    console.log('making map')
-    $("#dem_options").css("visibility", "hidden")
-    makeMap(us);
-  }
-  selected_fips = save_fips;
-  if (selected_fips != null)
-    highlight_single(selected_fips);
-}
-
-function ready(error, us) {
-  if (error) throw error;
-  $( "#alertdiv" ).hide();
-  $( "#dem_options" ).hide();
-  
-  var slider = document.querySelector('input[type="range"]');
-  var radio = document.querySelector('input[type="radio"]');
-  var val = document.getElementById("myRange").value;
-  var dem = $("input[name='dem_radio']:checked").val();
-
-  slider.addEventListener('change', function() {
-    change_move();
-  });
-
-  window.addEventListener('keypress', function(e) {
-      var keyCode = e.keyCode;
-      var key = keyCode - 48
-      if (key > 0 && key < 10) {
-        document.getElementById("myRange").value = key;
-        change_move();
-      }
-  });
-
-  document.getElementById("toggleButton").value="MAP";
-  makeMap(us);
-
-  document.getElementById("toggleButton").addEventListener("click", 
-    function(){ swapMap(us);});
-
-  $('#radio_options').change(function(){
-      dem = $("input[name='dem_radio']:checked").val();
-      var val = document.getElementById("myRange").value;
-      update_demographic(dem, val)
-  });
-}
-
 </script>

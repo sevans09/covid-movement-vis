@@ -73,4 +73,41 @@ function makeMap(us) {
       })
     })
   }
+
+  
+function swapMap(us) {
+    var save_fips = selected_fips;
+    unhighlight();
+    // bubbles are hidden, toggle to bubbles
+    if(document.getElementById("toggleButton").value=="MAP"){
+      document.getElementById("toggleButton").innerHTML = "Back to the map";
+      document.getElementById("toggleButton").value="BUBBLE";
+      $( "#dem_options" ).show();
+      $("#bubbles").css("visibility", "visible"); 
+      $("#dem_options").css("visibility", "visible")
+      $("#maps").css("visibility", "hidden");
+      $("#maps").empty();
+  
+      var val = document.getElementById("myRange").value;
+      dem = $("input[name='dem_radio']:checked").val();
+      make_bubbles_rep(us, val, dem)
+      if (selected_fips != null)
+        highlight_single(selected_fips);
+    } 
+    // map is hidden, toggle to map
+    else {
+      document.getElementById("toggleButton").value="MAP";
+      $( "#dem_options" ).hide();
+      document.getElementById("toggleButton").innerHTML = "Switch to Demographic Trends";
+      $("#bubbles").css("visibility", "hidden"); 
+      $("#maps").css("visibility", "visible");
+      $("#maps").empty();
+      console.log('making map')
+      $("#dem_options").css("visibility", "hidden")
+      makeMap(us);
+    }
+    selected_fips = save_fips;
+    if (selected_fips != null)
+      highlight_single(selected_fips);
+  }
   
