@@ -15,6 +15,8 @@ function ready(error, us) {
     $( "#alertdiv" ).hide();
     $( "#dem_options" ).hide();
 
+    getLocation();
+
     var slider = document.querySelector('input[type="range"]');
     var radio = document.querySelector('input[type="radio"]');
     var val = document.getElementById("myRange").value;

@@ -68,8 +68,6 @@ function displayBar(data) {
         .range([ 0, width])
         .domain(dates_dict.get(data).slice(get_slice_index(dates_dict.get(data))))
         .padding(0.2);
-
-      console.log(x);
         
       svg2.append("g")
         .attr("transform", "translate(0," + height + ")")
