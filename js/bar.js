@@ -19,11 +19,9 @@ function displayBar(data) {
     selected_fips = data;
     console.log("selected fips", selected_fips);
     $("#barchart").empty();
-      var margin = {top: 30, right: 30, bottom: 50, left: 40};
+      var margin = {top: 30, right: 30, bottom: 50, left: 45};
       width = 250;
       height = 250;
-      // height = ($( window ).height());
-      // width = ($( window ).width());
   
       function get_new_cases(data, i) {
         if (cases_dict.get(data)[i-1])
@@ -36,10 +34,10 @@ function displayBar(data) {
         .attr('class', 'd3-tip')
         .offset([-5, 0])
         .html(function(d, i) {
-          return "Date: " + dates_dict.get(data)[i] 
-          + "<br>Total Cases: " + num_with_commas(cases_dict.get(data)[i])
+          return "Date: " + sliced_data[i] 
+          + "<br>Total Cases: " + num_with_commas(cases[i])
           + "<br>New Cases: " + get_new_cases(data, i)
-          + "<br>Deaths: " + num_with_commas(deaths_dict.get(data)[i]);
+          + "<br>Deaths: " + num_with_commas(deaths[i]);
         })
   
       svg.call(bartip)
@@ -55,7 +53,7 @@ function displayBar(data) {
   
       function get_slice_index(dates) {
         for (var num in dates) {;
-          if (dates[num] == "2020-03-01") {
+          if (dates[num] == "2020-06-15") {
             console.log("SLICE", num);
             return num;
           }
@@ -63,10 +61,11 @@ function displayBar(data) {
         return 0;
       }
 
-      console.log(dates_dict.get(data)[0]);
+      const start_idx = get_slice_index(dates_dict.get(data));
+      var sliced_data = dates_dict.get(data).slice(start_idx)
       var x = d3.scaleBand()
         .range([ 0, width])
-        .domain(dates_dict.get(data).slice(get_slice_index(dates_dict.get(data))))
+        .domain(sliced_data)
         .padding(0.2);
         
       svg2.append("g")
@@ -78,7 +77,8 @@ function displayBar(data) {
           .style("font-size", "10px");
   
       // Add Y axis
-      var cases = cases_dict.get(data);
+      var cases = cases_dict.get(data).slice(start_idx);
+      var deaths = deaths_dict.get(data).slice(start_idx);
       var max = 0;
       for (i = 0; i < cases.length; i++) {
         if (cases[i] > max)
@@ -92,7 +92,7 @@ function displayBar(data) {
   
       // Bars
       svg2.selectAll("mybar")
-          .data(dates_dict.get(data))
+          .data(sliced_data)
           .enter()
           .append("rect")
             .attr("class", "cases")
@@ -111,7 +111,7 @@ function displayBar(data) {
             .on("mouseout", bartip.hide)
         
       svg2.selectAll("mybar")
-          .data(dates_dict.get(data))
+          .data(sliced_data)
           .enter()
           .append("rect")
             .attr("class", "deaths")
@@ -131,10 +131,10 @@ function displayBar(data) {
         .transition()
         .duration(200)
         .attr("y", function(d, i) { 
-          return y(cases_dict.get(data)[i]); 
+          return y(cases[i]); 
         })
         .attr("height", function(d, i) { 
-          return height - y(cases_dict.get(data)[i]); 
+          return height - y(cases[i]); 
         })
         .delay(function(d,i){
             return(i*50)
@@ -146,10 +146,10 @@ function displayBar(data) {
         .duration(200)
         .attr("fill", "#c02c59")
         .attr("y", function(d, i) { 
-          return y(deaths_dict.get(data)[i]); 
+          return y(deaths[i]); 
         })
         .attr("height", function(d, i) { 
-          return height - y(deaths_dict.get(data)[i]); 
+          return height - y(deaths[i]); 
         })
         .delay(function(d,i){
             return(i*50)
