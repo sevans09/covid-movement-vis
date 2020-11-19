@@ -53,7 +53,7 @@ function displayBar(data) {
   
       function get_slice_index(dates) {
         for (var num in dates) {;
-          if (dates[num] == "2020-06-15") {
+          if (dates[num] == "2020-08-15") {
             console.log("SLICE", num);
             return num;
           }
